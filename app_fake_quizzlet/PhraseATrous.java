@@ -1,4 +1,4 @@
-package application_fake_quizlet;
+package app_fake_quizzlet;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

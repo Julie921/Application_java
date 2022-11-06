@@ -1,4 +1,4 @@
-package application_fake_quizlet;
+package app_fake_quizzlet;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

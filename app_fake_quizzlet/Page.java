@@ -1,4 +1,4 @@
-package application_fake_quizlet;
+package app_fake_quizzlet;
 import javax.swing.*;
 import java.awt.*;
 
