@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 /**
  * Classe pour les exercices du type "phrases à trou".
+ * Le constructeur contient une liste vide de texte_a_trous et de mots_a_placer, 
+ * et une liste de string contenant la phrase_complete.
  */
 public class PhraseATrous extends Exercice {
 
@@ -13,6 +15,12 @@ public class PhraseATrous extends Exercice {
     ArrayList<String> mots_a_placer = new ArrayList<>();
     String[] phrase_complete;
 
+/**
+ * Méthode pour créer la phrase à trous et la notation depuis l'input du professeur et le nombre de point maximum
+ * @param input_prof
+ * @param nb_points
+ * @return rien
+ */
     PhraseATrous(String input_prof, int nb_points) {
 
         this.input_prof = input_prof;
@@ -36,18 +44,38 @@ public class PhraseATrous extends Exercice {
         }
     }
 
+    /**
+     * Méthode pour afficher la phrase avec les mots manquants. C'est cette phrase qui sera montrer à l'élève
+     * @param rien
+     * @return rien 
+     */
     public void affichePhraseAvecTrous() {
         System.out.println("Complétez la phrase suivante : " + String.join(" ", texte_a_trous));
     }
 
+    /**
+     * Méthode pour afficher la liste des mots à placer. On affiche pour l'élève la liste des mots à placer.
+     * @param rien 
+     * @return rien
+     */
     public void afficheMotsAPlacer() {
         System.out.println("Les mots à placer sont : " + String.join(", ", mots_a_placer));
     }
 
+    /**
+     * Méthode pour avoir la version corrigée de la phrase.
+     * @param rien 
+     * @return rien
+     */
     public void getCorrection() {
         System.out.println("La phrase correcte est : " + String.join(" ", phrase_complete));
     }
 
+    /**
+     * Cette méthode donne la note de l'élève. Elle affiche la note.
+     * @param reponse_eleve
+     * @return rien
+    */
     public void gradeExercice(ArrayList reponse_eleve) {
         int note = 0;
         int bareme = nb_points/mots_a_placer.size();

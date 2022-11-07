@@ -1,8 +1,21 @@
+/**
+ * Package contenant l'application (toutes les classes et le Main)
+ */
 package app_fake_quizzlet;
 
+/**
+ * Importation des packages nécessaires.
+ */
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+/**
+ * Classe Eleve (qui, après, va être une extension de la classe abstraite UTILISATEUR)
+ * Cette classe contient plusieurs méthodes :
+ * - doExercice()
+ * - afficheReponseEleve()
+ */
 
 public class Eleve {
 
@@ -39,6 +52,7 @@ public class Eleve {
     /**
      * Méthode pour afficher la phrase complétée avec les réponses de l'élève
      * @param reponse_eleve
+     * @return ...
      */
     void afficheReponseEleve(ArrayList reponse_eleve){
 
