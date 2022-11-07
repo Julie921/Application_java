@@ -17,16 +17,18 @@ La troisième étape d'ajouter la notation et le traitement des niveaux et comme
 
 ## Choses à améliorer
 
-1. Prise en compte de la ponctuation dans la phrase dans le constructeur de la classe PhraseATrous
-2. Revoir les sorties des fonctions. Pour le moments on print tout (à remplacer par des return ?)
-3. Faire un Main propre
-    - peut-on concaténer les étapes dans une méthode si on met des return à nos méthodes?
+- [ ] Prise en compte de la ponctuation dans la phrase dans le constructeur de la classe PhraseATrous 
+- [ ] Revoir les sorties des fonctions. Pour le moments on print tout (à remplacer par des return ?)
+- [ ] Faire un Main propre
+   - [ ] peut-on concaténer les étapes dans une méthode si on met des return à nos méthodes?
 
 ## Etapes suivantes
 
-1. Vérifier l'héritage 
-2. Traiter les exceptions 
-    - si le prof ne met pas de # 
-3. Traitement par fichier pour les entrées et les sorties
-4. Notation et niveau des élèves à gérer. 
-5. Créer une interface. 
+- [ ] Vérifier l'héritage : getters et setters
+- [ ] Ajouter dans la méthode pour ajouter un exercice un argument pour préciser le niveau de l'exercice
+- [ ] Traiter les exceptions 
+   - [ ] si le prof ne met pas de # 
+- [ ] Traitement par fichier pour les entrées et les sorties
+- [ ] Notation et niveau des élèves à gérer. 
+- [ ] Créer une interface. 
+

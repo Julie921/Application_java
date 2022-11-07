@@ -22,6 +22,10 @@ public class Main {
         System.out.println(exercice_test.phraseEleve(reponse_julie));
 
 
+        Window page_test = new Window("Fake Quizlet", "Phrases à trous", true);
+
+
+
         //Window page_accueil = new Window("Fake Quizlet", "Accueil", true);
         //JLabel message_accueil = new JLabel("Bonjour ! Qui êtes-vous ?");
         //page_accueil.panel_body.add(message_accueil);

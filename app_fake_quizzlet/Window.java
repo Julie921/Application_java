@@ -13,7 +13,7 @@ public class Window extends JFrame {
     //division de la page en trois parties : header, body et footer
     JPanel panel_header = new JPanel();
     JPanel panel_footer = new JPanel();
-    JPanel panel_body = new JPanel();
+    //JPanel panel_body = new JPanel();
 
     /**
      * Constructeur de la classe Window. Elle permet de créer des nouvelles fenêtes pour l'interface.
@@ -27,12 +27,14 @@ public class Window extends JFrame {
         super(name_app);
 
         //choix des couleurs pour les différentes divisions de la fenêtre
-        panel_header.setBackground(Color.ORANGE);
-        panel_body.setBackground(Color.PINK);
-        panel_footer.setBackground(Color.ORANGE);
+        //panel_header.setBackground(Color.ORANGE);
+        //panel_body.setBackground(Color.PINK);
+        //panel_footer.setBackground(Color.ORANGE);
+
+        JPanel contentPane = (JPanel) this.getContentPane();
 
         super.add(panel_header, BorderLayout.PAGE_START);
-        super.add(panel_body, BorderLayout.CENTER);
+        //super.add(panel_body, BorderLayout.CENTER);
         super.add(panel_footer, BorderLayout.PAGE_END);
 
         JLabel header = new JLabel("<html><h1>" + title_page + "</h1></html>");
