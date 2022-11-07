@@ -87,6 +87,25 @@ public class PhraseATrous extends Exercice {
         }
         System.out.println(note);
     }
+/**
+ * Méthode qui permet d'avoir la phrase de l'élève avec ses réponses. 
+ * @param reponse_eleve
+ * @return phraseEleve (sous forme de String)
+ */
+    public String phraseEleve(ArrayList<String> reponse_eleve){
+        ArrayList<String> phrase = new ArrayList<>();
+        int j = 0;
+        for(int i=0; i<texte_a_trous.size(); i++){
+            if( texte_a_trous.get(i).equals("____")) {
+                phrase.add(reponse_eleve.get(j));
+                j+=1;
+            }
+            else {
+                phrase.add(texte_a_trous.get(i));
+            }
+        }
+        return String.join(" ",phrase);
+    }
 
 
 

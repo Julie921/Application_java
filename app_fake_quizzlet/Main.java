@@ -19,6 +19,7 @@ public class Main {
         Eleve julie = new Eleve("Julie");
         ArrayList<String> reponse_julie = julie.doExercice(exercice_test);
         exercice_test.gradeExercice(reponse_julie);
+        System.out.println(exercice_test.phraseEleve(reponse_julie));
 
 
         //Window page_accueil = new Window("Fake Quizlet", "Accueil", true);
