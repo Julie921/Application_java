@@ -8,11 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        PhraseATrous exercice_test = new PhraseATrous("Ceci est un #chien#. J'adore les #chiens#. Mais j'aime bien les #chats# aussi", 6);
-        exercice_test.affichePhraseAvecTrous();
-        exercice_test.afficheMotsAPlacer();
-
-
+        PhraseATrous exercice_test = new PhraseATrous("Ceci est un #chien# blabla, et toi? J'adore les #chiens#. Mais j'aime bien les #chats# aussi", 6);
 
         System.out.println("------------------------------------------");
 
@@ -21,8 +17,10 @@ public class Main {
         exercice_test.gradeExercice(reponse_julie);
         System.out.println(exercice_test.phraseEleve(reponse_julie));
 
+        exercice_test.getCorrection();
 
-        Window page_test = new Window("Fake Quizlet", "Phrases à trous", true);
+
+        //Window page_test = new Window("Fake Quizlet", "Phrases à trous", true);
 
 
 
