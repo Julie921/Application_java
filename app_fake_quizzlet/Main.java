@@ -8,14 +8,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        PhraseATrous exercice_test = new PhraseATrous("Ceci est un #chien# blabla, et toi? J'adore les #chiens#. Mais j'aime bien les #chats# aussi", 6);
+        PhraseATrous exercice_test = new PhraseATrous("En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça ! Mémé m'a acheté un magnifique pull en #laine# en Irlande ? Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. ", 6);
 
         System.out.println("------------------------------------------");
 
         Eleve julie = new Eleve("Julie");
         ArrayList<String> reponse_julie = julie.doExercice(exercice_test);
         exercice_test.gradeExercice(reponse_julie);
-        System.out.println(exercice_test.phraseEleve(reponse_julie));
+        System.out.println("La réponse de l'élève est : " + exercice_test.phraseEleve(reponse_julie));
 
         exercice_test.getCorrection();
 

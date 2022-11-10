@@ -85,7 +85,7 @@ public class PhraseATrous extends Exercice {
                 note += bareme;
             }
         }
-        System.out.println(note);
+        System.out.println("Note : " + note + "/" + nb_points);
     }
 /**
  * Méthode qui permet d'avoir la phrase de l'élève avec ses réponses. 
