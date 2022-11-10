@@ -32,3 +32,9 @@ La troisième étape d'ajouter la notation et le traitement des niveaux et comme
 - [ ] Notation et niveau des élèves à gérer. 
 - [ ] Créer une interface. 
 
+## Suivis séances
+### 10/11
+- modification de l'objet Phrase et de beaucoup de méthodes. 
+- On veut séparer la manière dont on fait la notation :
+        1. Vérifier si la réponse donnée est *VRAI* / *FAUX* / *NR*
+        2. Faire la notation en fonction du compte des *VRAI* / *FAUX* / *NR*
