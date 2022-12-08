@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Eleve extends Utilisateur { //TODO association réflexive pour que le prof soit associé à chaque élève
 
-	private int niveau;
+	private BaremeNiveau niveau = BaremeNiveau.AVANCE;
 	private Map<Integer, Exercice> historique = new HashMap<>(); //TODO: créer une classe historique
 
 	/**
@@ -29,7 +29,7 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	 * marie.getNiveau();
 	 * @return Le niveau de l'élève
 	 */
-	public int getNiveau(){
+	public BaremeNiveau getBaremeNiveau(){
 		return this.niveau;
 	}
 
@@ -39,7 +39,7 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	 * marie.setNiveau(3);
 	 * @param niveau (int) Le niveau auquel on veut faire passer l'élève
 	 */
-	public void setNiveau(int niveau){
+	public void setNiveau(BaremeNiveau niveau){
 		this.niveau = niveau;
 	}
 

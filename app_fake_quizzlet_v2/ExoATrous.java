@@ -8,17 +8,13 @@ public class ExoATrous extends Exercice{
 
     private ArrayList<Phrase> listPhrases = new ArrayList<>(); //tous les objets phrases constitués avec l'input
 
-    private int nbPoints; //le nombre de points
-
     /**
-     * Méthode pour créer la phrase à trous et la notation depuis l'input du professeur et le nombre de point maximum TODO: corriger javadoc
+     * Méthode pour créer la phrase à trous et la notation depuis l'input du professeur
+     * TODO: corriger javadoc
      * @param inputProf
-     * @param nbPoints
      * @return rien
      */
-    ExoATrous(String inputProf, int nbPoints) {
-
-        this.nbPoints = nbPoints; //le nombre de points pour l'exercice en tout
+    ExoATrous(String inputProf) {
 
         String[] listPhrasesNotParsed = inputProf.split("(?<=[?!.])"); //on split sur la ponctuation en la gardant
 
@@ -45,13 +41,6 @@ public class ExoATrous extends Exercice{
      */
     public ArrayList<Phrase> getListPhrases(){
         return listPhrases;
-    }
-
-    /**
-     * TODO: écrire javadoc
-     */
-    public int getNbPoints(){
-        return nbPoints;
     }
 
     /**
