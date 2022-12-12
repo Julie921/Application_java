@@ -2,21 +2,22 @@ package app_fake_quizzlet_v2;
 
 import java.util.ArrayList;
 
+/**
+ * Classe Phrase qui contient trois attributs.
+ */
 public class Phrase {
-
+    /**
+     * Déclaration des attributs
+     */
     String phraseCorrecte; //attribut qui contient la phrase sans les # et avec les réponses correctes
     String phraseAvecTrous; //attribut qui contient la phrase avec des ___ à la place des mots à placer
 
     ArrayList<String> motsAPlacer = new ArrayList<>(); //liste de tous les mots à placer dans l'ordre
 
     /**
-     * TODO: update javadoc
      * Constructeur de la classe Phrase. Il prend en argument une String qui correspond à une phrase où aucun traitement n'a encore été effectué.
-     * Il crée l'objet Phrase qui possède 3 attributs :
-     * (1) la phrase correcte,
-     * (2) la phrase avec les trous,
-     * (3) la liste des mots à placer dans l'ordre
-     * @param phraseNotParsed
+     * @param String phraseNotParsed, Metaparser unParseur.
+     * Construction de l'objet Phrase grâce au Parseur.
      */
     Phrase(String phraseNotParsed, Metaparse unParseur){
 
@@ -24,8 +25,10 @@ public class Phrase {
 
     }
 
+    // TODO : on a ces getetr aussi dans la classe parseur, pb ????
+
     /**
-     * Méthode qui permet de récupérer la variante à trous de l'objet Phrase.
+     * Méthode qui permet de récupérer la phraseAvecTrous
      * @return (String) Notre phrase avec les trous
      */
     public String getPhraseAvecTrous() {
@@ -65,6 +68,10 @@ public class Phrase {
         this.motsAPlacer.addAll(motsAPlacer);
     }
 
+    /**
+     * Méthode qui permet de récupérer l'attribut motsAPlacer
+     * @return motsAPlacer
+     */
     public ArrayList<String> getMotsAPlacer(){
         return motsAPlacer;
     }

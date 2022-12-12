@@ -3,14 +3,22 @@ package app_fake_quizzlet_v2;
 import java.util.ArrayList;
 
 /**
- * TODO: écrire javadoc
+ * Classe CorrectionExoATrous qui implémente l'interface Correction. C'est un objet qui contient une liste
+ * de VRAI/FAUX/NA correspondant aux réponses de l'élève.
  */
 public class CorrectionExoATrous implements Correction{
 
+    /**
+     * Déclaration des attributs
+     */
     ArrayList<ArrayList<ValeurReponse>> listValeursReponses = new ArrayList<>(); //liste de "VRAI", "FAUX", "NA"
 
     @Override
-    public void corrige(ArrayList<ArrayList<String>> reponseEleve, Exercice exercice) { //TODO: écrire la javadoc
+    /**
+     * Méthode corrige() qui permet de comparer les réponses de l'élèves avec les réponses attendues. Créer l'objet Correction.
+     * @param liste de listes de string et un exercice
+     */
+    public void corrige(ArrayList<ArrayList<String>> reponseEleve, Exercice exercice) {
 
         try {
             if(exercice instanceof ExoATrous){ //on vérifie que c'est bien un Exercice du type ExoATrous
@@ -44,6 +52,10 @@ public class CorrectionExoATrous implements Correction{
         }
     }
 
+    /**
+     * Getter de l'attribut ListValeursReponses
+     * @return listValeursReponses
+     */
     public ArrayList<ArrayList<ValeurReponse>> getListValeursReponses(){
         return listValeursReponses;
     }

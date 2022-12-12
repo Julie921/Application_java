@@ -4,14 +4,24 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Classe ParseurPhraseATrous qui permet d'implémenter l'interface Metaparse
+ */
 public class ParseurPhraseATrous implements Metaparse{
-
+    /**
+     * Déclaration des attributs
+     */
     String phraseCorrecte;
     String phraseAvecTrous;
     ArrayList<String> motsAPlacer = new ArrayList<>();
 
     @Override
-    public void parse(String phraseNotParsed) { //TODO: pouvoir préciser le délimiter
+    /**
+     * Implémentation de la méthode parse()
+     * @param phraseNotParsed (String) (//TODO: pouvoir préciser le délimiter
+     * Cette méthode permet de créer les attributs de l'objet Phrase
+     */
+    public void parse(String phraseNotParsed) {
 
         phraseCorrecte = phraseNotParsed.replaceAll("#", ""); //on enlève les # depuis l'input, du coup ça correspond à la phrase correcte
 
@@ -27,14 +37,24 @@ public class ParseurPhraseATrous implements Metaparse{
 
     }
 
+    /**
+     * Getter de l'attribut phraseAvecTrous()
+     * @return phraseAvecTrous
+     */
     public String getPhraseAvecTrous() {
         return phraseAvecTrous;
     }
-
+    /**
+     * Getter de l'attribut phraseCorrecte()
+     * @return phraseCorrecte
+     */
     public String getPhraseCorrecte() {
         return phraseCorrecte;
     }
-
+    /**
+     * Getter de l'attribut motsAPlacer()
+     * @return motsAPlacer
+     */
     public ArrayList getMotsAPlacer(){
         return motsAPlacer;
     }
