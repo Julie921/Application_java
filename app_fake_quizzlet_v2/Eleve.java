@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Eleve extends Utilisateur { //TODO association réflexive pour que le prof soit associé à chaque élève
 
 	private BaremeNiveau niveau = BaremeNiveau.AVANCE;
-	private Map<Integer, Exercice> historique = new HashMap<>(); //TODO: créer une classe historique
+
 
 	/**
 	 * Constructeur pour la classe Eleve. Elle permet d'instancier un objet Eleve en renseignant le nom d'utilisateur (pseudo) et le mot de passe (password).
