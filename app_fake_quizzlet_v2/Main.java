@@ -15,7 +15,7 @@ public class Main {
         exerciceTest.afficheExercice(); //on affiche les phrases à trous et la liste des mots à placer
 
         //création d'une liste de liste de réponses pour tester notre classe Correction
-        ArrayList<ArrayList<String>> reponsesEleve1 = new ArrayList<>();
+        ArrayList<ArrayList<String>> listeMotsEleves = new ArrayList<>();
         ArrayList<String> phrase1 = new ArrayList<>();
         phrase1.add("test");
         phrase1.add("tester");
@@ -25,13 +25,15 @@ public class Main {
         phrase2.add("programme");
         ArrayList<String> phrase3 = new ArrayList<>();
         phrase3.add("marche");
-        reponsesEleve1.add(phrase1);
-        reponsesEleve1.add(phrase2);
-        reponsesEleve1.add(phrase3);
+        listeMotsEleves.add(phrase1);
+        listeMotsEleves.add(phrase2);
+        listeMotsEleves.add(phrase3);
+
+        ReponseEleveExoATrous reponseTest = new ReponseEleveExoATrous(listeMotsEleves); //création d'un objet ReponseEleveExoATrous
 
         //test de la classe Correction
         Correction correction1 = new CorrectionExoATrous();
-        correction1.corrige(reponsesEleve1, exerciceTest);
+        correction1.corrige(reponseTest.getMots(), exerciceTest);
 
 
 
