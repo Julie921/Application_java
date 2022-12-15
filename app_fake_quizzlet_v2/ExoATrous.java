@@ -2,6 +2,7 @@ package app_fake_quizzlet_v2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -23,11 +24,13 @@ public class ExoATrous extends Exercice{
 
         String[] listPhrasesNotParsed = inputProf.split("(?<=[?!.])"); //on split sur la ponctuation en la gardant
 
+        Pattern pattern = Pattern.compile("#([^#]+)#"); //on récupère ce qui se trouve entre les #
+
         for(String phraseNotParsed : listPhrasesNotParsed){ //pour chaque phrase non parsée dans la liste des phrases non parsées
 
             ParseurPhraseATrous monParseur = new ParseurPhraseATrous(); //on crée un parseur spécifique pour parser en phrases à trous
 
-            Phrase phraseParsed = new Phrase(phraseNotParsed, monParseur); //on crée notre phrase et on la parse
+            Phrase phraseParsed = new Phrase(phraseNotParsed, monParseur, pattern); //on crée notre phrase et on la parse
 
             //on instancie les attributs de notre objet Phrase en récupérant les résultats de notre parseur
             phraseParsed.setPhraseCorrecte(monParseur.getPhraseCorrecte());

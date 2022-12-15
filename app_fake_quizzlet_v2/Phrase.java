@@ -1,6 +1,7 @@
 package app_fake_quizzlet_v2;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * Classe Phrase qui contient trois attributs.
@@ -19,9 +20,9 @@ public class Phrase {
      * @param String phraseNotParsed, Metaparser unParseur.
      * Construction de l'objet Phrase grâce au Parseur.
      */
-    Phrase(String phraseNotParsed, Metaparse unParseur){
+    Phrase(String phraseNotParsed, Metaparse unParseur, Pattern pattern){
 
-        unParseur.parse(phraseNotParsed);
+        unParseur.parse(phraseNotParsed, pattern);
 
     }
 

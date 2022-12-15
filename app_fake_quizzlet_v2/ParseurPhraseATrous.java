@@ -21,15 +21,15 @@ public class ParseurPhraseATrous implements Metaparse{
      * @param phraseNotParsed (String) (//TODO: pouvoir préciser le délimiter
      * Cette méthode permet de créer les attributs de l'objet Phrase
      */
-    public void parse(String phraseNotParsed) {
+    public void parse(String phraseNotParsed, Pattern pattern) {
 
         phraseCorrecte = phraseNotParsed.replaceAll("#", ""); //on enlève les # depuis l'input, du coup ça correspond à la phrase correcte
 
         phraseAvecTrous = phraseNotParsed.replaceAll("#([^#]+)#", "___"); //notre phrase avec les trous correspond à la phrase où on a remplacé les #blabla# âr "___"
 
         //Pour constituer la liste des mots à placer
-        Pattern p = Pattern.compile("#([^#]+)#"); //on récupère ce qui se trouve entre les #
-        Matcher m = p.matcher(phraseNotParsed);
+
+        Matcher m = pattern.matcher(phraseNotParsed);
 
         while (m.find()) { //tant qu'on trouve des "#([^#]+)#"
             motsAPlacer.add(m.group(1)); //on rajoute ce qui se trouve entre les # à la liste de mots à placer
@@ -55,7 +55,7 @@ public class ParseurPhraseATrous implements Metaparse{
      * Getter de l'attribut motsAPlacer()
      * @return motsAPlacer
      */
-    public ArrayList getMotsAPlacer(){
+    public ArrayList<String> getMotsAPlacer(){
         return motsAPlacer;
     }
 }
