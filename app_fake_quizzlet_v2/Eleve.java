@@ -1,5 +1,6 @@
 package app_fake_quizzlet_v2;
 
+import app_fake_quizzlet.Exercice;
 import app_fake_quizzlet.PhraseATrous;
 
 import java.util.ArrayList;
@@ -45,25 +46,6 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 
 	/*public Map getBulletin(){ //TODO écrire la fonction
 		return bulletin;
-	}*/
-
-	/*private ArrayList doExercice(PhraseATrous exercice) { //TODO écrire la fonction
-
-		System.out.println("Bonjour " + this.pseudo);
-		exercice.affichePhraseAvecTrous(); //changer en getter
-		exercice.afficheMotsAPlacer(); //changer en getter
-
-		for (int i = 0; i < exercice.mots_a_placer.size(); i++) {
-			System.out.println("Quel est le mot manquant " + (i + 1) + "?");
-			Scanner myObj = new Scanner(System.in);
-			String motDonne = myObj.nextLine();
-			reponse_eleve.add(motDonne);
-		}
-
-		historique.append(reponse_eleve, exercice, pseudo); //pour remplir l'historique au fur et à mesure
-
-		return reponse_eleve;
-
 	}*/
 
 	/*public getNote*/

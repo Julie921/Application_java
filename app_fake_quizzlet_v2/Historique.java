@@ -7,19 +7,12 @@ import java.util.Map;
 
 public class Historique {
 
-    private ArrayList<HashMap<Exercice,Float>> dates = new ArrayList<>();
+    private ArrayList<HashMap<Exercice,Float>> data = new ArrayList<>();
 
-    private HashMap<Integer, HashMap<Exercice, HashMap<ReponseEleve, Float>>> data = new HashMap<>();
+    //private HashMap<Integer, HashMap<Exercice, HashMap<ReponseEleve, Float>>> data = new HashMap<>();
 
     Historique(){
 
     }
 
 }
-
-from Collection import defaultdict
-
-/*
-*
-* {1:{"Exercice" : exoATrous44, "Note" : 12, "Reponse" : ["zgihzge", "uhizgehu Hze]}, 2 :
- */
