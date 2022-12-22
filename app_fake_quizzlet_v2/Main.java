@@ -1,12 +1,37 @@
 package app_fake_quizzlet_v2;
 
-import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 
-        //création d'un élève
+        /**
+         * To create an object of Scanner class, we usually pass the predefined object System.in, which represents the standard input stream. We may pass an object of class File if we want to read input from a file.
+         */
+
+        Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
+
+        System.out.println("Bonjour ! Vous êtes un : \n - élève : E\n - professeur : P");
+        String inputUser = scannerInputUser.nextLine();
+        if(inputUser.equals("e")){
+            System.out.println("Bonjour élève");
+        } else if (inputUser.equals("p")) {
+            System.out.println("Bonjour prof");
+        }
+        else{
+            System.out.println("Pas une option");
+        }
+
+        FileInputStream file = new FileInputStream("C:\\Users\\aengp\\Desktop\\db\\login.txt");
+        Scanner scannerFile = new Scanner(file);
+
+
+
+
+      /*  //création d'un élève
 
         Eleve julie = new Eleve("julie28", "blabla", BaremeNiveau.DEBUTANT);
 
@@ -54,6 +79,10 @@ public class Main {
             julie.updateNiveau(BaremeNiveau.INTERMEDIAIRE);
             System.out.println("Julie doit changer de niveau : " + julie.mustChangeNiveau());
         }
-        System.out.println("Le niveau de julie est : " + julie.getBaremeNiveau());
+        System.out.println("Le niveau de julie est : " + julie.getBaremeNiveau());*/
+    }
+
+    public void scenarioEleve(){
+
     }
 }

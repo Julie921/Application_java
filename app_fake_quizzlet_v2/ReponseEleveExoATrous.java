@@ -13,13 +13,14 @@ public class ReponseEleveExoATrous extends ReponseEleve{
         System.out.println("Bonjour " + eleve.getPseudo());
         exercice.afficheExercice();
 
+        Scanner myScanner = new Scanner(System.in);
+
         int i = 1;
         for (Phrase phrase : exercice.getListPhrases()) { //pour chaque phrase de l'exercice
             ArrayList<String> listeTampon = new ArrayList<>(); //on crée une liste tampon
             for (String mot : phrase.getMotsAPlacer()) { //pour chaque mot à placer dans la phrase
                 System.out.println("Quel est le mot manquant " + i + "?"); //on demande le mot manquant à la place X
-                Scanner myObj = new Scanner(System.in);
-                String motDonne = myObj.nextLine();
+                String motDonne = myScanner.nextLine();
                 listeTampon.add(motDonne); //on ajoute notre mot à la liste tampon
                 i += 1;
             }
