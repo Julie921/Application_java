@@ -9,11 +9,12 @@ public class Historique {
 
     ArrayList<Map<String, Object>> data = new ArrayList<>(); //liste de dictionnaire : un dico = une entrée dans l'historique
 
-    public void addEntry(Exercice exercice, float note, ReponseEleve reponseEleve){
+    public void addEntry(Exercice exercice, float note, ReponseEleve reponseEleve, BaremeNiveau niveau){
         Map<String, Object> record = new HashMap<>();
         record.put("exercice",exercice);
         record.put("note", note);
         record.put("reponse", reponseEleve);
+        record.put("niveau", niveau);
         data.add(record);
     }
 

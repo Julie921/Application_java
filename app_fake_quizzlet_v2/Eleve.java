@@ -3,7 +3,7 @@ import java.util.Map;
 
 public class Eleve extends Utilisateur { //TODO association réflexive pour que le prof soit associé à chaque élève
 
-	private BaremeNiveau niveau = BaremeNiveau.DEBUTANT;
+	private BaremeNiveau niveau;
 	public Historique historiqueEleve = new Historique();
 
 	/**
@@ -13,8 +13,9 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	 * @param pseudo (String) Le nom d'utilisateur
 	 * @param password (String) Le mot de passe
 	 */
-	Eleve(String pseudo, String password) {
+	Eleve(String pseudo, String password, BaremeNiveau niveau) {
         super(pseudo, password);
+		this.niveau = niveau;
 	}
 
 	/**
@@ -37,14 +38,8 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		this.niveau = niveau;
 	}
 
-	/*public Map getBulletin(){ //TODO écrire la fonction
-		return bulletin;
-	}*/
-
-	/*public getNote*/
-
-	public void addEntryHistorique(Exercice exercice, Float note, ReponseEleve reponseEleve){
-		historiqueEleve.addEntry(exercice, note, reponseEleve);
+	public void addEntryHistorique(Exercice exercice, Float note, ReponseEleve reponseEleve, BaremeNiveau niveau){
+		historiqueEleve.addEntry(exercice, note, reponseEleve, niveau);
 	}
 
 	public Map<String, Object> getEntry(int index){
@@ -57,13 +52,48 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		System.out.printf("    HISTORIQUE      %n");
 		System.out.printf("--------------------------------%n");
 		System.out.printf("--------------------------------%n");
-		System.out.printf("| %-10s | %-8s | %4s |%n", "EXERCICE", "REPONSE", "NOTE");
+		System.out.printf("| %-10s | %-8s | %4s | %4s |%n", "EXERCICE", "REPONSE", "NOTE", "NIVEAU");
 		System.out.printf("--------------------------------%n");
 
 		for(Map entry: historiqueEleve.getData()){
-			System.out.printf("| %h | %h | %f|%n", entry.get("exercice"), entry.get("reponse"),  entry.get("note")); //%b
+			System.out.printf("| %h | %s | %f | %h |%n", entry.get("exercice").toString(), entry.get("reponse"),  entry.get("note"), entry.get("niveau")); //%b et toString()
 		}
 	}
 
+	public void updateNiveau(BaremeNiveau newNiveau){
+		this.niveau = newNiveau;
+	}
 
+	public boolean mustChangeNiveau(){
+
+		int compteur = 0;
+
+		float palier = 15.00F;
+
+		if(historiqueEleve.getData().size() < 1){ //l'élève n'a pas encore 5 notes donc il ne peut pas changer de niveau
+			return false;
+		}
+		else { //élève a plus de 5 notes
+			for(int i = historiqueEleve.getData().size()-1;  i < historiqueEleve.getData().size(); i++){ //on regarde les 5 dernière notes obtenues
+				if(historiqueEleve.getData().get(i).get("niveau").toString().equals(this.niveau.toString())){ //si le niveau est celui de l'élève
+					Float note = (Float) historiqueEleve.getData().get(i).get("note");
+					System.out.println(note);
+					if(note.compareTo(palier)>0) {
+						compteur++;
+						System.out.println("La note est au dessus de 15");
+						System.out.println("le compteur : "+compteur);
+
+					}
+				}
+			}
+
+		}
+		if(compteur==1){
+			return true;
+		}
+		else{
+
+			return false;
+		}
+	}
 }
