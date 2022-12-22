@@ -23,6 +23,9 @@ public class Main {
         System.out.println(((CorrectionExoATrous) correction1).getListValeursReponses());
 
         NotationExoATrous notation1 = new NotationExoATrous();
-        System.out.println("La note obtenue est : " + notation1.getNote(julie, correction1.getListValeursReponses()) + "/20");
+        float note = notation1.getNote(julie, correction1.getListValeursReponses());
+
+        julie.addEntryHistorique(exerciceTest, note, reponseTest);
+        julie.afficheHistorique();
     }
 }

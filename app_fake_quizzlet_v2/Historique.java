@@ -1,16 +1,28 @@
 package app_fake_quizzlet_v2;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Historique {
 
-    private HashMap<Integer, ArrayList> data = new HashMap<>();
+    ArrayList<Map<String, Object>> data = new ArrayList<>(); //liste de dictionnaire : un dico = une entrée dans l'historique
 
-    //private HashMap<Integer, HashMap<Exercice, HashMap<ReponseEleve, Float>>> data = new HashMap<>();
+    public void addEntry(Exercice exercice, float note, ReponseEleve reponseEleve){
+        Map<String, Object> record = new HashMap<>();
+        record.put("exercice",exercice);
+        record.put("note", note);
+        record.put("reponse", reponseEleve);
+        data.add(record);
+    }
 
-    Historique(){
+    public Map<String, Object> getEntry(int index){
+        return data.get(index-1);
+    }
 
+    public ArrayList<Map<String, Object>> getData() {
+        return data;
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class ReponseEleveExoATrous extends ReponseEleve{
 
     ArrayList<ArrayList<String>> mots = new ArrayList<>();
+    int note;
 
     ReponseEleveExoATrous(ExoATrous exercice, Eleve eleve){
 

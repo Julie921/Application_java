@@ -1,17 +1,10 @@
 package app_fake_quizzlet_v2;
-
-import app_fake_quizzlet.Exercice;
-import app_fake_quizzlet.PhraseATrous;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Eleve extends Utilisateur { //TODO association réflexive pour que le prof soit associé à chaque élève
 
-	private BaremeNiveau niveau = BaremeNiveau.AVANCE;
-
+	private BaremeNiveau niveau = BaremeNiveau.DEBUTANT;
+	public Historique historiqueEleve = new Historique();
 
 	/**
 	 * Constructeur pour la classe Eleve. Elle permet d'instancier un objet Eleve en renseignant le nom d'utilisateur (pseudo) et le mot de passe (password).
@@ -50,6 +43,27 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 
 	/*public getNote*/
 
+	public void addEntryHistorique(Exercice exercice, Float note, ReponseEleve reponseEleve){
+		historiqueEleve.addEntry(exercice, note, reponseEleve);
+	}
+
+	public Map<String, Object> getEntry(int index){
+		return historiqueEleve.getEntry(index); //afficher seulement une partie du tableau au lieu d'afficher les références
+	}
+
+	public void afficheHistorique(){
+
+		System.out.printf("--------------------------------%n");
+		System.out.printf("    HISTORIQUE      %n");
+		System.out.printf("--------------------------------%n");
+		System.out.printf("--------------------------------%n");
+		System.out.printf("| %-10s | %-8s | %4s |%n", "EXERCICE", "REPONSE", "NOTE");
+		System.out.printf("--------------------------------%n");
+
+		for(Map entry: historiqueEleve.getData()){
+			System.out.printf("| %h | %h | %f|%n", entry.get("exercice"), entry.get("reponse"),  entry.get("note")); //%b
+		}
+	}
 
 
 }
