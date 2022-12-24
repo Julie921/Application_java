@@ -8,6 +8,69 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
 
+        Boolean professeurSession = false, studentSession = false;
+
+        Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
+        String inputUser = "";
+
+        do {
+            System.out.println("Bonjour ! Vous êtes un : \n - 1 : élève\n - 2 : professeur");
+            System.out.print("Votre réponse: ");
+            inputUser = scannerInputUser.nextLine();
+
+            // Choix Session
+            studentSession = (inputUser.equals("1"));
+            professeurSession = (inputUser.equals("2"));
+            if (!studentSession && !professeurSession) {
+                System.out.println("Votre réponse ne convient pas");
+            }
+        } while (!inputUser.equals("quit") && !studentSession && !professeurSession);
+
+        System.out.println("---");
+        if (professeurSession) {
+            Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
+            do {
+                System.out.println("Que voulez-vous faire ?");
+                System.out.println("" +
+                        "1 : Ecrire un exercice\n" +
+                        "2 : Modifier un exercice\n" +
+                        "3 : Voir notes des élèves");
+                System.out.print("Votre réponse: ");
+                inputUser = scannerInputUser.nextLine();
+
+                // Choix Professeur
+                choixActionProf1 = inputUser.equals("1");
+                choixActionProf2 = inputUser.equals("2");
+                choixActionProf3 = inputUser.equals("3");
+                if (!choixActionProf1 && !choixActionProf2 && !choixActionProf3) {
+                    System.out.println("Votre réponse ne convient pas\n----");
+                }
+
+            } while (!inputUser.equals("quit") && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
+
+
+        } else if (studentSession) {
+            Boolean choixEleve1 = false, choixEleve2 = false;
+            do {
+                System.out.println("Que voulez-vous faire ?");
+                System.out.println("" +
+                        "1 : Choisir un exercice\n" +
+                        "2 : Voir mon historique");
+
+                System.out.print("Votre réponse: ");
+                inputUser = scannerInputUser.nextLine();
+
+                // Choix Eleve
+                choixEleve1 = inputUser.equals("1");
+                choixEleve2 = inputUser.equals("2");
+                if (!choixEleve1 && !choixEleve2) {
+                    System.out.println("Votre réponse ne convient pas\n----");
+                }
+
+            } while (!inputUser.equals("quit") && !choixEleve1 && !choixEleve2);
+        }
+
+
         ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous();
         ParseurTerminaison parseurTerminaison = new ParseurTerminaison();
         ExoATrous exercice1 = new ExoATrous(parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. ");
