@@ -63,8 +63,8 @@ public class ExoATrous extends Exercice{
         //on récupère tous les mots à placer de chaque phrase de l'exercice
         ArrayList<String> allMotsAPlacer = new ArrayList<>();
 
-        for(Phrase phrase : listPhrases){
-            for(String mot : phrase.getMotsAPlacer()){
+        for (Phrase phrase : listPhrases) {
+            for (String mot : phrase.getMotsAPlacer()) {
                 allMotsAPlacer.add(mot);
             }
         }
@@ -73,17 +73,12 @@ public class ExoATrous extends Exercice{
         Collections.shuffle(allMotsAPlacer);
 
         // on affiche la liste des mots à placer
-        System.out.println("Les mots à placer sont : "+String.join(", ", allMotsAPlacer)); //on affiche la liste de tous les mots à placer
+        System.out.println("Les mots à placer sont : " + String.join(", ", allMotsAPlacer)); //on affiche la liste de tous les mots à placer
 
         // on affiche la phrase avec les trousS.
-        for(Phrase phrase : listPhrases){
+        for (Phrase phrase : listPhrases) {
             System.out.println(phrase.getPhraseAvecTrous());
         }
-    }
-
-    @Override
-    public void corrigeExercice() { //TODO écrire la fonction
-
     }
 
 

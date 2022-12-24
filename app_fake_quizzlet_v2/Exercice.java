@@ -13,9 +13,4 @@ public abstract class Exercice {
      */
     public abstract void afficheExercice();
 
-    /**
-     * Méthode corrigeExercice() qui permet à l'élève d'avoir accès à la correction de l'exercice.
-     */
-    public abstract void corrigeExercice();
-
 }
