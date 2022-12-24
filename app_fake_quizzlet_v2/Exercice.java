@@ -8,6 +8,16 @@ package app_fake_quizzlet_v2;
  */
 public abstract class Exercice {
 
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * Méthode afficheExercice() permet d'afficher l'exercice à l'élève pour qu'il puisse le faire ou non.
      */

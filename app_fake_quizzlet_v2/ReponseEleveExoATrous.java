@@ -3,7 +3,7 @@ package app_fake_quizzlet_v2;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ReponseEleveExoATrous extends ReponseEleve{
+public class ReponseEleveExoATrous extends ReponseEleve {
 
     ArrayList<ArrayList<String>> mots = new ArrayList<>();
     int note;
@@ -16,7 +16,7 @@ public class ReponseEleveExoATrous extends ReponseEleve{
         Scanner myScanner = new Scanner(System.in);
 
         int i = 1;
-        for (Phrase phrase : exercice.getListPhrases()) { //pour chaque phrase de l'exercice
+        for (PhraseATrous phrase : exercice.getListPhrases()) { //pour chaque phrase de l'exercice
             ArrayList<String> listeTampon = new ArrayList<>(); //on crée une liste tampon
             for (String mot : phrase.getMotsAPlacer()) { //pour chaque mot à placer dans la phrase
                 System.out.println("Quel est le mot manquant " + i + "?"); //on demande le mot manquant à la place X

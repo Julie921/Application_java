@@ -8,9 +8,28 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        /**
+        ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous();
+        ParseurTerminaison parseurTerminaison = new ParseurTerminaison();
+        ExoATrous exercice1 = new ExoATrous(parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. ");
+        exercice1.afficheExercice();
+
+        /*// phrase1 = new PhraseATrous("Un chat #blanc#", parseurPhraseATrous);
+
+        PhraseATrous phrase2 = parseurTerminaison.parse("Je veux mang--er");
+
+        System.out.println(phrase1.toString());
+        System.out.println(phrase2.toString());
+
+
+        Professeur bernard = new Professeur("Bernard");
+        Eleve barnard = new Eleve("Barnard", BaremeNiveau.DEBUTANT, bernard);
+        Eleve lhermite = new Eleve("L'Hermite", BaremeNiveau.INTERMEDIAIRE, bernard);
+
+        bernard.listElevesToString();
+
+        *//**
          * To create an object of Scanner class, we usually pass the predefined object System.in, which represents the standard input stream. We may pass an object of class File if we want to read input from a file.
-         */
+         *//*
 
         Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
 
@@ -26,7 +45,7 @@ public class Main {
         }
 
         FileInputStream file = new FileInputStream("C:\\Users\\aengp\\Desktop\\db\\login.txt");
-        Scanner scannerFile = new Scanner(file);
+        Scanner scannerFile = new Scanner(file);*/
 
 
 
