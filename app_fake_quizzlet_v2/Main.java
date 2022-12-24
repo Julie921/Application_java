@@ -13,6 +13,7 @@ public class Main {
         ExoATrous exercice1 = new ExoATrous(parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. ");
         exercice1.afficheExercice();
 
+        // Essai
         /*// phrase1 = new PhraseATrous("Un chat #blanc#", parseurPhraseATrous);
 
         PhraseATrous phrase2 = parseurTerminaison.parse("Je veux mang--er");
