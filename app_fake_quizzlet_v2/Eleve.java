@@ -4,18 +4,22 @@ import java.util.Map;
 public class Eleve extends Utilisateur { //TODO association réflexive pour que le prof soit associé à chaque élève
 
 	private BaremeNiveau niveau;
+	private float moyenne;
 	public Historique historiqueEleve = new Historique();
+	private Professeur prof;
 
 	/**
 	 * Constructeur pour la classe Eleve. Elle permet d'instancier un objet Eleve en renseignant le nom d'utilisateur (pseudo) et le mot de passe (password).
 	 * Par exemple, si Marie veut créer son compte en utilisant le pseudo "marie2000" et le mot de passe "blabla", on va faire :
 	 * Eleve marie = new Eleve("marie2000", "blabla");
 	 * @param pseudo (String) Le nom d'utilisateur
-	 * @param password (String) Le mot de passe
 	 */
-	Eleve(String pseudo, String password, BaremeNiveau niveau) {
-        super(pseudo, password);
+	Eleve(String pseudo, BaremeNiveau niveau, Professeur prof) {
+        super(pseudo);
 		this.niveau = niveau;
+		this.moyenne = 0;
+		this.prof = prof;
+		this.prof.ajouterEleve(this);
 	}
 
 	/**
@@ -36,6 +40,22 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	 */
 	public void setNiveau(BaremeNiveau niveau){
 		this.niveau = niveau;
+	}
+
+	public float getMoyenne() {
+		return moyenne;
+	}
+
+	private void updateMoyenne() {
+		// TODO
+	}
+
+	public Professeur getProf() {
+		return prof;
+	}
+
+	public void setProf(Professeur prof) {
+		this.prof = prof;
 	}
 
 	public void addEntryHistorique(Exercice exercice, Float note, ReponseEleve reponseEleve, BaremeNiveau niveau){
@@ -95,5 +115,15 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Eleve{" +
+				"niveau=" + niveau +
+				", moyenne=" + moyenne +
+				", historiqueEleve=" + historiqueEleve +
+				", prof=" + prof +
+				'}';
 	}
 }
