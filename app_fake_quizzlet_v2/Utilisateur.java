@@ -1,7 +1,12 @@
 package app_fake_quizzlet_v2;
 
+import com.j256.ormlite.table.DatabaseTable;
+import com.j256.ormlite.field.DatabaseField;
+
+@DatabaseTable(tableName = "utilisateur")
 public abstract class Utilisateur {
 
+    @DatabaseField(id = true)
     private String pseudo;
 
     /**

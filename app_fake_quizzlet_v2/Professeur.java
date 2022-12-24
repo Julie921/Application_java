@@ -1,11 +1,18 @@
 package app_fake_quizzlet_v2;
 
+import com.j256.ormlite.table.DatabaseTable;
+import com.j256.ormlite.field.DatabaseField;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@DatabaseTable(tableName = "PROFESSEURS")
 public class Professeur extends Utilisateur {
 
+    @DatabaseField(canBeNull = true)
     private ArrayList<Eleve> listEleves = new ArrayList<Eleve>();
+
+    @DatabaseField(canBeNull = true)
     private HashMap<Integer, Exercice> listExercices = new HashMap<>();
 
     /**
