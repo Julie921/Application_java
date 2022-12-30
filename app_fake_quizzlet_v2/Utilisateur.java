@@ -9,12 +9,16 @@ public abstract class Utilisateur {
     @DatabaseField(id = true)
     private String pseudo;
 
+    public Utilisateur() {
+
+    }
+
     /**
      * Constructeur de la classe abstraite Utilisateur.
      * Il prend en argument le
      * @param pseudo
      */
-    Utilisateur(String pseudo){
+    public Utilisateur(String pseudo){
         this.pseudo = pseudo;
     }
 
