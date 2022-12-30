@@ -1,171 +1,257 @@
 package app_fake_quizzlet_v2;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.logger.LogBackendType;
+import com.j256.ormlite.logger.LoggerFactory;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.Array;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    private final static String DATABASE_URL = "jdbc:h2:file:./database.db";
 
-        Boolean professeurSession = false, studentSession = false;
+    private static ConnectionSource connectionSource = null;
+    private static Dao<Professeur, String> professeurDao;
+    private static Dao<Eleve, String> eleveDao;
 
-        Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
-        String inputUser = "";
+    public static Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
 
-        do {
-            System.out.println("Bonjour ! Vous êtes un : \n - 1 : élève\n - 2 : professeur");
-            System.out.print("Votre réponse: ");
-            inputUser = scannerInputUser.nextLine();
+    private static String QUIT_COMMAND = "quit";
 
-            // Choix Session
-            studentSession = (inputUser.equals("1"));
-            professeurSession = (inputUser.equals("2"));
-            if (!studentSession && !professeurSession) {
-                System.out.println("Votre réponse ne convient pas");
+    public static void main(String[] args) throws Exception {
+        LoggerFactory.setLogBackendFactory(LogBackendType.NULL); //enlève tous les print de ormlite
+
+
+
+        try {
+            // create our data-source for the database
+            connectionSource = new JdbcConnectionSource(DATABASE_URL);
+
+            // setup our database and DAOs
+            professeurDao = DaoManager.createDao(connectionSource, Professeur.class);
+            eleveDao = DaoManager.createDao(connectionSource, Eleve.class);
+
+            // if you need to create the table
+            TableUtils.createTableIfNotExists(connectionSource, Professeur.class);
+            TableUtils.createTableIfNotExists(connectionSource, Eleve.class);
+
+
+            // Essai sur les databases
+            Professeur account2 = professeurDao.queryForId("Jean");
+            System.out.println("Essai: " + account2.getPseudo());
+
+            /*Eleve julie = new Eleve("Julie",BaremeNiveau.INTERMEDIAIRE,account2);
+            Eleve olive = new Eleve("Olive",BaremeNiveau.DEBUTANT,account2);
+            Eleve sarah = new Eleve("Sarah",BaremeNiveau.EXPERT,account2);
+            Eleve louis = new Eleve("Louis",BaremeNiveau.AVANCE,account2);*/
+
+            /*Eleve essai2 = eleveDao.queryForId("Den");
+            essai2.updateMoyenne(15);
+            eleveDao.update(essai2);*/
+           //System.out.println(essai2);
+            // account2.listElevesToString();
+
+            System.out.println("\n\nIt seems to have worked\n\n");
+
+            Boolean professeurSession = false, studentSession = false;
+            String inputUser = "";
+            Utilisateur utilisateur_principal = null;
+
+            do {
+                System.out.println("Bonjour ! Vous êtes un : \n - 1 : élève\n - 2 : professeur");
+                System.out.print("Votre réponse: ");
+                inputUser = scannerInputUser.nextLine();
+
+                // Choix Session
+                studentSession = (inputUser.equals("1"));
+                professeurSession = (inputUser.equals("2"));
+                if (!studentSession && !professeurSession && !inputUser.equals(QUIT_COMMAND)) {
+                    System.out.println("Votre réponse ne convient pas");
+                }
+
+                if (inputUser.equals(QUIT_COMMAND)) {
+                    fermetureConnexion();
+                    return;
+                }
+
+            } while (!inputUser.equals(QUIT_COMMAND) && !studentSession && !professeurSession);
+
+            do {
+                System.out.println("Quel est votre identifiant ?");
+                System.out.print("Idenfitiant/pseudo: ");
+                inputUser = scannerInputUser.nextLine();
+
+                if (inputUser.equals(QUIT_COMMAND))
+                    break;
+
+                if (professeurSession) {
+                    utilisateur_principal = checkSession(inputUser, "prof");
+                } else if (studentSession) {
+                    utilisateur_principal = checkSession(inputUser, "eleve");
+                }
+
+            } while (utilisateur_principal == null);
+
+            if (utilisateur_principal == null) {
+                fermetureConnexion();
+                return;
             }
-        } while (!inputUser.equals("quit") && !studentSession && !professeurSession);
 
-        System.out.println("---");
-        if (professeurSession) {
-            Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
+            System.out.println("---");
             do {
-                System.out.println("Que voulez-vous faire ?");
-                System.out.println("" +
-                        "1 : Ecrire un exercice\n" +
-                        "2 : Modifier un exercice\n" +
-                        "3 : Voir notes des élèves");
-                System.out.print("Votre réponse: ");
-                inputUser = scannerInputUser.nextLine();
+                System.out.println("Bonjour "+ utilisateur_principal.getPseudo());
 
-                // Choix Professeur
-                choixActionProf1 = inputUser.equals("1");
-                choixActionProf2 = inputUser.equals("2");
-                choixActionProf3 = inputUser.equals("3");
-                if (!choixActionProf1 && !choixActionProf2 && !choixActionProf3) {
-                    System.out.println("Votre réponse ne convient pas\n----");
+                if (professeurSession) {
+                    Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
+                    do {
+                        System.out.println("Que voulez-vous faire ?");
+                        System.out.println("" +
+                                "1 : Ecrire un exercice\n" +
+                                "2 : Modifier un exercice\n" +
+                                "3 : Voir notes des élèves");
+                        System.out.print("Votre réponse: ");
+                        inputUser = scannerInputUser.nextLine();
+
+                        // Choix Professeur
+                        choixActionProf1 = inputUser.equals("1");
+                        choixActionProf2 = inputUser.equals("2");
+                        choixActionProf3 = inputUser.equals("3");
+
+                        if (!choixActionProf1 && !choixActionProf2 && !choixActionProf3 && !inputUser.equals(QUIT_COMMAND)) {
+                            System.out.println("Votre réponse ne convient pas\n----");
+                        }
+
+                    } while (!inputUser.equals(QUIT_COMMAND) && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
+
+                } else if (studentSession) {
+                    Boolean choixEleve1 = false, choixEleve2 = false;
+                    do {
+                        System.out.println("Que voulez-vous faire ?");
+                        System.out.println("" +
+                                "1 : Choisir un exercice\n" +
+                                "2 : Voir mon historique");
+
+                        System.out.print("Votre réponse: ");
+                        inputUser = scannerInputUser.nextLine();
+
+                        // Choix Eleve
+                        choixEleve1 = inputUser.equals("1");
+                        choixEleve2 = inputUser.equals("2");
+                        if (!choixEleve1 && !choixEleve2 && !inputUser.equals(QUIT_COMMAND)) {
+                            System.out.println("Votre réponse ne convient pas\n----");
+                        }
+
+                    } while (!inputUser.equals(QUIT_COMMAND) && !choixEleve1 && !choixEleve2);
                 }
 
-            } while (!inputUser.equals("quit") && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
+            } while (!inputUser.equals(QUIT_COMMAND));
 
 
-        } else if (studentSession) {
-            Boolean choixEleve1 = false, choixEleve2 = false;
-            do {
-                System.out.println("Que voulez-vous faire ?");
-                System.out.println("" +
-                        "1 : Choisir un exercice\n" +
-                        "2 : Voir mon historique");
-
-                System.out.print("Votre réponse: ");
-                inputUser = scannerInputUser.nextLine();
-
-                // Choix Eleve
-                choixEleve1 = inputUser.equals("1");
-                choixEleve2 = inputUser.equals("2");
-                if (!choixEleve1 && !choixEleve2) {
-                    System.out.println("Votre réponse ne convient pas\n----");
-                }
-
-            } while (!inputUser.equals("quit") && !choixEleve1 && !choixEleve2);
+        } finally {
+            // destroy the data source which should close underlying connections
+            if (connectionSource != null) {
+                connectionSource.close();
+            }
         }
-
-
-        ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous();
-        ParseurTerminaison parseurTerminaison = new ParseurTerminaison();
-        ExoATrous exercice1 = new ExoATrous(parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. ");
-        exercice1.afficheExercice();
-
-        // Essai
-        /*// phrase1 = new PhraseATrous("Un chat #blanc#", parseurPhraseATrous);
-
-        PhraseATrous phrase2 = parseurTerminaison.parse("Je veux mang--er");
-
-        System.out.println(phrase1.toString());
-        System.out.println(phrase2.toString());
-
-
-        Professeur bernard = new Professeur("Bernard");
-        Eleve barnard = new Eleve("Barnard", BaremeNiveau.DEBUTANT, bernard);
-        Eleve lhermite = new Eleve("L'Hermite", BaremeNiveau.INTERMEDIAIRE, bernard);
-
-        bernard.listElevesToString();
-
-        *//**
-         * To create an object of Scanner class, we usually pass the predefined object System.in, which represents the standard input stream. We may pass an object of class File if we want to read input from a file.
-         *//*
-
-        Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
-
-        System.out.println("Bonjour ! Vous êtes un : \n - élève : E\n - professeur : P");
-        String inputUser = scannerInputUser.nextLine();
-        if(inputUser.equals("e")){
-            System.out.println("Bonjour élève");
-        } else if (inputUser.equals("p")) {
-            System.out.println("Bonjour prof");
-        }
-        else{
-            System.out.println("Pas une option");
-        }
-
-        FileInputStream file = new FileInputStream("C:\\Users\\aengp\\Desktop\\db\\login.txt");
-        Scanner scannerFile = new Scanner(file);*/
-
-
-
-
-      /*  //création d'un élève
-
-        Eleve julie = new Eleve("julie28", "blabla", BaremeNiveau.DEBUTANT);
-
-        //création d'un exercice de phrases à trous
-        ExoATrous exerciceTest = new ExoATrous("Je suis un #test#.");
-
-        ReponseEleveExoATrous reponseTest = new ReponseEleveExoATrous(exerciceTest, julie); //création d'un objet ReponseEleveExoATrous
-
-        //test de la classe Correction
-        Correction correction1 = new CorrectionExoATrous();
-        correction1.corrige(reponseTest.getMots(), exerciceTest);
-
-
-        System.out.println(((CorrectionExoATrous) correction1).getListValeursReponses());
-
-        NotationExoATrous notation1 = new NotationExoATrous();
-        float note = notation1.getNote(julie, correction1.getListValeursReponses());
-
-        julie.addEntryHistorique(exerciceTest, note, reponseTest, julie.getBaremeNiveau());
-
-        if (julie.mustChangeNiveau()) {
-            julie.updateNiveau(BaremeNiveau.INTERMEDIAIRE);
-            System.out.println("Julie doit changer de niveau : " + julie.mustChangeNiveau());
-        }
-        System.out.println("Le niveau de julie est : " + julie.getBaremeNiveau());
-
-        System.out.println("##############################################################################");
-
-        ExoATrous exercice2 = new ExoATrous("Je suis un #autre# test.");
-
-        ReponseEleveExoATrous reponse2 = new ReponseEleveExoATrous(exercice2, julie); //création d'un objet ReponseEleveExoATrous
-
-        //test de la classe Correction
-        Correction correction2 = new CorrectionExoATrous();
-        correction2.corrige(reponse2.getMots(), exercice2);
-
-
-        System.out.println(((CorrectionExoATrous) correction2).getListValeursReponses());
-
-        float note2 = notation1.getNote(julie, correction2.getListValeursReponses());
-
-        julie.addEntryHistorique(exercice2, note2, reponse2, julie.getBaremeNiveau());
-
-        if (julie.mustChangeNiveau()) {
-            julie.updateNiveau(BaremeNiveau.INTERMEDIAIRE);
-            System.out.println("Julie doit changer de niveau : " + julie.mustChangeNiveau());
-        }
-        System.out.println("Le niveau de julie est : " + julie.getBaremeNiveau());*/
     }
 
     public void scenarioEleve(){
 
     }
+
+    public static Utilisateur checkSession(String pseudo, String type) {
+        String inputUser = "";
+        Boolean choix1, choix2 = false;
+        Utilisateur user = null;
+        try {
+            if (type.equals("prof")) {
+                user = professeurDao.queryForId(pseudo);
+            } else if (type.equals("eleve")) {
+                user = eleveDao.queryForId(pseudo);
+            }
+
+            if (user != null) {
+                return user;
+            }
+
+            // L'utilisateur n'existe pas dans la DB
+            System.out.println("/!\\ Identifiant inconnu ! Voulez-vous vous le créer ? (pseudo : " + pseudo + ")");
+            System.out.println("1 : Oui");
+            System.out.println("2 : Non");
+            inputUser = scannerInputUser.nextLine();
+
+            // Choix User
+            choix1 = inputUser.equals("1");
+            choix2 = inputUser.equals("2");
+
+            if (!choix1 && !choix2) {
+                System.out.println("Votre réponse ne convient pas\n----");
+            }
+
+            // L'utilisateur veut s'enregistrer
+            if (choix1) {
+                // Si l'utilisateur n'existe pas, création.
+                if (type.equals("prof")) {
+                    user = new Professeur(pseudo);
+                    professeurDao.create((Professeur) user);
+                } else {
+                    List<Professeur> allProf = professeurDao.queryForAll();
+                    System.out.println("Qui est votre professeur parmi ceux-ci ?");
+                    for (int i = 0; i < allProf.size(); i++) {
+                        Professeur p = allProf.get(i);
+                        System.out.println((i+1) + ": " + p.getPseudo());
+                    }
+                    System.out.print("Professeur choisi: ");
+                    inputUser = scannerInputUser.nextLine();
+                    int indexProf = Integer.parseInt(inputUser) - 1;
+                    if ((indexProf < 0) || (indexProf >= allProf.size())) {
+                        System.out.println("Saisie invalide, index non compris");
+                        return null;
+                    }
+
+                    System.out.println("Quel est votre niveau ?");
+                    List<BaremeNiveau> allNiveaux = Arrays.asList(BaremeNiveau.values());
+                    for (int i = 0; i < allNiveaux.size(); i++) {
+                        System.out.println((i+1) + ": " + allNiveaux.get(i));
+                    }
+                    System.out.print("Niveau choisi: ");
+                    inputUser = scannerInputUser.nextLine();
+                    int indexNiveau = Integer.parseInt(inputUser) - 1;
+                    if (((indexNiveau) < 0) || (indexNiveau >= allNiveaux.size())) {
+                        System.out.println("Saisie invalide, index non compris");
+                        return null;
+                    }
+
+                    user = new Eleve(pseudo, allNiveaux.get(indexNiveau), allProf.get(indexProf));
+                }
+
+            }
+            // Le prof ne veut pas s'enregistrer
+            else if (choix2) {
+                System.out.println("WARNING: Vous ne pouvez pas utiliser l'application sans créer de compte.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return user;
+    }
+
+    public static void fermetureConnexion() throws Exception {
+        System.out.println("Fermeture de l'application");
+        if (connectionSource != null) {
+            connectionSource.close();
+        }
+    }
 }
+
