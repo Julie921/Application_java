@@ -1,12 +1,26 @@
 package app_fake_quizzlet_v2;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.Map;
 
+@DatabaseTable(tableName = "ELEVES")
 public class Eleve extends Utilisateur { //TODO association réflexive pour que le prof soit associé à chaque élève
 
+	public static final String PROFESSOR_ID_FIELD_NAME = "professeur_id";
+
+	@DatabaseField
 	private BaremeNiveau niveau;
+	@DatabaseField(canBeNull = true)
 	private float moyenne;
 	public Historique historiqueEleve = new Historique();
+
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = PROFESSOR_ID_FIELD_NAME)
 	private Professeur prof;
+
+	public Eleve() {
+		super();
+	}
 
 	/**
 	 * Constructeur pour la classe Eleve. Elle permet d'instancier un objet Eleve en renseignant le nom d'utilisateur (pseudo) et le mot de passe (password).
@@ -46,8 +60,8 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		return moyenne;
 	}
 
-	private void updateMoyenne() {
-		// TODO
+	public void updateMoyenne(float mo) {
+		this.moyenne= mo;
 	}
 
 	public Professeur getProf() {
@@ -120,7 +134,8 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	@Override
 	public String toString() {
 		return "Eleve{" +
-				"niveau=" + niveau +
+				"nom élève = " + getPseudo() +
+				", niveau=" + niveau +
 				", moyenne=" + moyenne +
 				", historiqueEleve=" + historiqueEleve +
 				", prof=" + prof +

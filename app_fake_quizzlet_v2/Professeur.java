@@ -1,7 +1,8 @@
 package app_fake_quizzlet_v2;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.j256.ormlite.field.DatabaseField;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,11 +10,15 @@ import java.util.HashMap;
 @DatabaseTable(tableName = "PROFESSEURS")
 public class Professeur extends Utilisateur {
 
-    @DatabaseField(canBeNull = true)
-    private ArrayList<Eleve> listEleves = new ArrayList<Eleve>();
+    @ForeignCollectionField
+    private ForeignCollection<Eleve> listEleves;
 
-    @DatabaseField(canBeNull = true)
-    private HashMap<Integer, Exercice> listExercices = new HashMap<>();
+    /*@DatabaseField(canBeNull = true, foreign = true)
+    private HashMap<Integer, Exercice> listExercices = new HashMap<>();*/
+
+    public Professeur() {
+        super();
+    }
 
     /**
      * Constructeur pour la classe Professeur. Elle permet d'instancier un objet Professeur en renseignant le nom d'utilisateur (pseudo) et le mot de passe (password).
@@ -21,12 +26,12 @@ public class Professeur extends Utilisateur {
      * Professeur marie = new Professeur("marie2000", "blabla");
      * @param pseudo (String) Le nom d'utilisateur
      */
-    Professeur(String pseudo) {
+    public Professeur(String pseudo) {
         super(pseudo);
     }
 
     /* PARTIE ELEVE */
-    public ArrayList<Eleve> getListEleves() {
+    public ForeignCollection<Eleve> getListEleves() {
         return this.listEleves;
     }
 
@@ -41,9 +46,9 @@ public class Professeur extends Utilisateur {
     }
 
     /* PARTIE EXERCICES */
-    public HashMap<Integer, Exercice> getListExercices() {
+    /*public HashMap<Integer, Exercice> getListExercices() {
         return this.listExercices;
-    }
+    }*/
 
     /* PARTIE GENERALE */
     @Override
