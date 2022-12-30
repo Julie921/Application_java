@@ -26,7 +26,7 @@ public class Main {
 
     public static Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
 
-    private static String QUIT_COMMAND = "quit";
+    private static String QUIT_COMMAND = "quit"; // pour quitter l'application
 
     public static void main(String[] args) throws Exception {
         LoggerFactory.setLogBackendFactory(LogBackendType.NULL); //enlève tous les print de ormlite
