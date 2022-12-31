@@ -1,7 +1,11 @@
 package app_fake_quizzlet_v2;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @DatabaseTable(tableName = "ELEVES")
@@ -9,17 +13,28 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 
 	public static final String PROFESSOR_ID_FIELD_NAME = "professeur_id";
 
-	@DatabaseField
-	private BaremeNiveau niveau;
+	// @DatabaseField
+	private Map<Langue, BaremeNiveau> niveaux = new HashMap<>(); //dictionnaire pour le niveau de l'élève selon la langue
+
+	//@ForeignCollectionField(eager = true)
+	private ArrayList<Professeur> listProfesseurs = new ArrayList<>();
+
 	@DatabaseField(canBeNull = true)
 	private float moyenne;
 	public Historique historiqueEleve = new Historique();
 
-	@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = PROFESSOR_ID_FIELD_NAME)
-	private Professeur prof;
+	/*@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = PROFESSOR_ID_FIELD_NAME)
+	private Professeur prof;*/
 
+	/**
+	 * Constructeur vide qui est nécessaire quand on utilise ORMlite
+	 */
 	public Eleve() {
 		super();
+	}
+
+	public Eleve(String pseudo) {
+		super(pseudo);
 	}
 
 	/**
@@ -28,12 +43,18 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	 * Eleve marie = new Eleve("marie2000", "blabla");
 	 * @param pseudo (String) Le nom d'utilisateur
 	 */
-	Eleve(String pseudo, BaremeNiveau niveau, Professeur prof) {
-        super(pseudo);
-		this.niveau = niveau;
-		this.moyenne = 0;
-		this.prof = prof;
-		this.prof.ajouterEleve(this);
+	public Eleve(String pseudo, ArrayList<Professeur> profs) {
+		super(pseudo);
+		this.listProfesseurs = profs;
+		for (Professeur prof: profs) {
+			this.niveaux.put(prof.getLangue(), BaremeNiveau.DEBUTANT);
+			//prof.ajouterEleve(this);
+		}
+	}
+
+	public void ajouterProf(Professeur prof) {
+		this.listProfesseurs.add(prof);
+		this.niveaux.put(prof.getLangue(), BaremeNiveau.DEBUTANT);
 	}
 
 	/**
@@ -42,8 +63,8 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	 * marie.getNiveau();
 	 * @return Le niveau de l'élève
 	 */
-	public BaremeNiveau getBaremeNiveau(){
-		return this.niveau;
+	public BaremeNiveau getBaremeNiveau(Langue langue){
+		return this.niveaux.get(langue);
 	}
 
 	/**
@@ -52,8 +73,8 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	 * marie.setNiveau(3);
 	 * @param niveau (int) Le niveau auquel on veut faire passer l'élève
 	 */
-	public void setNiveau(BaremeNiveau niveau){
-		this.niveau = niveau;
+	public void setNiveau(BaremeNiveau niveau, Langue langue) {
+		this.niveaux.put(langue, niveau);
 	}
 
 	public float getMoyenne() {
@@ -62,14 +83,6 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 
 	public void updateMoyenne(float mo) {
 		this.moyenne= mo;
-	}
-
-	public Professeur getProf() {
-		return prof;
-	}
-
-	public void setProf(Professeur prof) {
-		this.prof = prof;
 	}
 
 	public void addEntryHistorique(Exercice exercice, Float note, ReponseEleve reponseEleve, BaremeNiveau niveau){
@@ -94,13 +107,9 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		}
 	}
 
-	public void updateNiveau(BaremeNiveau newNiveau){
-		this.niveau = newNiveau;
-	}
+	public boolean mustChangeNiveau() {
 
-	public boolean mustChangeNiveau(){
-
-		int compteur = 0;
+		/*int compteur = 0;
 
 		float palier = 15.00F;
 
@@ -128,17 +137,18 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		else{
 
 			return false;
-		}
+		}*/
+		return false;
 	}
 
 	@Override
 	public String toString() {
 		return "Eleve{" +
 				"nom élève = " + getPseudo() +
-				", niveau=" + niveau +
+				", niveaux=" + niveaux +
 				", moyenne=" + moyenne +
 				", historiqueEleve=" + historiqueEleve +
-				", prof=" + prof +
+				", profs=" + listProfesseurs +
 				'}';
 	}
 }

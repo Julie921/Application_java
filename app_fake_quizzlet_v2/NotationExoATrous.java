@@ -24,7 +24,8 @@ public class NotationExoATrous implements Notation {
         // Boucle qui permet de récupérer la valeur des réponses d'un élève. On attribut la note
         // en fonction du niveau de l'élève.
         for (ArrayList list : reponseEleve) {
-            for (Object valeur : list) {
+            // TODO changer bareme niveaux
+            /*for (Object valeur : list) {
                 if (valeur == ValeurReponse.VRAI) {
                     note = note + eleve.getBaremeNiveau().getVrai();
                 } else if (valeur == ValeurReponse.FAUX) {
@@ -32,7 +33,7 @@ public class NotationExoATrous implements Notation {
                 } else if (valeur == ValeurReponse.NA) {
                     note = note + eleve.getBaremeNiveau().getNa();
                 }
-            }
+            }*/
         }
         if(note < 0){
             // Si la note final est négative, on met juste noteFinale=0
@@ -61,9 +62,10 @@ public class NotationExoATrous implements Notation {
                 nbMots = nbMots + list.size();
             }
 
-            maxPoints = nbMots * eleve.getBaremeNiveau().getVrai(); //récupérer le maximum de points qu'il est possible d'obtenir pour un exercice donné
+            // TODO bareme niveau
+            //maxPoints = nbMots * eleve.getBaremeNiveau().getVrai(); //récupérer le maximum de points qu'il est possible d'obtenir pour un exercice donné
 
-            return maxPoints;
+            return 0;
         }
 
 

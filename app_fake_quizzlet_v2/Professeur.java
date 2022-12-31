@@ -1,6 +1,7 @@
 package app_fake_quizzlet_v2;
 
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -10,8 +11,11 @@ import java.util.HashMap;
 @DatabaseTable(tableName = "PROFESSEURS")
 public class Professeur extends Utilisateur {
 
-    @ForeignCollectionField
-    private ForeignCollection<Eleve> listEleves;
+    //@ForeignCollectionField
+    //private ForeignCollection<Eleve> listEleves;
+
+    @DatabaseField
+    private Langue langue;
 
     /*@DatabaseField(canBeNull = true, foreign = true)
     private HashMap<Integer, Exercice> listExercices = new HashMap<>();*/
@@ -26,24 +30,25 @@ public class Professeur extends Utilisateur {
      * Professeur marie = new Professeur("marie2000", "blabla");
      * @param pseudo (String) Le nom d'utilisateur
      */
-    public Professeur(String pseudo) {
+    public Professeur(String pseudo, Langue langue) {
         super(pseudo);
+        this.langue = langue;
     }
 
     /* PARTIE ELEVE */
-    public ForeignCollection<Eleve> getListEleves() {
+    /*public ForeignCollection<Eleve> getListEleves() {
         return this.listEleves;
-    }
+    }*/
 
-    public void listElevesToString() {
+    /*public void listElevesToString() {
         for (Eleve eleve : listEleves) {
             System.out.println(eleve);
         }
     }
-
-    public void ajouterEleve(Eleve eleve) {
+*/
+ /*   public void ajouterEleve(Eleve eleve) {
         this.listEleves.add(eleve);
-    }
+    }*/
 
     /* PARTIE EXERCICES */
     /*public HashMap<Integer, Exercice> getListExercices() {
@@ -54,5 +59,13 @@ public class Professeur extends Utilisateur {
     @Override
     public String toString() {
         return "Professeur { "+ this.getPseudo()+" }";
+    }
+
+    public Langue getLangue() {
+        return langue;
+    }
+
+    public void setLangue(Langue langue) {
+        this.langue = langue;
     }
 }

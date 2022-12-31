@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -23,14 +24,14 @@ public class Main {
     private static ConnectionSource connectionSource = null;
     private static Dao<Professeur, String> professeurDao;
     private static Dao<Eleve, String> eleveDao;
+    private static Dao<NiveauxEleves, Integer> niveauElevesDao;
 
     public static Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
 
-    private static String QUIT_COMMAND = "quit"; // pour quitter l'application
+    private static String QUIT_COMMAND = "!quit"; // pour quitter l'application
 
     public static void main(String[] args) throws Exception {
         LoggerFactory.setLogBackendFactory(LogBackendType.NULL); //enlève tous les print de ormlite
-
 
 
         try {
@@ -40,15 +41,46 @@ public class Main {
             // setup our database and DAOs
             professeurDao = DaoManager.createDao(connectionSource, Professeur.class);
             eleveDao = DaoManager.createDao(connectionSource, Eleve.class);
+            niveauElevesDao = DaoManager.createDao(connectionSource, NiveauxEleves.class);
 
             // if you need to create the table
             TableUtils.createTableIfNotExists(connectionSource, Professeur.class);
             TableUtils.createTableIfNotExists(connectionSource, Eleve.class);
+            TableUtils.createTableIfNotExists(connectionSource, NiveauxEleves.class);
+
+            ///////////////////////////////////////////////////////////////////////
+
+
+            // test pour changer la méthode de passage de niveau : juste une somme
+
+            /*Eleve eleve = eleveDao.queryForId("Den");
+
+            ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous(); // parseur pour les exo à trous
+
+            ExoATrous exercice1 = new ExoATrous(Langue.FR, BaremeNiveau.AVANCE, parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. \n" +
+                    "Il faut que je travaille pour gagner des #sous#. Sinon, je ne pourrais pas offrir de #cadeaux# aux autres.");
+
+            // on récupère les réponses de l'élève avec des input
+            ReponseEleveExoATrous reponse1 = new ReponseEleveExoATrous(exercice1, eleve);
+
+            System.out.println(reponse1.getReponses());
+
+            // on crée un objet qui contiendra la correction de ses réponses
+            CorrectionExoATrous correction1 = new CorrectionExoATrous();
+
+            // on corrige
+            correction1.corrige(reponse1);
+
+
+            System.out.println(correction1.getListValeursReponses());*/
+
+
+            ///////////////////////////////////////////////////////////////////////
 
 
             // Essai sur les databases
-            Professeur account2 = professeurDao.queryForId("Jean");
-            System.out.println("Essai: " + account2.getPseudo());
+            //Professeur account2 = professeurDao.queryForId("Jean");
+            //System.out.println("Essai: " + account2.getPseudo());
 
             /*Eleve julie = new Eleve("Julie",BaremeNiveau.INTERMEDIAIRE,account2);
             Eleve olive = new Eleve("Olive",BaremeNiveau.DEBUTANT,account2);
@@ -106,6 +138,11 @@ public class Main {
                 fermetureConnexion();
                 return;
             }
+
+            NiveauxEleves niv = niveauElevesDao.queryForId(1);
+            niv.setNiveau(BaremeNiveau.DEBUTANT);
+            niveauElevesDao.update(niv);
+
 
             System.out.println("---");
             do {
@@ -202,37 +239,61 @@ public class Main {
             if (choix1) {
                 // Si l'utilisateur n'existe pas, création.
                 if (type.equals("prof")) {
-                    user = new Professeur(pseudo);
+
+                    // Langue
+                    System.out.println("Quelle langue enseignez-vous ?");
+                    List<Langue> allLangues = Arrays.asList(Langue.values());
+                    for (int i = 0; i < allLangues.size(); i++) {
+                        System.out.println((i+1) + ": " + allLangues.get(i));
+                    }
+                    System.out.print("Langue choisie: ");
+                    inputUser = scannerInputUser.nextLine();
+                    int indexLangue = Integer.parseInt(inputUser) - 1;
+                    if (((indexLangue) < 0) || (indexLangue >= allLangues.size())) {
+                        System.out.println("Saisie invalide, index non compris");
+                        return null;
+                    }
+
+                    user = new Professeur(pseudo, allLangues.get(indexLangue));
                     professeurDao.create((Professeur) user);
                 } else {
-                    List<Professeur> allProf = professeurDao.queryForAll();
-                    System.out.println("Qui est votre professeur parmi ceux-ci ?");
-                    for (int i = 0; i < allProf.size(); i++) {
-                        Professeur p = allProf.get(i);
-                        System.out.println((i+1) + ": " + p.getPseudo());
-                    }
-                    System.out.print("Professeur choisi: ");
-                    inputUser = scannerInputUser.nextLine();
-                    int indexProf = Integer.parseInt(inputUser) - 1;
-                    if ((indexProf < 0) || (indexProf >= allProf.size())) {
-                        System.out.println("Saisie invalide, index non compris");
-                        return null;
-                    }
+                    // Creation de l'utilsateur principal
+                    user = new Eleve(pseudo);
+                    eleveDao.create((Eleve) user);
 
-                    System.out.println("Quel est votre niveau ?");
-                    List<BaremeNiveau> allNiveaux = Arrays.asList(BaremeNiveau.values());
-                    for (int i = 0; i < allNiveaux.size(); i++) {
-                        System.out.println((i+1) + ": " + allNiveaux.get(i));
-                    }
-                    System.out.print("Niveau choisi: ");
-                    inputUser = scannerInputUser.nextLine();
-                    int indexNiveau = Integer.parseInt(inputUser) - 1;
-                    if (((indexNiveau) < 0) || (indexNiveau >= allNiveaux.size())) {
-                        System.out.println("Saisie invalide, index non compris");
-                        return null;
-                    }
+                    Boolean profsFini = false;
+                    ArrayList<Professeur> listProfEleve = new ArrayList<>();
+                    do {
+                        List<Professeur> allProf = professeurDao.queryForAll();
+                        System.out.println("Qui sont vos professeurs parmi ceux-ci ?\n" +
+                                "Note: Rentrer la valeur 0 lorsque vous avez fini de choisir tous vos professeurs.");
+                        for (int i = 0; i < allProf.size(); i++) {
+                            Professeur p = allProf.get(i);
+                            if (!listProfEleve.contains(p)) {
+                                System.out.println((i+1) + ": " + p.getPseudo());
+                            }
+                        }
+                        System.out.print("Professeur choisi: ");
+                        inputUser = scannerInputUser.nextLine();
+                        int indexProf = Integer.parseInt(inputUser) - 1;
 
-                    user = new Eleve(pseudo, allNiveaux.get(indexNiveau), allProf.get(indexProf));
+                        // Si l'eleve a rentrée 0 dans sa donnée
+                        // il a fini de choisir ses professeurs
+                        if (indexProf == -1) {
+                            profsFini = true;
+                        } else {
+                            // Sinon, on vérifie que l'index donné est correct
+                            if ((indexProf < 0) || (indexProf >= allProf.size())) {
+                                System.out.println("Saisie invalide, index non compris");
+                                return null;
+                            }
+                            // et on l'ajoute dans la liste des profs de l'eleve.
+                            listProfEleve.add(allProf.get(indexProf));
+                            ((Eleve) user).ajouterProf(allProf.get(indexProf));
+                            NiveauxEleves niv = new NiveauxEleves((Eleve) user, allProf.get(indexProf));
+                            niveauElevesDao.create(niv);
+                        }
+                    } while(!profsFini);
                 }
 
             }

@@ -18,7 +18,7 @@ public class ExoATrous extends Exercice {
      * @param inputProf
      * @return rien
      */
-    ExoATrous(String langue, BaremeNiveau niveau, ParseurPhraseATrous parseur, String inputProf) {
+    ExoATrous(Langue langue, BaremeNiveau niveau, ParseurPhraseATrous parseur, String inputProf) {
 
         super(langue, niveau);
 

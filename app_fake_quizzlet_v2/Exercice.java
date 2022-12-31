@@ -9,10 +9,10 @@ package app_fake_quizzlet_v2;
 public abstract class Exercice {
 
     private int id;
-    private String langue;
+    private Langue langue;
     private BaremeNiveau niveau;
 
-    Exercice(String langue, BaremeNiveau niveau){
+    Exercice(Langue langue, BaremeNiveau niveau){
         this.langue = langue;
         this.niveau = niveau;
     }
@@ -30,7 +30,7 @@ public abstract class Exercice {
      */
     public abstract void afficheExercice();
 
-    public String getLangue(){
+    public Langue getLangue(){
         return this.langue;
     }
 
