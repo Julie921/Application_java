@@ -18,7 +18,10 @@ public class ExoATrous extends Exercice {
      * @param inputProf
      * @return rien
      */
-    ExoATrous(ParseurPhraseATrous parseur, String inputProf) {
+    ExoATrous(String langue, BaremeNiveau niveau, ParseurPhraseATrous parseur, String inputProf) {
+
+        super(langue, niveau);
+
         String[] listPhrasesNotParsed = inputProf.split("(?<=[?!.])"); //on split sur la ponctuation en la gardant
 
         for(String phraseNotParsed : listPhrasesNotParsed){ //pour chaque phrase non parsée dans la liste des phrases non parsées
@@ -57,7 +60,7 @@ public class ExoATrous extends Exercice {
         Collections.shuffle(allMotsAPlacer);
 
         // on affiche la liste des mots à placer
-        System.out.println("Les mots à placer sont : " + String.join(", ", allMotsAPlacer)); //on affiche la liste de tous les mots à placer
+        System.out.println("Les mots à placer sont : " + String.join(", ", allMotsAPlacer) + "\n\n"); //on affiche la liste de tous les mots à placer
 
         // on affiche la phrase avec les trousS.
         for (PhraseATrous phrase : listPhrases) {
