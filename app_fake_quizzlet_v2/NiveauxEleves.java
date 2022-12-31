@@ -23,6 +23,9 @@ public class NiveauxEleves {
     @DatabaseField(foreign = true, columnName = PROF_COL)
     private Professeur professeur;
 
+    @DatabaseField
+    private float score;
+
     public NiveauxEleves() {
 
     }
@@ -32,6 +35,7 @@ public class NiveauxEleves {
         this.professeur = professeur;
         this.langue = professeur.getLangue();
         this.niveau = eleve.getBaremeNiveau(this.langue);
+        this.score = 0;
     }
 
     public BaremeNiveau getNiveau() {
@@ -61,6 +65,14 @@ public class NiveauxEleves {
 
     public void setProfesseur(Professeur professeur) {
         this.professeur = professeur;
+    }
+
+    public float getScore(){
+        return this.score;
+    }
+
+    public void addScore(float gain){
+        this.score += gain;
     }
 
 }

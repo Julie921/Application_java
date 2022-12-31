@@ -139,9 +139,12 @@ public class Main {
                 return;
             }
 
-            NiveauxEleves niv = niveauElevesDao.queryForId(1);
-            niv.setNiveau(BaremeNiveau.DEBUTANT);
-            niveauElevesDao.update(niv);
+            NiveauxEleves dunFR = niveauElevesDao.queryForId(1);
+            dunFR.addScore(10.5F);
+            niveauElevesDao.update(dunFR);
+
+
+
 
 
             System.out.println("---");

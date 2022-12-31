@@ -21,6 +21,7 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 
 	@DatabaseField(canBeNull = true)
 	private float moyenne;
+
 	public Historique historiqueEleve = new Historique();
 
 	/*@DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = PROFESSOR_ID_FIELD_NAME)
@@ -140,6 +141,8 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		}*/
 		return false;
 	}
+
+
 
 	@Override
 	public String toString() {
