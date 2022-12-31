@@ -10,9 +10,8 @@ public interface Correction {
     /**
      * Méthode corrige()
      * @param reponseEleve qui est une liste de liste de string
-     * @param exercice qui est un objet de la classe Exercice.
      */
-    public void corrige(ArrayList<ArrayList<String>> reponseEleve, Exercice exercice);
+    public void corrige(ReponseEleve reponseEleve);
 
     /** Comprends pas
      * @param
