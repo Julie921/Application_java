@@ -14,7 +14,7 @@ public abstract class Exercice {
 
     private Float pourcentage;
 
-    Exercice(Langue langue, BaremeNiveau niveau, Float pourcentage){
+    public Exercice(Langue langue, BaremeNiveau niveau, Float pourcentage){
         this.langue = langue;
         this.niveau = niveau;
         this.pourcentage = pourcentage;

@@ -8,6 +8,7 @@ import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -35,6 +36,14 @@ public class Main {
 
     // Liste des NiveauxEleves qui fait le lien entre Eleve et Professeur
     private static List<NiveauxEleves> listNiveauxUtilisateur = new ArrayList<>();
+
+    private static HashMap<TypeExo, Metaparse> listParseurs = new HashMap<>();
+
+    private static ImportExercice importExercice = null;
+
+    private static JFileChooser fileChooser = new JFileChooser(".");
+
+
 
     public static void main(String[] args) throws Exception {
         LoggerFactory.setLogBackendFactory(LogBackendType.NULL); //enlève tous les print de ormlite
@@ -150,11 +159,15 @@ public class Main {
                 System.out.println("Bonjour "+ utilisateur_principal.getPseudo());
 
                 if (professeurSession) {
+                    remplirListeParseurs();
+                    importExercice = new ImportExercice(listParseurs);
+                    List<Exercice> liste = new ArrayList<>();
+
                     Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
                     do {
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
-                                "1 : Ecrire un exercice\n" +
+                                "1 : Importer un exercice\n" +
                                 "2 : Modifier un exercice\n" +
                                 "3 : Voir notes des élèves");
                         System.out.print("Votre réponse: ");
@@ -170,6 +183,27 @@ public class Main {
                         }
 
                     } while (!inputUser.equals(QUIT_COMMAND) && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
+
+                    while(!inputUser.equals(QUIT_COMMAND)) {
+                        switch (inputUser) {
+                            case "1":
+                                System.out.println("Renseignez le nom du fichier");
+                                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                                int res = fileChooser.showOpenDialog(null);
+                                if (res == JFileChooser.APPROVE_OPTION){
+                                    liste.add(importExercice.readFromFile(fileChooser.getSelectedFile()));
+                                }
+                                break;
+                            default:
+                                System.out.println("Rien");
+                                break;
+                        }
+                        for (Exercice exo: liste) {
+                            exo.afficheExercice();
+                        }
+                        System.out.print("Que voulez-vous faire ? ");
+                        inputUser = scannerInputUser.nextLine();
+                    }
 
                 } else if (studentSession) {
                     Boolean choixEleve1 = false, choixEleve2 = false;
@@ -201,6 +235,12 @@ public class Main {
                 connectionSource.close();
             }
         }
+    }
+
+    private static void remplirListeParseurs() {
+        listParseurs.put(TypeExo.EXO_A_TROU, new ParseurPhraseATrous());
+        listParseurs.put(TypeExo.EXO_TERMINAISON, new ParseurTerminaison());
+        // Rajouter nouveaux parseurs ici
     }
 
     public void scenarioEleve(){

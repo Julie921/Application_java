@@ -60,7 +60,7 @@ public class ExoATrous extends Exercice {
         Collections.shuffle(allMotsAPlacer);
 
         // on affiche la liste des mots à placer
-        System.out.println("Les mots à placer sont : " + String.join(", ", allMotsAPlacer) + "\n\n"); //on affiche la liste de tous les mots à placer
+        System.out.println("Les mots à placer sont : " + String.join(", ", allMotsAPlacer) + "\n"); //on affiche la liste de tous les mots à placer
 
         // on affiche la phrase avec les trousS.
         for (PhraseATrous phrase : listPhrases) {
@@ -78,4 +78,10 @@ public class ExoATrous extends Exercice {
 
     }
 
+    @Override
+    public String toString() {
+        return "ExoATrous{" +
+                "listPhrases=" + listPhrases +
+                '}';
+    }
 }
