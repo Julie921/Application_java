@@ -16,6 +16,8 @@ public class Main {
 
     private final static String DATABASE_URL = "jdbc:h2:file:./database.db";
 
+    public final static String RESSOURCES_FOLDER = "./ressources";
+
     private static ConnectionSource connectionSource = null;
     private static Dao<Professeur, String> professeurDao;
     private static Dao<Eleve, String> eleveDao;
@@ -36,6 +38,8 @@ public class Main {
 
     // Liste des NiveauxEleves qui fait le lien entre Eleve et Professeur
     private static List<NiveauxEleves> listNiveauxUtilisateur = new ArrayList<>();
+
+    private static List<Exercice> listExercices = new ArrayList<>();
 
     private static HashMap<TypeExo, Metaparse> listParseurs = new HashMap<>();
 
@@ -103,6 +107,10 @@ public class Main {
             // account2.listElevesToString();
 
             createFromDatabase();
+            remplirListeParseurs();
+            importExercice = new ImportExercice(listParseurs);
+            listExercices = importExercice.importDossier(RESSOURCES_FOLDER);
+
             System.out.println("\n\nIt seems to have worked\n\n");
 
             Boolean professeurSession = false, studentSession = false;
@@ -159,16 +167,12 @@ public class Main {
                 System.out.println("Bonjour "+ utilisateur_principal.getPseudo());
 
                 if (professeurSession) {
-                    remplirListeParseurs();
-                    importExercice = new ImportExercice(listParseurs);
-                    List<Exercice> liste = new ArrayList<>();
-
                     Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
                     do {
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
                                 "1 : Importer un exercice\n" +
-                                "2 : Modifier un exercice\n" +
+                                "2 : Voir les exercices sauvegardés\n" +
                                 "3 : Voir notes des élèves");
                         System.out.print("Votre réponse: ");
                         inputUser = scannerInputUser.nextLine();
@@ -185,20 +189,21 @@ public class Main {
                     } while (!inputUser.equals(QUIT_COMMAND) && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
 
                     while(!inputUser.equals(QUIT_COMMAND)) {
+                        // TODO compléter les cases
                         switch (inputUser) {
                             case "1":
                                 System.out.println("Renseignez le nom du fichier");
                                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                                 int res = fileChooser.showOpenDialog(null);
                                 if (res == JFileChooser.APPROVE_OPTION){
-                                    liste.add(importExercice.readFromFile(fileChooser.getSelectedFile()));
+                                    listExercices.add(importExercice.readFromFile(fileChooser.getSelectedFile()));
                                 }
                                 break;
                             default:
                                 System.out.println("Rien");
                                 break;
                         }
-                        for (Exercice exo: liste) {
+                        for (Exercice exo: listExercices) {
                             exo.afficheExercice();
                         }
                         System.out.print("Que voulez-vous faire ? ");
