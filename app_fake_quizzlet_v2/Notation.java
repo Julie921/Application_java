@@ -8,16 +8,7 @@ import java.util.ArrayList;
 public interface Notation {
 
     /**
-     * Méthode getNote()
-     * @param eleve
-     * @param reponseEleve
+     * Méthode calculNote()
      */
-    public float getNote(Eleve eleve, ArrayList<ArrayList<ValeurReponse>> reponseEleve);
-
-    /**
-     * Méthode getMax()
-     * @param eleve
-     * @param reponseEleve
-     */
-    public float getMax(Eleve eleve, ArrayList<ArrayList<ValeurReponse>> reponseEleve);
+    public void calculNote();
 }

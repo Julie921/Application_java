@@ -9,14 +9,7 @@ public interface Correction {
 
     /**
      * Méthode corrige()
-     * @param reponseEleve qui est une liste de liste de string
      */
-    public void corrige(ReponseEleve reponseEleve);
-
-    /** Comprends pas
-     * @param
-     * @return
-     */
-    public ArrayList<ArrayList<ValeurReponse>> getListValeursReponses();
+    public void corrige();
 
 }
