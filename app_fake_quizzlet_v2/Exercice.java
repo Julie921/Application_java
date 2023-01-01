@@ -12,9 +12,12 @@ public abstract class Exercice {
     private Langue langue;
     private BaremeNiveau niveau;
 
-    Exercice(Langue langue, BaremeNiveau niveau){
+    private Float pourcentage;
+
+    Exercice(Langue langue, BaremeNiveau niveau, Float pourcentage){
         this.langue = langue;
         this.niveau = niveau;
+        this.pourcentage = pourcentage;
     }
 
     public int getId() {
@@ -36,5 +39,13 @@ public abstract class Exercice {
 
     public BaremeNiveau getNiveau() {
         return niveau;
+    }
+
+    public Float getPourcentage() {
+        return pourcentage;
+    }
+
+    public void setPourcentage(Float pourcentage) {
+        this.pourcentage = pourcentage;
     }
 }

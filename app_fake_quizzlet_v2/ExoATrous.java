@@ -18,9 +18,9 @@ public class ExoATrous extends Exercice {
      * @param inputProf
      * @return rien
      */
-    ExoATrous(Langue langue, BaremeNiveau niveau, ParseurPhraseATrous parseur, String inputProf) {
+    ExoATrous(Langue langue, BaremeNiveau niveau, Float pourcentage, ParseurPhraseATrous parseur, String inputProf) {
 
-        super(langue, niveau);
+        super(langue, niveau, pourcentage);
 
         String[] listPhrasesNotParsed = inputProf.split("(?<=[?!.])"); //on split sur la ponctuation en la gardant
 

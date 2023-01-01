@@ -5,11 +5,10 @@ import java.util.Scanner;
 
 public class ReponseEleveExoATrous extends ReponseEleve {
 
-    float note;
-
     ReponseEleveExoATrous(ExoATrous exercice, Eleve eleve){
 
         super(exercice, eleve);
+        this.setSeuilPassation();
 
         System.out.println("Bonjour " + eleve.getPseudo() + "!\n\n");
 
@@ -28,13 +27,74 @@ public class ReponseEleveExoATrous extends ReponseEleve {
                 listeTampon.add(motDonne); //on ajoute notre mot à la liste tampon
                 i += 1;
             }
-            this.reponses.add(new ArrayList<String>(listeTampon));
+            this.reponsesFournies.add(new ArrayList<String>(listeTampon));
         }
 
+        this.corrige();
+        this.calculNote();
+
     }
 
-    public void setNote(){
-        this.note = note;
+    @Override
+    public void setSeuilPassation() {
+        ExoATrous exo = (ExoATrous) this.exercice;
+        Float totalReponsesAFournir = 0.0F;
+        for (PhraseATrous phrase : exo.getListPhrases()) {
+            totalReponsesAFournir += phrase.motsAPlacer.size();
+        }
+        this.seuilPassation = exo.getPourcentage() * totalReponsesAFournir * exo.getNiveau().getVrai();
     }
 
+    @Override
+    public void calculNote() {
+        BaremeNiveau niveauExercice = this.getExercice().getNiveau();
+        for (ArrayList<ValeurReponse> phraseCorrigee : this.getReponsesCorrection()) {
+            for (ValeurReponse v : phraseCorrigee) {
+                switch (v) {
+                    case NA:
+                        this.noteDonnee += niveauExercice.getNa();
+                        break;
+                    case FAUX:
+                        this.noteDonnee += niveauExercice.getFaux();
+                        break;
+                    case VRAI:
+                        this.noteDonnee += niveauExercice.getVrai();
+                        break;
+                    default:
+                        System.out.println("Valeur incorrecte");
+                        break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void corrige() {
+        ArrayList<ValeurReponse> listTampon = new ArrayList<>();
+        ExoATrous exo = (ExoATrous) exercice;
+        ArrayList<PhraseATrous> listPhrases = exo.getListPhrases();
+
+        for(int i=0; i < listPhrases.size(); i++) { //pour i allant de 0 au nombre de phrases dans l'exo
+
+            listTampon.clear(); // on vide la liste tampon après chaque phrase
+            PhraseATrous phrase = listPhrases.get(i);
+
+            for(int j=0; j < phrase.getMotsAPlacer().size(); j++){ //pour j allant de 0 au nombre de mots à placer dans une phrase
+                String reponseElevePourLaPhraseIEtLeMotJ = this.reponsesFournies.get(i).get(j);
+
+                if(reponseElevePourLaPhraseIEtLeMotJ.equals(phrase.getMotsAPlacer().get(j))){ //si la réponse de l'élève correspond à la bonne réponse
+                    listTampon.add(ValeurReponse.VRAI);
+                }
+                else if (reponseElevePourLaPhraseIEtLeMotJ.isEmpty()) { //si l'élève n'a pas répondu
+                    listTampon.add(ValeurReponse.NA);
+                }
+                else{ //si la réponse de l'élève est fausse
+                    listTampon.add(ValeurReponse.FAUX);
+                }
+
+            }
+
+            this.getReponsesCorrection().add(new ArrayList<ValeurReponse>(listTampon));
+        }
+    }
 }
