@@ -8,14 +8,8 @@ import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.sql.Array;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -30,9 +24,20 @@ public class Main {
 
     private static String QUIT_COMMAND = "!quit"; // pour quitter l'application
 
+    // Référence de l'utilisateur principal pour toutes les opérations
+    private static Utilisateur utilisateur_principal = null;
+
+    // Dictionnaire qui permet de récupérer plus facilement les objets Professeur
+    private static HashMap<String, Professeur> listProfs = new HashMap<>();
+
+    // Dictionnaire qui permet de récupérer plus facilement les objets Eleve
+    private static HashMap<String, Eleve> listEleves = new HashMap<>();
+
+    // Liste des NiveauxEleves qui fait le lien entre Eleve et Professeur
+    private static List<NiveauxEleves> listNiveauxUtilisateur = new ArrayList<>();
+
     public static void main(String[] args) throws Exception {
         LoggerFactory.setLogBackendFactory(LogBackendType.NULL); //enlève tous les print de ormlite
-
 
         try {
             // create our data-source for the database
@@ -52,27 +57,22 @@ public class Main {
 
 
             // test pour changer la méthode de passage de niveau : juste une somme
-
-            /*Eleve eleve = eleveDao.queryForId("Den");
-
+            /*
             ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous(); // parseur pour les exo à trous
 
-            ExoATrous exercice1 = new ExoATrous(Langue.FR, BaremeNiveau.AVANCE, parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. \n" +
+            ExoATrous exercice1 = new ExoATrous(Langue.FR, BaremeNiveau.INTERMEDIAIRE, 0.5F, parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. \n" +
                     "Il faut que je travaille pour gagner des #sous#. Sinon, je ne pourrais pas offrir de #cadeaux# aux autres.");
+
+            Eleve eleve = eleveDao.queryForId("Dun");
 
             // on récupère les réponses de l'élève avec des input
             ReponseEleveExoATrous reponse1 = new ReponseEleveExoATrous(exercice1, eleve);
+            System.out.println("Les réponses fournies:\n" + reponse1.getReponsesFournies());
+            System.out.println("Les réponses corrigees:\n" + reponse1.getReponsesCorrection());
+            System.out.println("La note:\n" + reponse1.getNoteDonnee());
+            System.out.println("Eleve passe:\n" + reponse1.estBon());
 
-            System.out.println(reponse1.getReponses());
-
-            // on crée un objet qui contiendra la correction de ses réponses
-            CorrectionExoATrous correction1 = new CorrectionExoATrous();
-
-            // on corrige
-            correction1.corrige(reponse1);
-
-
-            System.out.println(correction1.getListValeursReponses());*/
+             */
 
 
             ///////////////////////////////////////////////////////////////////////
@@ -93,11 +93,11 @@ public class Main {
            //System.out.println(essai2);
             // account2.listElevesToString();
 
+            createFromDatabase();
             System.out.println("\n\nIt seems to have worked\n\n");
 
             Boolean professeurSession = false, studentSession = false;
             String inputUser = "";
-            Utilisateur utilisateur_principal = null;
 
             do {
                 System.out.println("Bonjour ! Vous êtes un : \n - 1 : élève\n - 2 : professeur");
@@ -139,11 +139,9 @@ public class Main {
                 return;
             }
 
-            NiveauxEleves dunFR = niveauElevesDao.queryForId(1);
-            dunFR.addScore(10.5F);
-            niveauElevesDao.update(dunFR);
 
-
+            // Update le score de l'utilisateur principal
+            updateScore(Langue.FR, 10F);
 
 
 
@@ -294,6 +292,7 @@ public class Main {
                             listProfEleve.add(allProf.get(indexProf));
                             ((Eleve) user).ajouterProf(allProf.get(indexProf));
                             NiveauxEleves niv = new NiveauxEleves((Eleve) user, allProf.get(indexProf));
+                            listNiveauxUtilisateur.add(niv);
                             niveauElevesDao.create(niv);
                         }
                     } while(!profsFini);
@@ -316,6 +315,37 @@ public class Main {
         if (connectionSource != null) {
             connectionSource.close();
         }
+    }
+
+    // Méthode qui permet d'updater le score dans l'objet NiveauxEleve et dans la Base de Données
+    public static void updateScore(Langue lang, Float addScore) throws SQLException {
+        for(NiveauxEleves niv : listNiveauxUtilisateur) {
+            if (niv.getEleve().equals(utilisateur_principal.getPseudo()) && niv.getLangue() == lang) {
+                niv.setScore(niv.getScore()+addScore);
+                niveauElevesDao.update(niv);
+            }
+        }
+    }
+
+    // Méthode qui re-créée les objets à partir de la base de données.
+    public static void createFromDatabase() throws SQLException {
+        System.out.println("----- CREATION A PARTIR DE LA BASE DE DONNEES -----");
+        // build a query that returns all Foo objects where the `name` field starts with "A"
+        List<Professeur> results = professeurDao.queryForAll();
+        for (Professeur p : results) {
+            listProfs.put(p.getPseudo(), p);
+        }
+        System.out.println(listProfs);
+
+        List<Eleve> resultsEleves = eleveDao.queryForAll();
+        for (Eleve e : resultsEleves) {
+            listEleves.put(e.getPseudo(), e);
+        }
+        System.out.println(listEleves);
+
+        listNiveauxUtilisateur = niveauElevesDao.queryForAll();
+        System.out.println(listNiveauxUtilisateur);
+        System.out.println("----- FIN DE LA CREATION A PARTIR DE LA BASE DE DONNEES -----");
     }
 }
 
