@@ -1,5 +1,6 @@
 package app_fake_quizzlet_v2;
 
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.field.DatabaseField;
 
 public class NiveauxEleves {
@@ -11,8 +12,8 @@ public class NiveauxEleves {
     @DatabaseField(generatedId = true)
     private int index;
 
-    @DatabaseField(foreign = true, columnName = ELEVE_ID)
-    private Eleve eleve;
+    @DatabaseField(columnName = ELEVE_ID)
+    private String eleve;
 
     @DatabaseField(columnName = LANGUE_COL)
     private Langue langue;
@@ -20,8 +21,8 @@ public class NiveauxEleves {
     @DatabaseField
     private BaremeNiveau niveau;
 
-    @DatabaseField(foreign = true, columnName = PROF_COL)
-    private Professeur professeur;
+    @DatabaseField(columnName = PROF_COL)
+    private String professeur;
 
     @DatabaseField
     private float score;
@@ -31,11 +32,11 @@ public class NiveauxEleves {
     }
 
     public NiveauxEleves(Eleve eleve, Professeur professeur) {
-        this.eleve = eleve;
-        this.professeur = professeur;
+        this.eleve = eleve.getPseudo();
+        this.professeur = professeur.getPseudo();
         this.langue = professeur.getLangue();
         this.niveau = eleve.getBaremeNiveau(this.langue);
-        this.score = 0;
+        this.setScore(0);
     }
 
     public BaremeNiveau getNiveau() {
@@ -48,31 +49,50 @@ public class NiveauxEleves {
     }
 
     public void updateNiveau() {
-        this.niveau = this.eleve.getBaremeNiveau(this.langue);
+        //this.niveau = this.eleve.getBaremeNiveau(this.langue);
     }
 
-    public Eleve getEleve() {
+    public String getEleve() {
         return eleve;
     }
 
     public void setEleve(Eleve eleve) {
-        this.eleve = eleve;
+        this.eleve = eleve.getPseudo();
     }
 
-    public Professeur getProfesseur() {
+    public String getProfesseur() {
         return professeur;
     }
 
     public void setProfesseur(Professeur professeur) {
-        this.professeur = professeur;
+        this.professeur = professeur.getPseudo();
     }
 
     public float getScore(){
         return this.score;
     }
 
-    public void addScore(float gain){
-        this.score += gain;
+    public Langue getLangue() {
+        return langue;
     }
 
+    public void setLangue(Langue langue) {
+        this.langue = langue;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "NiveauxEleves{" +
+                "index=" + index +
+                ", eleve=" + eleve +
+                ", langue=" + langue +
+                ", niveau=" + niveau +
+                ", professeur=" + professeur +
+                ", score=" + score +
+                '}';
+    }
 }

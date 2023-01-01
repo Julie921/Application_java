@@ -58,7 +58,9 @@ public class Professeur extends Utilisateur {
     /* PARTIE GENERALE */
     @Override
     public String toString() {
-        return "Professeur { "+ this.getPseudo()+" }";
+        return "Professeur { "+ this.getPseudo()+
+                " - Lang: " + this.getLangue().toString() +
+                " }";
     }
 
     public Langue getLangue() {
