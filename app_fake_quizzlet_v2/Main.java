@@ -47,7 +47,10 @@ public class Main {
     private static JFileChooser fileChooser = new JFileChooser(".");
 
 
-
+    /**
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         LoggerFactory.setLogBackendFactory(LogBackendType.NULL); //enlève tous les print de ormlite
 
@@ -69,22 +72,9 @@ public class Main {
 
 
             // test pour changer la méthode de passage de niveau : juste une somme
-            /*
             ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous(); // parseur pour les exo à trous
 
-            ExoATrous exercice1 = new ExoATrous(Langue.FR, BaremeNiveau.INTERMEDIAIRE, 0.5F, parseurPhraseATrous, "En été je porte tous les jours un t-shirt en #coton#, un short et des sandales. Tiens, je vais te donner un sac en #plastique# pour mettre tout ça. Mémé m'a acheté un magnifique pull en #laine# en Irlande. Je voudrais m'acheter une veste en #cuir# mais je n'ai pas assez d'argent. \n" +
-                    "Il faut que je travaille pour gagner des #sous#. Sinon, je ne pourrais pas offrir de #cadeaux# aux autres.");
 
-            Eleve eleve = eleveDao.queryForId("Dun");
-
-            // on récupère les réponses de l'élève avec des input
-            ReponseEleveExoATrous reponse1 = new ReponseEleveExoATrous(exercice1, eleve);
-            System.out.println("Les réponses fournies:\n" + reponse1.getReponsesFournies());
-            System.out.println("Les réponses corrigees:\n" + reponse1.getReponsesCorrection());
-            System.out.println("La note:\n" + reponse1.getNoteDonnee());
-            System.out.println("Eleve passe:\n" + reponse1.estBon());
-
-             */
 
 
             ///////////////////////////////////////////////////////////////////////
@@ -155,13 +145,7 @@ public class Main {
                 return;
             }
 
-
-            // Update le score de l'utilisateur principal
-            updateScore(Langue.FR, 10F);
-
-
-
-            System.out.println("---");
+            System.out.println("//-------------------------------------------------//");
             do {
                 System.out.println("Bonjour "+ utilisateur_principal.getPseudo());
 
@@ -182,7 +166,7 @@ public class Main {
                         choixActionProf3 = inputUser.equals("3");
 
                         if (!choixActionProf1 && !choixActionProf2 && !choixActionProf3 && !inputUser.equals(QUIT_COMMAND)) {
-                            System.out.println("Votre réponse ne convient pas\n----");
+                            System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
                         }
 
                     } while (!inputUser.equals(QUIT_COMMAND) && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
@@ -214,8 +198,8 @@ public class Main {
                     do {
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
-                                "1 : Choisir un exercice\n" +
-                                "2 : Voir mon historique");
+                                "1 : Faire un exercice\n" +
+                                "2 : Voir mes résultats");
 
                         System.out.print("Votre réponse: ");
                         inputUser = scannerInputUser.nextLine();
@@ -224,7 +208,37 @@ public class Main {
                         choixEleve1 = inputUser.equals("1");
                         choixEleve2 = inputUser.equals("2");
                         if (!choixEleve1 && !choixEleve2 && !inputUser.equals(QUIT_COMMAND)) {
-                            System.out.println("Votre réponse ne convient pas\n----");
+                            System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
+                        }
+                        switch (inputUser){
+                            case "1":
+                                //TODO : faire une preview de l'exercice pour pouvoir l'afficher
+                                ExoATrous exercice1 = new ExoATrous(Langue.FR, BaremeNiveau.INTERMEDIAIRE, 0.5F, parseurPhraseATrous, "Ceci est un #test#.");
+
+                                Eleve eleve = eleveDao.queryForId("doun");
+
+                                // on récupère les réponses de l'élève avec des input
+                                ReponseEleveExoATrous reponse1 = new ReponseEleveExoATrous(exercice1, eleve);
+                                System.out.println("Les réponses fournies:\n" + reponse1.getReponsesFournies());
+                                System.out.println("Les réponses corrigees:\n" + reponse1.getReponsesCorrection());
+                                System.out.println("La note:\n" + reponse1.getNoteDonnee());
+                                System.out.println("Eleve passe:\n" + reponse1.valide());
+                                if(reponse1.valide()){
+                                    updateScore(reponse1.getExercice().getLangue(), 2F);
+                                    System.out.println("Le score a été updaté");
+                                break;
+                                }
+                            case "2": // l'utilisateur veut voir ses résultats
+                                for(NiveauxEleves niv: listNiveauxUtilisateur){ // pour chaque inscription dans la table NiveauxEleves
+                                    if(niv.getEleve().equals(utilisateur_principal.getPseudo())){ // si l'inscription correspond à l'utilisateur principal
+                                    System.out.println("\n" + niv.getLangue() + " :\n" + // la langue
+                                            "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
+                                            "- " + niv.getScore()); // le score dans la langue
+                                }
+                                }
+                            default:
+                                System.out.println("Rien");
+                                break;
                         }
 
                     } while (!inputUser.equals(QUIT_COMMAND) && !choixEleve1 && !choixEleve2);
@@ -244,7 +258,7 @@ public class Main {
     private static void remplirListeParseurs() {
         listParseurs.put(TypeExo.EXO_A_TROU, new ParseurPhraseATrous());
         listParseurs.put(TypeExo.EXO_TERMINAISON, new ParseurTerminaison());
-        // Rajouter nouveaux parseurs ici
+        // Rajouter nouveaux parseurs ici si on veut créer d'autres types d'exercices
     }
 
     public void scenarioEleve(){
@@ -277,7 +291,7 @@ public class Main {
             choix2 = inputUser.equals("2");
 
             if (!choix1 && !choix2) {
-                System.out.println("Votre réponse ne convient pas\n----");
+                System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
             }
 
             // L'utilisateur veut s'enregistrer
@@ -362,7 +376,7 @@ public class Main {
     }
 
     // Méthode qui permet d'updater le score dans l'objet NiveauxEleve et dans la Base de Données
-    public static void updateScore(Langue lang, Float addScore) throws SQLException {
+    public static void updateScore(Langue lang, Float addScore) throws SQLException { //TODO : mettre la méthode autre part
         for(NiveauxEleves niv : listNiveauxUtilisateur) {
             if (niv.getEleve().equals(utilisateur_principal.getPseudo()) && niv.getLangue() == lang) {
                 niv.setScore(niv.getScore()+addScore);
