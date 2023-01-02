@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="ormlite-jdbc-6.1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/ormlite-jdbc-6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ormlite-jdbc-6.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
