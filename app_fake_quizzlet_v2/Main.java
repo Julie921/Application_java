@@ -11,7 +11,6 @@ import com.j256.ormlite.table.TableUtils;
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class Main {
 
@@ -28,7 +27,7 @@ public class Main {
     private static String QUIT_COMMAND = "!quit"; // pour quitter l'application
 
     // Référence de l'utilisateur principal pour toutes les opérations
-    private static Utilisateur utilisateur_principal = null;
+    private static Utilisateur utilisateurActif = null;
 
     // Dictionnaire qui permet de récupérer plus facilement les objets Professeur
     private static HashMap<String, Professeur> listProfs = new HashMap<>();
@@ -71,37 +70,16 @@ public class Main {
 
             ///////////////////////////////////////////////////////////////////////
 
-
             // test pour changer la méthode de passage de niveau : juste une somme
             ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous(); // parseur pour les exo à trous
 
-
-
-
             ///////////////////////////////////////////////////////////////////////
 
-
-            // Essai sur les databases
-            //Professeur account2 = professeurDao.queryForId("Jean");
-            //System.out.println("Essai: " + account2.getPseudo());
-
-            /*Eleve julie = new Eleve("Julie",BaremeNiveau.INTERMEDIAIRE,account2);
-            Eleve olive = new Eleve("Olive",BaremeNiveau.DEBUTANT,account2);
-            Eleve sarah = new Eleve("Sarah",BaremeNiveau.EXPERT,account2);
-            Eleve louis = new Eleve("Louis",BaremeNiveau.AVANCE,account2);*/
-
-            /*Eleve essai2 = eleveDao.queryForId("Den");
-            essai2.updateMoyenne(15);
-            eleveDao.update(essai2);*/
-           //System.out.println(essai2);
-            // account2.listElevesToString();
 
             createFromDatabase();
             remplirListeParseurs();
             importExercice = new ImportExercice(listParseurs);
             listExercices = importExercice.importDossier(RESSOURCES_FOLDER);
-
-            System.out.println("\n\nIt seems to have worked\n\n");
 
             Boolean professeurSession = false, studentSession = false;
             String inputUser = "";
@@ -126,7 +104,7 @@ public class Main {
             } while (!inputUser.equals(QUIT_COMMAND) && !studentSession && !professeurSession);
 
             do {
-                System.out.println("Quel est votre identifiant ?");
+                System.out.println("\nQuel est votre identifiant ?");
                 System.out.print("Idenfitiant/pseudo: ");
                 inputUser = scannerInputUser.nextLine();
 
@@ -134,27 +112,27 @@ public class Main {
                     break;
 
                 if (professeurSession) {
-                    utilisateur_principal = checkSession(inputUser, "prof");
+                    utilisateurActif = checkSession(inputUser, "prof");
                 } else if (studentSession) {
-                    utilisateur_principal = checkSession(inputUser, "eleve");
+                    utilisateurActif = checkSession(inputUser, "eleve");
                 }
 
-            } while (utilisateur_principal == null);
+            } while (utilisateurActif == null);
 
-            if (utilisateur_principal == null) {
+            if (utilisateurActif == null) {
                 fermetureConnexion();
                 return;
             }
 
-            System.out.println("//-------------------------------------------------//");
-            System.out.println("Bonjour "+ utilisateur_principal.getPseudo() + "!");
+            System.out.println("\n//-------------------------------------------------//");
+            System.out.println("Bonjour "+ utilisateurActif.getPseudo() + "!");
 
             do {
 
                 if (professeurSession) {
                     Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
                     do {
-                        System.out.println("//-------------------------------------------------//");
+                        System.out.println("//-------------------------------------------------//\n");
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
                                 "1 : Importer un exercice\n" +
@@ -225,20 +203,20 @@ public class Main {
                             System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
                         }*/
                         switch (inputUser){
-                            case "1": // l'élève veut faire une exercice
+                            case "1": // l'élève veut faire un exercice
 
-                                //TODO: construire une liste des exercices que l'élève peut faire (langues et niveau)
-                                System.out.println("Voici une preview de chaque exercice. Pour faire un exercice, rentrez le numéro de l'exercice. ");
+                                System.out.println("Voici une preview de chaque exercice acessible pour vos langues et votre niveau dans ces langues.");
+
+                                ArrayList<Exercice> exercicesAccessibles = getExercicesAccessibles();
 
                                 int i = 1;
-
-                                for(Exercice exercice : listExercices) {
-                                    System.out.println("*********** EXERCICE " + i + " *********** ");
+                                for(Exercice exercice : exercicesAccessibles) {
+                                    System.out.println("\n*********** EXERCICE " + i + " *********** ");
                                     exercice.previewText();
                                     i++;
                                 }
 
-                                System.out.println("Numéro de l'exercice choisi : ");
+                                System.out.println("\nNuméro de l'exercice choisi : ");
                                 inputUser = scannerInputUser.nextLine();
                                 if(inputUser.equals(QUIT_COMMAND)){
                                     fermetureConnexion();
@@ -246,15 +224,15 @@ public class Main {
                                 }
 
                                 if(Integer.parseInt(inputUser)>listExercices.size() || inputUser.equals("0")) {
-                                    System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
+                                    System.out.println("\nVotre réponse ne convient pas\n");
                                 }
                                 else{ // l'élève a choisi un exercice de la liste
                                     //TODO : faire la passation de niveaux
                                     Exercice exerciceChoisi = listExercices.get(Integer.parseInt(inputUser)-1);
 
                                     // construction de la réponse de l'exercice
-                                    ReponseEleve reponseEleve = exerciceChoisi.construireReponse((Eleve) utilisateur_principal);
-                                    reponseEleve.getReponsesCorrection();
+                                    ReponseEleve reponseEleve = exerciceChoisi.construireReponse((Eleve) utilisateurActif);
+                                    System.out.println("\nCorrection :\n");
 
                                     if(reponseEleve.valide()){ // l'élève a réussi l'exercice et gagne un point dans son score de la langue
                                         reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
@@ -273,7 +251,7 @@ public class Main {
 
                             case "2": // l'utilisateur veut voir ses résultats
                                 for(NiveauxEleves niv: listNiveauxUtilisateur){ // pour chaque inscription dans la table NiveauxEleves
-                                    if(niv.getEleve().equals(utilisateur_principal.getPseudo())){ // si l'inscription correspond à l'utilisateur principal
+                                    if(niv.getPseudoEleve().equals(utilisateurActif.getPseudo())){ // si l'inscription correspond à l'utilisateur principal
                                     System.out.println("\n" + niv.getLangue() + " :\n" + // la langue
                                             "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
                                             "- " + niv.getScore()); // le score dans la langue
@@ -415,7 +393,9 @@ public class Main {
     }
 
     public static void fermetureConnexion() throws Exception {
+        System.out.println("\n//-------------------------------------------------//");
         System.out.println("Fermeture de l'application");
+        System.out.println("//-------------------------------------------------//");
         if (connectionSource != null) {
             connectionSource.close();
         }
@@ -424,32 +404,70 @@ public class Main {
     // Méthode qui permet d'updater le score dans l'objet NiveauxEleve et dans la Base de Données
     public static void updateScore(Langue lang, Float addScore) throws SQLException { //TODO : mettre la méthode autre part
         for(NiveauxEleves niv : listNiveauxUtilisateur) {
-            if (niv.getEleve().equals(utilisateur_principal.getPseudo()) && niv.getLangue() == lang) {
+            if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == lang) {
                 niv.setScore(niv.getScore()+addScore);
                 niveauElevesDao.update(niv);
             }
         }
     }
 
-    // Méthode qui re-créée les objets à partir de la base de données.
-    public static void createFromDatabase() throws SQLException {
-        System.out.println("----- CREATION A PARTIR DE LA BASE DE DONNEES -----");
+    public static void updateNiveau(Langue lang, BaremeNiveau newNiveau) throws SQLException { //TODO : mettre la méthode autre part
+        for(NiveauxEleves niv : listNiveauxUtilisateur) {
+            if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == lang) {
+                niv.setNiveau(newNiveau);
+                niveauElevesDao.update(niv);
+            }
+        }
+    }
 
+    /**
+     * Méthode statique qui re-crée les objets à partir de la base de données.
+     * Cette méthode récupère les enregistrements de la table Professeur et Eleve de la base de données et les ajoute respectivement aux listes {@link #listProfs} et {@link #listEleves}.
+     * Elle récupère également les enregistrements de la table NiveauEleve et les ajoute à la liste {@link #listNiveauxUtilisateur}.
+     * Il est important de noter que cette méthode ne doit être utilisée qu'à l'initialisation de l'application, lorsque la base de données est vide et qu'il faut remplir la base de données avec des objets "vides" (sans élèves ni exercices). Si cette méthode est utilisée alors que la base de données contient déjà des informations, celles-ci seront écrasées par les objets "vides" créés par cette méthode.
+     * @throws SQLException Si une erreur se produit lors de l'exécution de la requête SQL.
+     */
+    public static void createFromDatabase() throws SQLException {
+
+        // Récupération des enregistrements de la table Professeur de la base de données
         List<Professeur> results = professeurDao.queryForAll();
+        // Pour chaque enregistrement, on ajoute l'objet Professeur à la liste listProfs
         for (Professeur p : results) {
             listProfs.put(p.getPseudo(), p);
         }
-        System.out.println(listProfs);
 
+        // Récupération des enregistrements de la table Eleve de la base de données
         List<Eleve> resultsEleves = eleveDao.queryForAll();
+        // Pour chaque enregistrement, on ajoute l'objet Eleve à la liste listEleves
         for (Eleve e : resultsEleves) {
             listEleves.put(e.getPseudo(), e);
         }
-        System.out.println(listEleves);
 
+        // Récupération de tous les enregistrements de la table NiveauEleve de la base de données
         listNiveauxUtilisateur = niveauElevesDao.queryForAll();
-        System.out.println(listNiveauxUtilisateur);
-        System.out.println("----- FIN DE LA CREATION A PARTIR DE LA BASE DE DONNEES -----");
+    }
+
+    /**
+     * Cette méthode retourne la liste des exercices auxquels l'utilisateur actif (un élève) a accès.
+     * Un élève a accès à un exercice s'il est inscrit dans la langue de l'exercice et que le niveau de l'exercice correspond à son niveau dans cette langue.
+     * @return la liste des exercices auxquels l'utilisateur actif a accès
+     */
+    public static ArrayList<Exercice> getExercicesAccessibles() {
+        ArrayList<Exercice> exercicesAccessibles = new ArrayList<>();
+        // Pour chaque enregistrement de niveau de l'utilisateur actif
+        for (NiveauxEleves niveauEleve : listNiveauxUtilisateur) {
+        // Si l'enregistrement concerne l'utilisateur actif
+            if (niveauEleve.getPseudoEleve().equals(utilisateurActif.getPseudo())) {
+        // Pour chaque exercice de la liste
+                for (Exercice exercice : listExercices) {
+                    // Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
+                    if (exercice.getLangue().equals(niveauEleve.getLangue()) && exercice.getNiveau().equals(niveauEleve.getNiveau())) {
+                        exercicesAccessibles.add(exercice);
+                    }
+                }
+            }
+        }
+        return exercicesAccessibles;
     }
 }
 
