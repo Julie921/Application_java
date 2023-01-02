@@ -128,7 +128,7 @@ public class NiveauxEleves {
      *
      * @return le pseudo de l'élève
      */
-    public String getEleve() {
+    public String getPseudoEleve() {
         return eleve;
     }
 
