@@ -11,5 +11,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="ormlite-jdbc-6.1" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:2.1.214" level="project" />
+    <orderEntry type="library" name="Maven: io.github.alexarchambault.windows-ansi:windows-ansi:0.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.fusesource.jansi:jansi:1.18" level="project" />
   </component>
 </module>
