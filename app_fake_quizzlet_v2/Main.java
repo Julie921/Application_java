@@ -146,17 +146,19 @@ public class Main {
             }
 
             System.out.println("//-------------------------------------------------//");
+            System.out.println("Bonjour "+ utilisateur_principal.getPseudo() + "!");
+
             do {
-                System.out.println("Bonjour "+ utilisateur_principal.getPseudo());
 
                 if (professeurSession) {
                     Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
                     do {
+                        System.out.println("//-------------------------------------------------//");
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
                                 "1 : Importer un exercice\n" +
                                 "2 : Voir les exercices sauvegardés\n" +
-                                "3 : Voir notes des élèves");
+                                "3 : Voir les résultats de mes élèves");
                         System.out.print("Votre réponse: ");
                         inputUser = scannerInputUser.nextLine();
 
@@ -171,7 +173,7 @@ public class Main {
 
                     } while (!inputUser.equals(QUIT_COMMAND) && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
 
-                    while(!inputUser.equals(QUIT_COMMAND)) {
+                    /*while(!inputUser.equals(QUIT_COMMAND)) {
                         // TODO compléter les cases
                         switch (inputUser) {
                             case "1":
@@ -182,20 +184,31 @@ public class Main {
                                     listExercices.add(importExercice.readFromFile(fileChooser.getSelectedFile()));
                                 }
                                 break;
+                            case "2":
+                                for (Exercice exo: listExercices) { // TODO : faire en sorte que ça affiche une preview plutôt
+                                    exo.afficheExercice();
+                                }
+                            case "3": // le prof veut voir les notes de ses élèves
+                                for(NiveauxEleves niv: listNiveauxUtilisateur){ // pour chaque inscription dans la table NiveauxEleves
+                                    if(niv.getProfesseur().equals(utilisateur_principal.getPseudo())){ // si l'élève a comme prof le prof qui utilise l'application
+                                        System.out.println("\n" + niv.getEleve() + " :\n" + // le nom de l'élève
+                                                "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
+                                                "- " + niv.getScore()); // le score dans la langue
+                                    }
+                                }
                             default:
                                 System.out.println("Rien");
                                 break;
-                        }
-                        for (Exercice exo: listExercices) {
-                            exo.afficheExercice();
+                            }
                         }
                         System.out.print("Que voulez-vous faire ? ");
                         inputUser = scannerInputUser.nextLine();
-                    }
+                    }*/
 
                 } else if (studentSession) {
                     Boolean choixEleve1 = false, choixEleve2 = false;
                     do {
+                        System.out.println("//-------------------------------------------------//");
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
                                 "1 : Faire un exercice\n" +
@@ -207,27 +220,51 @@ public class Main {
                         // Choix Eleve
                         choixEleve1 = inputUser.equals("1");
                         choixEleve2 = inputUser.equals("2");
-                        if (!choixEleve1 && !choixEleve2 && !inputUser.equals(QUIT_COMMAND)) {
+                        /*if (!choixEleve1 && !choixEleve2 && !inputUser.equals(QUIT_COMMAND)) {
                             System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
-                        }
+                        }*/
                         switch (inputUser){
-                            case "1":
-                                //TODO : faire une preview de l'exercice pour pouvoir l'afficher
-                                ExoATrous exercice1 = new ExoATrous(Langue.FR, BaremeNiveau.INTERMEDIAIRE, 0.5F, parseurPhraseATrous, "Ceci est un #test#.");
+                            case "1": // l'élève veut faire une exercice
 
-                                Eleve eleve = eleveDao.queryForId("doun");
+                                //TODO: construire une liste des exercices que l'élève peut faire (langues et niveau)
+                                System.out.println("Voici une preview de chaque exercice. Pour faire un exercice, rentrez le numéro de l'exercice. ");
 
-                                // on récupère les réponses de l'élève avec des input
-                                ReponseEleveExoATrous reponse1 = new ReponseEleveExoATrous(exercice1, eleve);
-                                System.out.println("Les réponses fournies:\n" + reponse1.getReponsesFournies());
-                                System.out.println("Les réponses corrigees:\n" + reponse1.getReponsesCorrection());
-                                System.out.println("La note:\n" + reponse1.getNoteDonnee());
-                                System.out.println("Eleve passe:\n" + reponse1.valide());
-                                if(reponse1.valide()){
-                                    updateScore(reponse1.getExercice().getLangue(), 2F);
-                                    System.out.println("Le score a été updaté");
-                                break;
+                                int i = 1;
+
+                                for(Exercice exercice : listExercices) {
+                                    System.out.println("*********** EXERCICE " + i + " *********** ");
+                                    exercice.previewText();
+                                    i++;
                                 }
+
+                                System.out.println("Numéro de l'exercice choisi : ");
+                                inputUser = scannerInputUser.nextLine();
+                                if(inputUser.equals(QUIT_COMMAND)){
+                                    fermetureConnexion();
+                                    break;
+                                }
+
+                                if(Integer.parseInt(inputUser)>listExercices.size() || inputUser.equals("0")) {
+                                    System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
+                                }
+                                else{ // l'élève a choisi un exercice de la liste
+                                    //TODO : faire la passation de niveaux
+                                    Exercice exerciceChoisi = listExercices.get(Integer.parseInt(inputUser)-1);
+
+                                    // construction de la réponse de l'exercice
+                                    ReponseEleve reponseEleve = exerciceChoisi.construireReponse((Eleve) utilisateur_principal);
+
+                                    if(reponseEleve.valide()){ // l'élève a réussi l'exercice et gagne un point dans son score de la langue
+                                        System.out.println("Félicitations, vous avez réussi l'exercice.");
+                                        updateScore(exerciceChoisi.getLangue(), 1F);
+                                    }
+                                    else{ // l'élève n'a pas réussi l'exercice
+                                        System.out.println("Dommage, vous n'avez pas réussi l'exercice.");
+                                        updateScore(exerciceChoisi.getLangue(), -1F);
+                                    }
+                                }
+                            break;
+
                             case "2": // l'utilisateur veut voir ses résultats
                                 for(NiveauxEleves niv: listNiveauxUtilisateur){ // pour chaque inscription dans la table NiveauxEleves
                                     if(niv.getEleve().equals(utilisateur_principal.getPseudo())){ // si l'inscription correspond à l'utilisateur principal
@@ -235,10 +272,13 @@ public class Main {
                                             "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
                                             "- " + niv.getScore()); // le score dans la langue
                                 }
-                                }
+                            }
+                            break;
+
                             default:
-                                System.out.println("Rien");
+                                System.out.println("Votre réponse ne convient pas.");
                                 break;
+
                         }
 
                     } while (!inputUser.equals(QUIT_COMMAND) && !choixEleve1 && !choixEleve2);
@@ -388,7 +428,7 @@ public class Main {
     // Méthode qui re-créée les objets à partir de la base de données.
     public static void createFromDatabase() throws SQLException {
         System.out.println("----- CREATION A PARTIR DE LA BASE DE DONNEES -----");
-        // build a query that returns all Foo objects where the `name` field starts with "A"
+
         List<Professeur> results = professeurDao.queryForAll();
         for (Professeur p : results) {
             listProfs.put(p.getPseudo(), p);
