@@ -132,4 +132,8 @@ public abstract class ReponseEleve implements Correction, Notation {
      * et que l'élève valide cet exercice.
      */
     public abstract void setSeuilPassation();
+
+    public Float getSeuilPassation(){
+        return this.seuilPassation;
+    }
 }
