@@ -20,9 +20,27 @@ public abstract class Metaparse {
     protected Pattern pattern = null;
 
     /**
+     * Objet {@link Pattern} utilisé pour parser l'input dans le sens inverse.
+     */
+    protected Pattern reversedPattern = null;
+
+    /**
      *  Méthode {@code parse()} qui permet de parser un input en utilisant l'objet {@link Pattern} fourni en paramètre.
      * @param phraseNotParsed l'input à parser
      */
     public abstract Phrase parse(String phraseNotParsed);
 
+    public Pattern getPattern(){
+        return this.pattern;
+    }
+
+    /**
+     * Méthode qui retourne l'objet {@link Pattern} utilisé pour parser l'input dans le sens inverse.
+     * C'est utile pour reconstituer l'exercice avec les réponses de l'élève.
+     *
+     * @return l'objet {@link Pattern} utilisé pour parser l'input dans le sens inverse
+     */
+    public Pattern getReversedPattern(){
+        return this.reversedPattern;
+    }
 }

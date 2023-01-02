@@ -19,6 +19,7 @@ public class ParseurPhraseATrous extends Metaparse {
         delimiter = "#";
         String p = String.join("",delimiter, "([^", delimiter, "]+)", delimiter);
         pattern = Pattern.compile(p);
+        reversedPattern = Pattern.compile("\\b(___)\\b");
     }
 
     /**
