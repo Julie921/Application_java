@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ParseurTerminaison extends Metaparse {
+public class ParseurTerminaison extends Metaparse { //TODO : est-ce qu'on garde vraiment cet exemple d'autre parseur ? l'exercice est globalement le même que le phrase à trous
 
-    // Exemple : Mang--er
+    /**
+     * Constructeur de la classe ParseurTerminaison.
+     * Initialise le délimiteur de la phrase à trous et le motif de la regex utilisé pour extraire les terminaisons à trouver.
+     * Exemple : Mang--er
+     */
     public ParseurTerminaison() {
         delimiter = "-";
         String p = String.join(delimiter,delimiter, "([^", delimiter, "]+)( |$)");
@@ -27,8 +31,4 @@ public class ParseurTerminaison extends Metaparse {
         return l_phrase;
     }
 
-    @Override
-    public void parse(String phraseNotParsed, Pattern pattern) {
-
-    }
 }

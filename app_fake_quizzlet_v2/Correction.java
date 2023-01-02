@@ -1,14 +1,20 @@
 package app_fake_quizzlet_v2;
 
-import java.util.ArrayList;
-
 /**
- * Interface Correction. Elle permet d'implémenter la méthode correction dans des classes.
+ * Interface permettant de définir la méthode de correction de réponses d'un élève pour un exercice.
+ *
+ * La méthode {@link #corrige()} doit être implémentée pour définir la logique de correction des réponses.
+ *
+ * La classe {@link ReponseEleve} implémente cette interface.
+ *
+ * @see ReponseEleve
  */
 public interface Correction {
 
     /**
-     * Méthode corrige()
+     * Méthode de correction de réponses.
+     *
+     * Cette méthode doit être implémentée par les classes qui utilisent cette interface pour définir la logique de correction des réponses.
      */
     public void corrige();
 

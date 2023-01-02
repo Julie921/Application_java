@@ -1,11 +1,23 @@
 package app_fake_quizzlet_v2;
 
 /**
- * La classe BaremeNiveau permet de créer des objets sous forme de constante.Elles servent à attribuer
- * un niveau à un élève.
- * Il y a l'objet DEBUTANT, INTERMEDIAIRE,AVANCE et EXPERT. A chaque constante est associé
- * une valeur pour les réponses vraies,fausses et NA. Cela permet de construire la notation
- * par la suite.
+ * La classe enum `BaremeNiveau` représente un barème de niveaux pour évaluer les réponses d'un élève.
+ *
+ * Chaque niveau est défini par les points attribués pour chaque réponse de l'élève :
+ * - vrai : nombre de points attribués pour une réponse vraie.
+ * - faux : nombre de points attribués pour une réponse fausse.
+ * - nr : nombre de points attribués pour une réponse non répondue.
+ *
+ * Les niveaux disponibles sont :
+ * - DEBUTANT : 1 point pour une réponse vraie, 0 point pour une réponse fausse et 0 point pour une réponse non répondue.
+ * - INTERMEDIAIRE : 1 point pour une réponse vraie, -1 point pour une réponse fausse et 0 point pour une réponse non répondue.
+ * - AVANCE : 1 point pour une réponse vraie, -1 point pour une réponse fausse et -1 point pour une réponse non répondue.
+ * - EXPERT : 1 point pour une réponse vraie, -2 points pour une réponse fausse et -1 point pour une réponse non répondue.
+ *
+ * Elle est utilisée dans l'interface {@link Notation}, notamment dans la classe {@link ReponseEleve} qui implémente l'interface {@link Notation}.
+ *
+ * @see Notation
+ * @see ReponseEleve
  */
 public enum BaremeNiveau {
     // Déclaration des constantes
@@ -14,40 +26,45 @@ public enum BaremeNiveau {
     // Déclaration des attributs pour les valeurs à l'interieur de nos constantes.
     private int vrai; //nombre de points attribués par réponse vraie de l'élève
     private int faux; //nombre de points attribués par réponse fausse de l'élève
-    private int na; //nombre de points attributs par réponses non répondue de l'élève
+    private int nr; //nombre de points attributs par réponse non répondue de l'élève
 
     /**
-     * Constructeur de la classe
-     * @param vrai
-     * @param faux
-     * @param na
+     * Constructeur de la classe `BaremeNiveau`
+     *
+     * @param vrai nombre de points attribués par réponse vraie de l'élève
+     * @param faux nombre de points attribués par réponse fausse de l'élève
+     * @param nr nombre de points attributs par réponse non répondue de l'élève
      */
-    BaremeNiveau(int vrai, int faux, int na) {
+    BaremeNiveau(int vrai, int faux, int nr) {
         this.vrai = vrai;
         this.faux = faux;
-        this.na = na;
+        this.nr = nr;
     }
 
-    /** Getter de l'attribut vrai
-     * @param
-     * @return vrai
+    /**
+     * Retourne le nombre de points attribués pour une réponse vraie.
+     *
+     * @return nombre de points attribués pour une réponse vraie.
      */
     public int getVrai(){
         return vrai;
     }
-    /** Getter de l'attribut faux
-     * @param
-     * @return faux
+
+    /**
+     * Retourne le nombre de points attribués pour une réponse fausse.
+     *
+     * @return nombre de points attribués pour une réponse fausse.
      */
     public int getFaux(){
         return faux;
     }
 
-    /** Getter de l'attribut na
-     * @param
-     * @return na
+    /**
+     * Retourne le nombre de points attribués pour une question non-répondue.
+     *
+     * @return nombre de points attribués pour une question non-répondue.
      */
-    public int getNa(){
-        return na;
+    public int getNr(){
+        return nr;
     }
 }

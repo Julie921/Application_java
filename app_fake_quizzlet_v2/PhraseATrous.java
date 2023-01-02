@@ -1,50 +1,50 @@
 package app_fake_quizzlet_v2;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 /**
- * Classe Phrase qui contient trois attributs.
+ *  La classe PhraseATrous hérite de la classe Phrase et représente une phrase à trous.
+ *
+ *  Elle contient trois attributs :
+ *  - la phrase correcte, qui est la phrase sans les trous et avec les réponses correctes
+ *  - la phrase avec les trous, qui est la phrase avec des "___" à la place des mots à placer
+ *  - la liste des mots à placer, qui est une liste de tous les mots à placer dans l'ordre
+ *
+ *  La classe dispose de plusieurs méthodes permettant de récupérer ou de set ces différents attributs.
  */
-public class PhraseATrous {
-    /**
-     * Déclaration des attributs
-     */
+public class PhraseATrous extends Phrase{
+
     String phraseCorrecte; //attribut qui contient la phrase sans les # et avec les réponses correctes
     String phraseAvecTrous; //attribut qui contient la phrase avec des ___ à la place des mots à placer
 
     ArrayList<String> motsAPlacer = new ArrayList<>(); //liste de tous les mots à placer dans l'ordre
 
     /**
-     * Constructeur de la classe Phrase. Il prend en argument une String qui correspond à une phrase où aucun traitement n'a encore été effectué.
-     * @param String phraseNotParsed, Metaparser unParseur.
-     * Construction de l'objet Phrase grâce au Parseur.
+     * Constructeur de la classe PhraseATrous.
+     * Il prend en paramètre la phrase correcte, la phrase avec les trous et la liste des mots à placer.
+     * Il initialise les attributs de la classe avec ces valeurs.
+     * @param phraseCorrecte la phrase correcte
+     * @param phraseAvecTrous la phrase avec les trous
+     * @param motsAPlacer la liste des mots à placer dans l'ordre correct
      */
-    PhraseATrous(String phraseNotParsed, Metaparse unParseur, Pattern pattern){
-
-        unParseur.parse(phraseNotParsed, pattern);
-
-    }
-
     PhraseATrous(String phraseCorrecte, String phraseAvecTrous, ArrayList<String> motsAPlacer) {
         this.phraseCorrecte = phraseCorrecte;
         this.phraseAvecTrous = phraseAvecTrous;
         this.motsAPlacer = motsAPlacer;
     }
 
-    // TODO : on a ces getetr aussi dans la classe parseur, pb ????
-
     /**
      * Méthode qui permet de récupérer la phraseAvecTrous
-     * @return (String) Notre phrase avec les trous
+     * @return Notre phrase avec les trous
      */
     public String getPhraseAvecTrous() {
         return phraseAvecTrous;
     }
 
     /**
-     * Méthode qui permet de récupérer la variante correcte de l'objet Phrase. Donc la phrase sans les # et avec les mots à la bonne place.
-     * @return (String) La phrase correcte
+     * Méthode qui permet de récupérer la variante correcte de l'objet Phrase.
+     * Donc la phrase sans les # et avec les mots à la bonne place.
+     * @return La phrase correcte
      */
     public String getPhraseCorrecte() {
         return phraseCorrecte;
@@ -76,13 +76,18 @@ public class PhraseATrous {
     }
 
     /**
-     * Méthode qui permet de récupérer l'attribut motsAPlacer
+     * Méthode qui permet de récupérer l'attribut motsAPlacer qui est la liste de tous les mots
+     * à placer de la phrase, dans l'ordre correct.
      * @return motsAPlacer
      */
     public ArrayList<String> getMotsAPlacer(){
         return motsAPlacer;
     }
 
+    /**
+     * Méthode toString qui permet de représenter sous forme de chaîne de caractères l'objet PhraseATrous.
+     * @return (String) La phrase correcte, la phrase avec les trous et la liste des mots à placer
+     */
     @Override
     public String toString() {
         return "PhraseATrous{ " +

@@ -17,7 +17,6 @@ public class Main {
     private final static String DATABASE_URL = "jdbc:h2:file:./database.db";
 
     public final static String RESSOURCES_FOLDER = "./ressources";
-
     private static ConnectionSource connectionSource = null;
     private static Dao<Professeur, String> professeurDao;
     private static Dao<Eleve, String> eleveDao;

@@ -5,18 +5,29 @@ import java.util.Collections;
 
 /**
  * Classe ExoATrous qui étend la classe abstraite Exercice.
+ * Elle représente un exercice de type "phrase à trous" où l'élève doit remplir les trous avec les mots à placer fournis.
+ *
+ * Elle contient une liste de phrases {@link PhraseATrous} qui constituent l'exercice.
+ *
+ * Elle implémente la méthode {@link #afficheExercice()} pour afficher l'exercice à l'élève.
  */
 public class ExoATrous extends Exercice {
 
     /**
-     * Déclaration des attributs de la classe
+     * ArrayList qui contient les objets {@link PhraseATrous} créés à partir de l'input donné par le professeur.
      */
-    private ArrayList<PhraseATrous> listPhrases = new ArrayList<>(); //tous les objets phrases constitués avec l'input
+    private ArrayList<PhraseATrous> listPhrases = new ArrayList<>();
 
     /**
-     * Méthode pour créer la phrase à trous et la notation depuis l'input du professeur
-     * @param inputProf
-     * @return rien
+     * Constructeur de la classe ExoATrous.
+     * Il permet de créer l'exercice de type "phrase à trous" en utilisant le {@link ParseurPhraseATrous}
+     * pour parser les phrases données en entrée par le professeur (paramètre {@code inputProf}).
+     *
+     * @param langue langue de l'exercice
+     * @param niveau niveau de difficulté de l'exercice
+     * @param pourcentage pourcentage de points par l'élève en faisant l'exercice pour que l'exercice soit considéré comme réussi
+     * @param parseur parseur de phrases à trous
+     * @param inputProf entrée du professeur contenant les phrases de l'exercice
      */
     ExoATrous(Langue langue, BaremeNiveau niveau, Float pourcentage, ParseurPhraseATrous parseur, String inputProf) {
 
@@ -33,7 +44,7 @@ public class ExoATrous extends Exercice {
     }
 
     /**
-     * Getter de l'attribut listPhrases
+     * Getter de l'attribut listPhrases. Il contient la liste de tous les objets {@link PhraseATrous} qui composent l'exercice
      * @return listPhrase
      */
     public ArrayList<PhraseATrous> getListPhrases(){
@@ -41,10 +52,11 @@ public class ExoATrous extends Exercice {
     }
 
     /**
-     * Implémentation de la méthode afficheExercice()
-     * @param
-     * @return rien
-     * Elle permet d'afficher l'exercice
+     * Implémentation de la méthode abstraite afficheExercice() de la classe {@link Exercice}.
+     * Elle affiche :
+     *
+     * - la liste des mots à placer arrangés de manière aléatoire
+     * - le texte avec des "___" à la place des mots à placer
      */
     @Override
     public void afficheExercice() {
@@ -68,16 +80,10 @@ public class ExoATrous extends Exercice {
         }
     }
 
-
     /**
-     * TODO: écrire javadoc
-     * @param newPhrase
-     *
+     * Redéfinition de la méthode toString() de la classe Object.
+     * @return (String) Une chaîne de caractères qui représente l'objet ExoATrous.
      */
-    public void addPhrase(String newPhrase){ //TODO écrire fonction pour pouvoir ajouter une phrase après
-
-    }
-
     @Override
     public String toString() {
         return "ExoATrous{" +

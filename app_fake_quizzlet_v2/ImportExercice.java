@@ -9,6 +9,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * La classe ImportExercice est utilisée pour importer des exercices depuis des fichiers.
+ *
+ * Elle contient une liste de parseurs qui permet de déterminer quel parseur utiliser en fonction du type d'exercice.
+ *
+ * Elle contient également deux méthodes pour lire un fichier : readFromFile() et readFile(). Ces méthodes permettent de lire les métadonnées et l'input de l'exercice contenu dans le fichier, et de créer un objet {@link Exercice} en utilisant le parseur correspondant au type d'exercice.
+ *
+ * Elle contient également une méthode addParseur() pour ajouter un parseur à la liste de parseurs, si jamais on veut créer de nouveaux types d'exercices.
+ */
 public class ImportExercice {
 
     HashMap<TypeExo, Metaparse> listParseurs = null;

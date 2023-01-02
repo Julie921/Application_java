@@ -3,8 +3,19 @@ package app_fake_quizzlet_v2;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Classe représentant une réponse à un exercice à trous donnée par un élève.
+ * Cette classe hérite de ReponseEleve et définit la méthode abstraite setSeuilPassation() pour déterminer le seuil de passation de l'exercice.
+ * Elle implémente également les méthodes calculNote() et corrige() pour respectivement calculer la note de la réponse et corriger les réponses de l'élève.
+ */
 public class ReponseEleveExoATrous extends ReponseEleve {
 
+    /**
+     * Constructeur de la classe ReponseEleveExoATrous.
+     * Demande à l'élève de répondre à l'exercice à trous, corrige ses réponses ({@link #corrige}) et calcule sa note ({@link #calculNote()})
+     * @param exercice l'exercice à trous à compléter.
+     * @param eleve l'élève qui répond à l'exercice.
+     */
     ReponseEleveExoATrous(ExoATrous exercice, Eleve eleve){
 
         super(exercice, eleve);
@@ -45,14 +56,19 @@ public class ReponseEleveExoATrous extends ReponseEleve {
         this.seuilPassation = exo.getPourcentage() * totalReponsesAFournir * exo.getNiveau().getVrai();
     }
 
+    /**
+     * Méthode qui définit le seuil de passation de l'exercice à trous,
+     * en somme la note qu'il faut atteindre pour que l'exercice soit considéré comme réussi
+     * Le seuil de passation est égal au pourcentage d'exigence de l'exercice (renseigné par le professeur lors de la création des exercices) multiplié par le nombre de réponses à fournir en tout, multiplié par le nombre de points attribués à une réponse correcte selon le {@link BaremeNiveau} de l'élève.
+     */
     @Override
     public void calculNote() {
         BaremeNiveau niveauExercice = this.getExercice().getNiveau();
         for (ArrayList<ValeurReponse> phraseCorrigee : this.getReponsesCorrection()) {
             for (ValeurReponse v : phraseCorrigee) {
                 switch (v) {
-                    case NA:
-                        this.noteDonnee += niveauExercice.getNa();
+                    case NR:
+                        this.noteDonnee += niveauExercice.getNr();
                         break;
                     case FAUX:
                         this.noteDonnee += niveauExercice.getFaux();
@@ -68,6 +84,10 @@ public class ReponseEleveExoATrous extends ReponseEleve {
         }
     }
 
+    /**
+     * Méthode qui corrige les réponses de l'élève à l'exercice à trous.
+     * Pour chaque phrase de l'exercice, la méthode compare chaque réponse de l'élève à la réponse attendue et attribue la valeur VRAI si la réponse de l'élève est correcte, FAUX si elle est incorrecte et NR si elle est vide.
+     */
     @Override
     public void corrige() {
         ArrayList<ValeurReponse> listTampon = new ArrayList<>();
@@ -86,7 +106,7 @@ public class ReponseEleveExoATrous extends ReponseEleve {
                     listTampon.add(ValeurReponse.VRAI);
                 }
                 else if (reponseElevePourLaPhraseIEtLeMotJ.isEmpty()) { //si l'élève n'a pas répondu
-                    listTampon.add(ValeurReponse.NA);
+                    listTampon.add(ValeurReponse.NR);
                 }
                 else{ //si la réponse de l'élève est fausse
                     listTampon.add(ValeurReponse.FAUX);

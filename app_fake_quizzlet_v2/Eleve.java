@@ -1,26 +1,40 @@
 package app_fake_quizzlet_v2;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe représentant un élève dans l'application Fake Quizlet qui permet de faire des exercices de langue.
+ *
+ * Un élève est un utilisateur de l'application qui peut s'inscrire auprès de différents professeurs et participer à leurs quizz.
+ *
+ * Un élève a un niveau ({@link BaremeNiveau}) dans chaque langue enseignée par ses {@link Professeur}. Ce niveau détermine le nombre de points qu'il peut obtenir pour chaque réponse juste, fausse ou non répondue lorsqu'il fait un exercice.
+ *
+ * L'élève peut monter ou descendre d'un niveau dans une langue donnée en réussissant ou en ratant des exercices. Ce passage de niveau est réalisé par rapport au score qu'il a dans la langue.
+ *
+ * @see BaremeNiveau
+ * @see Professeur
+ */
 @DatabaseTable(tableName = "ELEVES")
 public class Eleve extends Utilisateur { //TODO association réflexive pour que le prof soit associé à chaque élève
 
+	/**
+	 * Nom de la colonne de la base de données pour l'identifiant du professeur.
+	 */
 	public static final String PROFESSOR_ID_FIELD_NAME = "professeur_id";
 
-	// @DatabaseField
-	private Map<Langue, BaremeNiveau> niveaux = new HashMap<>(); //dictionnaire pour le niveau de l'élève selon la langue
+	/**
+	 * Map associant à chaque langue enseignée par ses professeurs le niveau de l'élève dans cette langue.
+	 */
+	private Map<Langue, BaremeNiveau> niveaux = new HashMap<>();
 
-	//@ForeignCollectionField(eager = true)
+	/**
+	 * Liste des professeurs auprès desquels l'élève est inscrit.
+	 */
 	private ArrayList<Professeur> listProfesseurs = new ArrayList<>();
-
-	@DatabaseField(canBeNull = true)
-	private float moyenne;
 
 	public Historique historiqueEleve = new Historique();
 
@@ -28,21 +42,26 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 	private Professeur prof;*/
 
 	/**
-	 * Constructeur vide qui est nécessaire quand on utilise ORMlite
+	 * Constructeur vide nécessaire pour l'utilisation d'ORMlite.
 	 */
 	public Eleve() {
 		super();
 	}
 
+	/**
+	 * Constructeur permettant de créer un élève avec un pseudo donné.
+	 *
+	 * @param pseudo pseudo de l'élève
+	 */
 	public Eleve(String pseudo) {
 		super(pseudo);
 	}
 
 	/**
-	 * Constructeur pour la classe Eleve. Elle permet d'instancier un objet Eleve en renseignant le nom d'utilisateur (pseudo) et le mot de passe (password).
-	 * Par exemple, si Marie veut créer son compte en utilisant le pseudo "marie2000" et le mot de passe "blabla", on va faire :
-	 * Eleve marie = new Eleve("marie2000", "blabla");
-	 * @param pseudo (String) Le nom d'utilisateur
+	 * Constructeur permettant de créer un élève avec un pseudo et une liste de professeurs donnés.
+	 *
+	 * @param pseudo pseudo de l'élève
+	 * @param profs liste des professeurs auprès desquels l'élève est inscrit
 	 */
 	public Eleve(String pseudo, ArrayList<Professeur> profs) {
 		super(pseudo);
@@ -53,37 +72,34 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		}
 	}
 
+	/**
+	 * Méthode permettant à un élève de s'inscrire auprès d'un professeur.
+	 *
+	 * @param prof professeur auprès duquel l'élève s'inscrit
+	 */
 	public void ajouterProf(Professeur prof) {
 		this.listProfesseurs.add(prof);
 		this.niveaux.put(prof.getLangue(), BaremeNiveau.DEBUTANT);
 	}
 
 	/**
-	 * Méthode qui permet de récupérer le niveau d'un élève.
-	 * Par exemple, si je veux récuperer le niveau de l'élève "marie", il faut faire :
-	 * marie.getNiveau();
-	 * @return Le niveau de l'élève
+	 * Méthode permettant de récupérer le niveau de l'élève dans une langue donnée.
+	 *
+	 * @param langue langue pour laquelle on souhaite récupérer le niveau de l'élève
+	 * @return niveau de l'élève dans la langue donnée
 	 */
 	public BaremeNiveau getBaremeNiveau(Langue langue){
 		return this.niveaux.get(langue);
 	}
 
 	/**
-	 * Méthode qui permet de modifier le niveau d'un élève.
-	 * Par exemple, si je veux changer le niveau de "marie", il faut faire :
-	 * marie.setNiveau(3);
-	 * @param niveau (int) Le niveau auquel on veut faire passer l'élève
+	 * Méthode permettant de modifier le niveau de l'élève dans une langue donnée.
+	 *
+	 * @param niveau nouveau niveau de l'élève dans la langue donnée
+	 * @param langue langue pour laquelle on souhaite modifier le niveau de l'élève
 	 */
 	public void setNiveau(BaremeNiveau niveau, Langue langue) {
 		this.niveaux.put(langue, niveau);
-	}
-
-	public float getMoyenne() {
-		return moyenne;
-	}
-
-	public void updateMoyenne(float mo) {
-		this.moyenne= mo;
 	}
 
 	public void addEntryHistorique(Exercice exercice, Float note, ReponseEleve reponseEleve, BaremeNiveau niveau){
@@ -108,48 +124,12 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		}
 	}
 
-	public boolean mustChangeNiveau() {
-
-		/*int compteur = 0;
-
-		float palier = 15.00F;
-
-		if(historiqueEleve.getData().size() < 1){ //l'élève n'a pas encore 5 notes donc il ne peut pas changer de niveau
-			return false;
-		}
-		else { //élève a plus de 5 notes
-			for(int i = historiqueEleve.getData().size()-1;  i < historiqueEleve.getData().size(); i++){ //on regarde les 5 dernière notes obtenues
-				if(historiqueEleve.getData().get(i).get("niveau").toString().equals(this.niveau.toString())){ //si le niveau est celui de l'élève
-					Float note = (Float) historiqueEleve.getData().get(i).get("note");
-					System.out.println(note);
-					if(note.compareTo(palier)>0) {
-						compteur++;
-						System.out.println("La note est au dessus de 15");
-						System.out.println("le compteur : "+compteur);
-
-					}
-				}
-			}
-
-		}
-		if(compteur==1){
-			return true;
-		}
-		else{
-
-			return false;
-		}*/
-		return false;
-	}
-
-
 
 	@Override
 	public String toString() {
 		return "Eleve{" +
 				"nom élève = " + getPseudo() +
 				", niveaux=" + niveaux +
-				", moyenne=" + moyenne +
 				", historiqueEleve=" + historiqueEleve +
 				", profs=" + listProfesseurs +
 				'}';
