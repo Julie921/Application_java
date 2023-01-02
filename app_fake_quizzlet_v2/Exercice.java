@@ -90,4 +90,8 @@ public abstract class Exercice {
     public void setPourcentage(Float pourcentage) {
         this.pourcentage = pourcentage;
     }
+
+    public abstract  void previewText();
+
+    public abstract ReponseEleve construireReponse(Eleve eleve);
 }

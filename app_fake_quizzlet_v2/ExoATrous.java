@@ -80,6 +80,24 @@ public class ExoATrous extends Exercice {
         }
     }
 
+    @Override
+    public void previewText() {
+        // Affiche seulement les 10 premières phrases du texte
+        for (int i = 0; i < 3 && i < listPhrases.size(); i++) {
+            System.out.println(listPhrases.get(i).getPhraseAvecTrous());
+        }
+        // Affiche un message indiquant qu'il y a plus de phrases dans le texte
+        if (listPhrases.size() > 3) {
+            System.out.println("...");
+        }
+    }
+
+    //TODO: écrire la javadoc
+    @Override
+    public ReponseEleveExoATrous construireReponse(Eleve eleve) {
+        return new ReponseEleveExoATrous(this, eleve);
+    }
+
     /**
      * Redéfinition de la méthode toString() de la classe Object.
      * @return (String) Une chaîne de caractères qui représente l'objet ExoATrous.
@@ -90,4 +108,6 @@ public class ExoATrous extends Exercice {
                 "listPhrases=" + listPhrases +
                 '}';
     }
+
+
 }
