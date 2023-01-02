@@ -1,6 +1,7 @@
 package app_fake_quizzlet_v2;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  *  La classe ReponseEleve est une classe abstraite qui représente la réponse d'un élève à un exercice.
@@ -38,7 +39,7 @@ public abstract class ReponseEleve implements Correction, Notation {
 
     /**
      * La correction des réponses fournies par l'élève (la correction est faite avec l'interface {@link Correction}.
-     * On attribut à chaque réponse fournie une {@link ValeurReponse}.
+     * On attribue à chaque réponse fournie une {@link ValeurReponse}.
      */
     private ArrayList<ArrayList<ValeurReponse>> reponsesCorrection = new ArrayList<>();
 
@@ -136,4 +137,6 @@ public abstract class ReponseEleve implements Correction, Notation {
     public Float getSeuilPassation(){
         return this.seuilPassation;
     }
+
+    public abstract void affichePhrasesRempliesAvecCouleurs(Pattern pattern);
 }

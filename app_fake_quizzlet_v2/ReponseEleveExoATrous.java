@@ -1,7 +1,14 @@
 package app_fake_quizzlet_v2;
 
+import org.fusesource.jansi.Ansi;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Classe représentant une réponse à un exercice à trous donnée par un élève.
@@ -16,37 +23,45 @@ public class ReponseEleveExoATrous extends ReponseEleve {
      * @param exercice l'exercice à trous à compléter.
      * @param eleve l'élève qui répond à l'exercice.
      */
-    ReponseEleveExoATrous(ExoATrous exercice, Eleve eleve){
-
+    ReponseEleveExoATrous(ExoATrous exercice, Eleve eleve) {
+        // Appel du constructeur de la classe parente
         super(exercice, eleve);
+
+        // Définition du seuil de passation pour l'exercice
         this.setSeuilPassation();
 
-        System.out.println("Bonjour " + eleve.getPseudo() + "!\n\n");
-
+        // Affichage de l'exercice complet (liste des mots à placer et phrases avec trous)
         exercice.afficheExercice();
 
-        Scanner myScanner = new Scanner(System.in); // scanner pour récupérer les réponses de l'élève
+        // Création d'un scanner pour récupérer les réponses de l'élève
+        Scanner myScanner = new Scanner(System.in);
 
-        ArrayList<String> listeTampon = new ArrayList<>(); //on crée une liste tampon qu'on videra après chaque phrase
+        // Liste tampon qui sera vidée après chaque phrase
+        ArrayList<String> listeTampon = new ArrayList<>();
 
+        // Compteur pour numéroter les mots manquants
         int i = 1;
         for (PhraseATrous phrase : exercice.getListPhrases()) { //pour chaque phrase de l'exercice
             listeTampon.clear(); // on vide la liste tampon
+            System.out.println("\nPhrase " + i + " : " + phrase.getPhraseAvecTrous()); // on réimprime la phrase avec les trous pour la lisibilité
+            int j = 1;
             for (String mot : phrase.getMotsAPlacer()) { //pour chaque mot à placer dans la phrase
-                System.out.println("Quel est le mot manquant " + i + "?"); //on demande le mot manquant à la place X
+                System.out.println("Quel est le mot manquant " + j + "?"); //on demande le mot manquant à la place J dans la phrase
                 String motDonne = myScanner.nextLine();
                 listeTampon.add(motDonne); //on ajoute notre mot à la liste tampon
-                i += 1;
+                j++;
             }
+            i++;
             this.reponsesFournies.add(new ArrayList<String>(listeTampon));
         }
-
+        // On corrige les réponses de l'élève
         this.corrige();
+        // On calcule la note de l'élève pour l'exercice
         this.calculNote();
-
     }
 
-    @Override
+
+        @Override
     public void setSeuilPassation() {
         ExoATrous exo = (ExoATrous) this.exercice;
         Float totalReponsesAFournir = 0.0F;
@@ -54,6 +69,62 @@ public class ReponseEleveExoATrous extends ReponseEleve {
             totalReponsesAFournir += phrase.motsAPlacer.size();
         }
         this.seuilPassation = exo.getPourcentage() * totalReponsesAFournir * exo.getNiveau().getVrai();
+    }
+
+    @Override
+    /**
+     * Affiche les phrases de l'exercice avec les trous remplis par les réponses de l'élève.
+     * Si la réponse de l'élève est correcte, le mot est affiché en vert.
+     * Si la réponse est incorrecte, le mot est affiché en rouge.
+     * Si la réponse n'a pas été fournie, "___" est affiché en jaune.
+     *
+     * @param pattern le motif de l'expression régulière utilisé pour détecter les trous dans
+     *                les phrases
+     */
+    public void affichePhrasesRempliesAvecCouleurs(Pattern pattern) {
+        // Crée une liste qui contient l'attribut phraseAvecTrous de chaque objet Phrase de l'exo
+        ArrayList<String> allPhraseAvecTrous = new ArrayList<>();
+        for (PhraseATrous phrase : ((ExoATrous) exercice).getListPhrases()) {
+            allPhraseAvecTrous.add(phrase.getPhraseAvecTrous());
+        }
+
+        // Crée un StringBuffer qui contiendra les phrases dans lesquelles on a rempli les trous par les réponses de l'élève
+        StringBuffer phrasesRemplies = new StringBuffer();
+        for (int i = 0; i < allPhraseAvecTrous.size(); i++) {
+            // Récupère la phrase et les réponses de l'élève pour cette phrase
+            String phrase = allPhraseAvecTrous.get(i);
+            ArrayList<String> response = reponsesFournies.get(i);
+            Matcher matcher = pattern.matcher(phrase);
+
+            int j = 0;
+            while (matcher.find()) { // tant qu'on trouve des trous dans la phrase
+                ValeurReponse correction = this.getReponsesCorrection().get(i).get(j);
+                String replacement = null;
+                switch (correction) { // en fonction de la correction, détermine la couleur de la réponse de l'élève
+                    case VRAI:
+                        replacement = Ansi.ansi().bg(Ansi.Color.GREEN).a(response.get(j)).reset().toString();
+                        break;
+                    case FAUX:
+                        replacement = Ansi.ansi().bg(Ansi.Color.RED).a(response.get(j)).reset().toString();
+                        break;
+                    case NR:
+                        replacement = Ansi.ansi().bg(Ansi.Color.YELLOW).a("___").reset().toString();
+                        break;
+                    default:
+                        replacement = response.get(j);
+                        break;
+                }
+                // Remplace le trou par la réponse de l'élève dans le StringBuffer
+                matcher.appendReplacement(phrasesRemplies, replacement);
+                j++;
+            }
+            // Ajoute la fin de la phrase au StringBuffer
+            matcher.appendTail(phrasesRemplies);
+            phrasesRemplies.append("\n");
+        }
+
+        // Affiche le StringBuffer qui contient les phrases remplies
+        System.out.println(phrasesRemplies);
     }
 
     /**
