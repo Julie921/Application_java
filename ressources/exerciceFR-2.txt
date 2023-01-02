@@ -1,4 +1,4 @@
-FR:EXO_A_TROU:INTERMEDIAIRE:50
+FR:EXO_A_TROU:INTERMEDIAIRE:0.5
 J'ai besoin d'un #verre# d'eau.
 Les chiens sont les meilleurs #amis# de l'homme.
 J'adore les #pommes#.
