@@ -11,6 +11,7 @@ import com.j256.ormlite.table.TableUtils;
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -253,13 +254,18 @@ public class Main {
 
                                     // construction de la réponse de l'exercice
                                     ReponseEleve reponseEleve = exerciceChoisi.construireReponse((Eleve) utilisateur_principal);
+                                    reponseEleve.getReponsesCorrection();
 
                                     if(reponseEleve.valide()){ // l'élève a réussi l'exercice et gagne un point dans son score de la langue
+                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
                                         System.out.println("Félicitations, vous avez réussi l'exercice.");
+                                        System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "!\n");
                                         updateScore(exerciceChoisi.getLangue(), 1F);
                                     }
                                     else{ // l'élève n'a pas réussi l'exercice
+                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
                                         System.out.println("Dommage, vous n'avez pas réussi l'exercice.");
+                                        System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "...\n");
                                         updateScore(exerciceChoisi.getLangue(), -1F);
                                     }
                                 }
