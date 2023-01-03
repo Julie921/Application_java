@@ -71,12 +71,6 @@ public class Main {
 
             ///////////////////////////////////////////////////////////////////////
 
-            //TODO : enlever car il existe déjà avec remplir
-            // test pour changer la méthode de passage de niveau : juste une somme
-            ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous(); // parseur pour les exo à trous
-
-            ///////////////////////////////////////////////////////////////////////
-
 
             createFromDatabase();
             remplirListeParseurs();
@@ -225,7 +219,6 @@ public class Main {
                                 if (Integer.parseInt(inputUser) > exercicesAccessibles.size() || inputUser.equals("0")) {
                                     System.out.println("\nVotre réponse ne convient pas\n");
                                 } else { // l'élève a choisi un exercice de la liste
-                                    //TODO : faire la passation de niveaux
                                     Exercice exerciceChoisi = exercicesAccessibles.get(Integer.parseInt(inputUser) - 1);
 
                                     // construction de la réponse de l'exercice
@@ -233,11 +226,11 @@ public class Main {
                                     System.out.println("\nCorrection :\n");
 
                                     if (reponseEleve.valide()) { // l'élève a réussi l'exercice et gagne un point dans son score de la langue
-                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
+                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(listParseurs.get(exerciceChoisi.getType()).getReversedPattern()); // on récupère le reversed pattern du parseur utilisé pour le type de l'exercice spécifique
                                         System.out.println("Félicitations, vous avez réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "!\n");
                                     } else { // l'élève n'a pas réussi l'exercice
-                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
+                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(listParseurs.get(exerciceChoisi.getType()).getReversedPattern());
                                         System.out.println("Dommage, vous n'avez pas réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "...\n");
                                     }

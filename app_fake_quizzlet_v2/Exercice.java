@@ -1,5 +1,7 @@
 package app_fake_quizzlet_v2;
 
+import java.lang.reflect.Type;
+
 /**
  * Classe abstraite représentant un exercice. Un exercice peut être un texte à trous, un QCM ou une traduction, par exemple.
  *
@@ -27,6 +29,8 @@ public abstract class Exercice {
      * Pourcentage de points qu'un élève doit obtenir en faisant l'exercice pour que l'exercice soit considéré comme réussi.
      */
     private Float pourcentage;
+
+    private TypeExo type;
 
     /**
      * Constructeur de la classe Exercice.
@@ -99,4 +103,12 @@ public abstract class Exercice {
      * Affiche la correction de l'exercice, c'est-à-dire les vraies réponses qu'il fallait fournir.
      */
     public abstract void afficherCorrection();
+
+    public TypeExo getType(){
+        return this.type;
+    }
+
+    public void setType(TypeExo type){
+        this.type = type;
+    }
 }

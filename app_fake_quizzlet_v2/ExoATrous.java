@@ -43,6 +43,7 @@ public class ExoATrous extends Exercice {
 
         }
 
+        super.setType(TypeExo.EXO_A_TROU);
     }
 
     /**
