@@ -199,7 +199,8 @@ public class Main {
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
                                 "1 : Faire un exercice\n" +
-                                "2 : Voir mes résultats");
+                                "2 : Voir mes résultats\n" +
+                                "3 : S'inscrire dans un nouveau cours de langue");
 
                         System.out.print("Votre réponse: ");
                         inputUser = scannerInputUser.nextLine();
@@ -268,6 +269,28 @@ public class Main {
                                 }
                             }
                             break;
+                            case "3":
+                                List<Professeur> allProf = professeurDao.queryForAll();
+                                System.out.println("Dans quel cours voulez-vous vous inscrire ?");
+                                for (i = 0; i < allProf.size(); i++) {
+                                    Professeur p = allProf.get(i);
+                                    System.out.println((i+1) + ": " + p.getPseudo() + " - " +  p.getLangue());
+                                }
+                                System.out.print("Professeur choisi: ");
+                                inputUser = scannerInputUser.nextLine();
+                                int indexProf = Integer.parseInt(inputUser) - 1;
+
+                                // Si l'eleve a rentrée 0 dans sa donnée
+                                // il a fini de choisir ses professeurs
+
+                                // Sinon, on vérifie que l'index donné est correct
+                                if ((indexProf < 0) || (indexProf >= allProf.size())) {
+                                    System.out.println("Saisie invalide, index non compris.");
+                                }
+                                // et on l'ajoute dans la liste des profs de l'eleve.
+                                ((Eleve) utilisateurActif).ajouterProf(allProf.get(indexProf));
+                                inscriptionLangue(allProf.get(indexProf).getPseudo());
+                                break;
 
                             default:
                                 System.out.println("Votre réponse ne convient pas.");
@@ -368,16 +391,13 @@ public class Main {
                     eleveDao.create((Eleve) user);
 
                     Boolean profsFini = false;
-                    ArrayList<Professeur> listProfEleve = new ArrayList<>();
                     do {
                         List<Professeur> allProf = professeurDao.queryForAll();
                         System.out.println("Qui sont vos professeurs parmi ceux-ci ?\n" +
                                 "Note: Rentrer la valeur 0 lorsque vous avez fini de choisir tous vos professeurs.");
                         for (int i = 0; i < allProf.size(); i++) {
                             Professeur p = allProf.get(i);
-                            if (!listProfEleve.contains(p)) {
-                                System.out.println((i+1) + ": " + p.getPseudo());
-                            }
+                            System.out.println((i+1) + ": " + p.getPseudo() + " - " +  p.getLangue());
                         }
                         System.out.print("Professeur choisi: ");
                         inputUser = scannerInputUser.nextLine();
@@ -390,15 +410,12 @@ public class Main {
                         } else {
                             // Sinon, on vérifie que l'index donné est correct
                             if ((indexProf < 0) || (indexProf >= allProf.size())) {
-                                System.out.println("Saisie invalide, index non compris");
+                                System.out.println("Saisie invalide, index non compris.");
                                 return null;
                             }
                             // et on l'ajoute dans la liste des profs de l'eleve.
-                            listProfEleve.add(allProf.get(indexProf));
                             ((Eleve) user).ajouterProf(allProf.get(indexProf));
-                            NiveauxEleves niv = new NiveauxEleves((Eleve) user, allProf.get(indexProf));
-                            listNiveauxUtilisateur.add(niv);
-                            niveauElevesDao.create(niv);
+                            inscriptionLangue(allProf.get(indexProf).getPseudo());
                         }
                     } while(!profsFini);
                 }
@@ -536,5 +553,30 @@ public class Main {
                 .map(Enum::name)
                 .collect(Collectors.joining(", "));
     }
+
+    /**
+     *  Cette méthode permet à un élève de s'inscrire dans une nouvelle langue.
+     *  Si l'élève n'est pas déjà inscrit dans la langue, un enregistrement de NiveauxEleves est créé avec le niveau "débutant" et le score initialisé à 0.
+     *  Si l'élève est déjà inscrit dans la langue, la méthode ne fait rien.
+     *  @param pseudoProf le pseudo du professeur enseignant la langue dans laquelle l'élève souhaite s'inscrire
+    */
+     public static void inscriptionLangue(String pseudoProf) throws SQLException {
+            // On vérifie si l'élève est déjà inscrit dans la langue
+            boolean estInscrit = false;
+            for (NiveauxEleves niveau : listNiveauxUtilisateur) {
+                if (niveau.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niveau.getLangue().equals(listProfs.get(pseudoProf).getLangue())) {
+                    estInscrit = true;
+                    System.out.println("Vous êtes déjà inscrit dans ce cours.");
+                    break;
+                }
+            }
+            // Si l'élève n'est pas inscrit dans la langue, on crée un enregistrement de NiveauxEleves pour l'inscrire dans cette langue
+            if (!estInscrit) {
+                System.out.println("Inscription réussie.");
+                NiveauxEleves niveau = new NiveauxEleves((Eleve) utilisateurActif, listProfs.get(pseudoProf));
+                listNiveauxUtilisateur.add(niveau);
+                niveauElevesDao.create(niveau);
+            }
+        }
 }
 
