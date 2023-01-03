@@ -34,8 +34,22 @@ public abstract class Utilisateur {
         return this.pseudo;
     }
 
+    /**
+     *  Cette méthode retourne la liste des exercices accessibles par l'utilisateur actif.
+     *  Si l'utilisateur est un élève, la liste contient les exercices de sa langue et de son niveau.
+     *  Si l'utilisateur est un professeur, la liste contient les exercices pour la langue qu'il enseigne.
+     *  @param listNiveauxUtilisateur la liste des niveaux des utilisateurs
+     *  @param listExercices la liste des exercices disponibles
+     *  @return la liste des exercices accessibles par l'utilisateur actif
+     */
     public abstract ArrayList<Exercice> getExercicesAccessibles(ArrayList<NiveauxEleves> listNiveauxUtilisateur, List<Exercice> listExercices);
 
+    /**
+     * Affiche la liste des exercices accessibles pour l'utilisateur sous la forme d'une preview (3 première phrases) de chaque exercice.
+     * @see Utilisateur#getExercicesAccessibles(ArrayList, List) 
+     *
+     * @param exercicesAccessibles la liste des exercices accessibles
+     */
     public void afficheExercicesAccessibles(ArrayList<Exercice> exercicesAccessibles){
         int i = 1;
         for (Exercice exercice : exercicesAccessibles) {
