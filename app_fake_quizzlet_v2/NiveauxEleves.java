@@ -1,6 +1,9 @@
 package app_fake_quizzlet_v2;
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
+
+import java.sql.SQLException;
 
 /**
  *  La classe NiveauxEleves représente le niveau de chaque élève dans les langues qu'il étudie.
@@ -208,4 +211,28 @@ public class NiveauxEleves {
         "\n score=" + score +
                 "\n}";
     }
+
+    /**
+     * Cette méthode met à jour le niveau de l'utilisateur actif (un élève) dans une langue donnée, en fonction de son score dans cette langue.
+     * Si le score est compris entre 20 et 40, le niveau est défini comme "intermédiaire".
+     * Si le score est compris entre 40 et 60, le niveau est défini comme "avancé".
+     * Si le score est supérieur à 60, le niveau est défini comme "expert".
+     *
+     * @param lang la langue pour laquelle mettre à jour le niveau de l'utilisateur actif
+     * @param niveauElevesDao l'objet Dao pour accéder à la table des enregistrements de niveaux des élèves dans la base de données
+     * @throws SQLException
+     */
+    public void updateNiveau(Langue lang, Dao niveauElevesDao) throws SQLException {
+        if (this.getScore() < 20) {
+            this.setNiveau(BaremeNiveau.DEBUTANT);
+        } else if (this.getScore() >= 20 && this.getScore() < 40) {
+            this.setNiveau(BaremeNiveau.INTERMEDIAIRE);
+        } else if (this.getScore() >= 40 && this.getScore() < 60) {
+            this.setNiveau(BaremeNiveau.AVANCE);
+        } else if (this.getScore() >= 60) {
+            this.setNiveau(BaremeNiveau.EXPERT);
+        }
+        niveauElevesDao.update(this);
+    }
 }
+

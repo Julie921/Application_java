@@ -237,13 +237,17 @@ public class Main {
                                         System.out.println("Félicitations, vous avez réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "!\n");
                                         updateScore(exerciceChoisi.getLangue(), 1F);
-                                        updateNiveau(exerciceChoisi.getLangue());
                                     } else { // l'élève n'a pas réussi l'exercice
                                         reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
                                         System.out.println("Dommage, vous n'avez pas réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "...\n");
                                         updateScore(exerciceChoisi.getLangue(), -1F);
-                                        updateNiveau(exerciceChoisi.getLangue());
+                                    }
+                                    for (NiveauxEleves niv : listNiveauxUtilisateur) {
+                                        if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == exerciceChoisi.getLangue()) {
+                                            niv.updateNiveau(exerciceChoisi.getLangue(), niveauElevesDao);
+                                            break;
+                                        }
                                     }
                                 }
                                 break;
@@ -459,7 +463,6 @@ public class Main {
      *
      * @param lang la langue pour laquelle mettre à jour le niveau de l'utilisateur actif
      * @throws SQLException
-     */
     public static void updateNiveau(Langue lang) throws SQLException {
         for (NiveauxEleves niv : listNiveauxUtilisateur) {
             if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == lang) {
@@ -475,7 +478,7 @@ public class Main {
                 niveauElevesDao.update(niv);
             }
         }
-    }
+    }*/
 
     /**
      * Méthode statique qui re-crée les objets à partir de la base de données.
@@ -518,30 +521,4 @@ public class Main {
                 .collect(Collectors.joining(", "));
     }
 
-    /**
-     * Cette méthode permet à un élève de s'inscrire dans une nouvelle langue.
-     * Si l'élève n'est pas déjà inscrit dans la langue, un enregistrement de NiveauxEleves est créé avec le niveau "débutant" et le score initialisé à 0.
-     * Si l'élève est déjà inscrit dans la langue, la méthode ne fait rien.
-     *
-     * @param pseudoProf le pseudo du professeur enseignant la langue dans laquelle l'élève souhaite s'inscrire
-     */
-    /*public static void inscriptionLangue(Eleve user, String pseudoProf) throws SQLException {
-        // On vérifie si l'élève est déjà inscrit dans la langue
-        boolean estInscrit = false;
-        for (NiveauxEleves niveau : listNiveauxUtilisateur) {
-            if (niveau.getPseudoEleve().equals(user.getPseudo()) && niveau.getLangue().equals(listProfs.get(pseudoProf).getLangue())) {
-                estInscrit = true;
-                System.out.println("Vous êtes déjà inscrit dans un cours de cette langue.\n");
-                break;
-            }
-        }
-        // Si l'élève n'est pas inscrit dans la langue, on crée un enregistrement de NiveauxEleves pour l'inscrire dans cette langue
-        if (!estInscrit) {
-            System.out.println("Inscription réussie.");
-            user.ajouterProf(listProfs.get(pseudoProf));
-            NiveauxEleves niveau = new NiveauxEleves(user, listProfs.get(pseudoProf));
-            listNiveauxUtilisateur.add(niveau);
-            niveauElevesDao.create(niveau);
-        }
-    }*/
 }
