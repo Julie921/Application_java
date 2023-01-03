@@ -3,6 +3,9 @@ package app_fake_quizzlet_v2;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * La classe Professeur hérite de la classe Utilisateur et représente un professeur dans l'application.
  * Elle a un attribut `langue` qui représente la langue que le professeur enseigne.
@@ -72,5 +75,28 @@ public class Professeur extends Utilisateur {
      */
     public void setLangue(Langue langue) {
         this.langue = langue;
+    }
+
+    @Override
+    public ArrayList<Exercice> getExercicesAccessibles(ArrayList<NiveauxEleves> listNiveauxUtilisateur, List<Exercice> listExercices) {
+        ArrayList<Exercice> exercicesAccessibles = new ArrayList<>();
+        // Pour chaque enregistrement de niveau de l'utilisateur actif
+        for (NiveauxEleves niveauEleve : listNiveauxUtilisateur) {
+            // Si l'enregistrement concerne l'utilisateur actif
+            if (niveauEleve.getLangue().equals(this.getLangue())) {
+                // Pour chaque exercice de la liste
+                for (Exercice exercice : listExercices) {
+                    // Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
+                    if (exercice.getLangue().equals(niveauEleve.getLangue())) {
+                        System.out.println(niveauEleve.getNiveau());
+                        exercicesAccessibles.add(exercice);
+                    }
+                }
+            }
+        }
+        if(exercicesAccessibles.isEmpty()){
+            System.out.println("Il n'y a encore aucun exercice enregistré en " + this.getLangue() + ".");
+        }
+        return exercicesAccessibles;
     }
 }

@@ -2,6 +2,9 @@ package app_fake_quizzlet_v2;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Utilisateur {
 
     /* Le pseudo de l'utilisateur*/
@@ -29,6 +32,17 @@ public abstract class Utilisateur {
      */
     public String getPseudo(){
         return this.pseudo;
+    }
+
+    public abstract ArrayList<Exercice> getExercicesAccessibles(ArrayList<NiveauxEleves> listNiveauxUtilisateur, List<Exercice> listExercices);
+
+    public void afficheExercicesAccessibles(ArrayList<Exercice> exercicesAccessibles){
+        int i = 1;
+        for (Exercice exercice : exercicesAccessibles) {
+            System.out.println("\n*********** EXERCICE " + i + " *********** ");
+            exercice.previewText();
+            i++;
+        }
     }
 
 }

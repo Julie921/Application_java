@@ -37,7 +37,7 @@ public class Main {
     private static HashMap<String, Eleve> listEleves = new HashMap<>();
 
     // Liste des NiveauxEleves qui fait le lien entre Eleve et Professeur
-    private static List<NiveauxEleves> listNiveauxUtilisateur = new ArrayList<>();
+    private static ArrayList<NiveauxEleves> listNiveauxUtilisateur = new ArrayList<>();
 
     private static List<Exercice> listExercices = new ArrayList<>();
 
@@ -171,9 +171,10 @@ public class Main {
                                 }
                                 break;
                             case "2":
-                                for (Exercice exo : listExercices) { // TODO : faire en sorte que ça affiche une preview plutôt
-                                    exo.afficheExercice();
-                                }
+                                ArrayList<Exercice> exercicesAccessibles = utilisateurActif.getExercicesAccessibles(listNiveauxUtilisateur, listExercices);
+
+                                utilisateurActif.afficheExercicesAccessibles(exercicesAccessibles);
+                                break;
                             case "3": // le prof veut voir les notes de ses élèves
                                 afficherResultats((Professeur) utilisateurActif);
                                 break;
@@ -210,14 +211,9 @@ public class Main {
 
                                 System.out.println("Voici une preview de chaque exercice acessible pour vos langues et votre niveau dans ces langues.");
 
-                                ArrayList<Exercice> exercicesAccessibles = getExercicesAccessibles();
+                                ArrayList<Exercice> exercicesAccessibles = utilisateurActif.getExercicesAccessibles(listNiveauxUtilisateur, listExercices);
 
-                                int i = 1;
-                                for (Exercice exercice : exercicesAccessibles) {
-                                    System.out.println("\n*********** EXERCICE " + i + " *********** ");
-                                    exercice.previewText();
-                                    i++;
-                                }
+                                utilisateurActif.afficheExercicesAccessibles(exercicesAccessibles);
 
                                 System.out.println("\nNuméro de l'exercice choisi : ");
                                 inputUser = scannerInputUser.nextLine();
@@ -258,7 +254,7 @@ public class Main {
                             case "3":
                                 List<Professeur> allProf = professeurDao.queryForAll();
                                 System.out.println("Dans quel cours voulez-vous vous inscrire ?");
-                                for (i = 0; i < allProf.size(); i++) {
+                                for (int i = 0; i < allProf.size(); i++) {
                                     Professeur p = allProf.get(i);
                                     System.out.println((i + 1) + ": " + p.getPseudo() + " - " + p.getLangue());
                                 }
@@ -504,32 +500,7 @@ public class Main {
         }
 
         // Récupération de tous les enregistrements de la table NiveauEleve de la base de données
-        listNiveauxUtilisateur = niveauElevesDao.queryForAll();
-    }
-
-    /**
-     * Cette méthode retourne la liste des exercices auxquels l'utilisateur actif (un élève) a accès.
-     * Un élève a accès à un exercice s'il est inscrit dans la langue de l'exercice et que le niveau de l'exercice correspond à son niveau dans cette langue.
-     *
-     * @return la liste des exercices auxquels l'utilisateur actif a accès
-     */
-    public static ArrayList<Exercice> getExercicesAccessibles() {
-        ArrayList<Exercice> exercicesAccessibles = new ArrayList<>();
-        // Pour chaque enregistrement de niveau de l'utilisateur actif
-        for (NiveauxEleves niveauEleve : listNiveauxUtilisateur) {
-            // Si l'enregistrement concerne l'utilisateur actif
-            if (niveauEleve.getPseudoEleve().equals(utilisateurActif.getPseudo())) {
-                // Pour chaque exercice de la liste
-                for (Exercice exercice : listExercices) {
-                    // Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
-                    if (exercice.getLangue().equals(niveauEleve.getLangue()) && exercice.getNiveau().equals(niveauEleve.getNiveau())) {
-                        System.out.println(niveauEleve.getNiveau());
-                        exercicesAccessibles.add(exercice);
-                    }
-                }
-            }
-        }
-        return exercicesAccessibles;
+        listNiveauxUtilisateur = (ArrayList<NiveauxEleves>) niveauElevesDao.queryForAll();
     }
 
     /**
@@ -609,7 +580,7 @@ public class Main {
                 }
             }
             if (estInscrit) {
-                System.out.println("Bulletin :\n");
+                System.out.println("Bulletin :");
                 for (NiveauxEleves niv : listNiveauxUtilisateur) {
                     if (niv.getPseudoEleve().equals(utilisateur.getPseudo())) {
                         System.out.println("\n" + niv.getLangue() + " (" + niv.getPseudoProfesseur() + ") :\n" +
