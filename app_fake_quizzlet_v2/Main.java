@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.logger.LogBackendType;
 import com.j256.ormlite.logger.LoggerFactory;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -176,7 +177,7 @@ public class Main {
                                 }
                             case "3": // le prof veut voir les notes de ses élèves
                                 for(NiveauxEleves niv: listNiveauxUtilisateur){ // pour chaque inscription dans la table NiveauxEleves
-                                    if(niv.getProfesseur().equals(utilisateurActif.getPseudo())){ // si l'élève a comme prof le prof qui utilise l'application
+                                    if(niv.getPseudoProfesseur().equals(utilisateurActif.getPseudo())){ // si l'élève a comme prof le prof qui utilise l'application
                                         System.out.println("\n" + niv.getPseudoEleve() + " :\n" + // le nom de l'élève
                                                 "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
                                                 "- " + niv.getScore()); // le score dans la langue
@@ -263,7 +264,7 @@ public class Main {
                             case "2": // l'utilisateur veut voir ses résultats
                                 for(NiveauxEleves niv: listNiveauxUtilisateur){ // pour chaque inscription dans la table NiveauxEleves
                                     if(niv.getPseudoEleve().equals(utilisateurActif.getPseudo())){ // si l'inscription correspond à l'utilisateur principal
-                                    System.out.println("\n" + niv.getLangue() + " :\n" + // la langue
+                                    System.out.println("\n" + niv.getLangue() + " (" + niv.getPseudoProfesseur() + ") :\n" + // la langue
                                             "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
                                             "- " + niv.getScore()); // le score dans la langue
                                 }
@@ -287,9 +288,9 @@ public class Main {
                                 if ((indexProf < 0) || (indexProf >= allProf.size())) {
                                     System.out.println("Saisie invalide, index non compris.");
                                 }
-                                // et on l'ajoute dans la liste des profs de l'eleve.
-                                ((Eleve) utilisateurActif).ajouterProf(allProf.get(indexProf));
-                                inscriptionLangue(allProf.get(indexProf).getPseudo());
+                                else {
+                                    inscriptionLangue((Eleve) utilisateurActif, allProf.get(indexProf).getPseudo());
+                                }
                                 break;
 
                             default:
@@ -415,7 +416,7 @@ public class Main {
                             }
                             // et on l'ajoute dans la liste des profs de l'eleve.
                             ((Eleve) user).ajouterProf(allProf.get(indexProf));
-                            inscriptionLangue(allProf.get(indexProf).getPseudo());
+                            inscriptionLangue((Eleve) user, allProf.get(indexProf).getPseudo());
                         }
                     } while(!profsFini);
                 }
@@ -560,20 +561,21 @@ public class Main {
      *  Si l'élève est déjà inscrit dans la langue, la méthode ne fait rien.
      *  @param pseudoProf le pseudo du professeur enseignant la langue dans laquelle l'élève souhaite s'inscrire
     */
-     public static void inscriptionLangue(String pseudoProf) throws SQLException {
+     public static void inscriptionLangue(Eleve user, String pseudoProf) throws SQLException {
             // On vérifie si l'élève est déjà inscrit dans la langue
             boolean estInscrit = false;
             for (NiveauxEleves niveau : listNiveauxUtilisateur) {
-                if (niveau.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niveau.getLangue().equals(listProfs.get(pseudoProf).getLangue())) {
+                if (niveau.getPseudoEleve().equals(user.getPseudo()) && niveau.getLangue().equals(listProfs.get(pseudoProf).getLangue())) {
                     estInscrit = true;
-                    System.out.println("Vous êtes déjà inscrit dans ce cours.");
+                    System.out.println("Vous êtes déjà inscrit dans un cours de cette langue.");
                     break;
                 }
             }
             // Si l'élève n'est pas inscrit dans la langue, on crée un enregistrement de NiveauxEleves pour l'inscrire dans cette langue
             if (!estInscrit) {
                 System.out.println("Inscription réussie.");
-                NiveauxEleves niveau = new NiveauxEleves((Eleve) utilisateurActif, listProfs.get(pseudoProf));
+                user.ajouterProf(listProfs.get(pseudoProf));
+                NiveauxEleves niveau = new NiveauxEleves(user, listProfs.get(pseudoProf));
                 listNiveauxUtilisateur.add(niveau);
                 niveauElevesDao.create(niveau);
             }
