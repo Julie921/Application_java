@@ -45,4 +45,10 @@ public abstract class Utilisateur {
         }
     }
 
+    /**
+     *  Affiche les résultats de l'utilisateur spécifié en paramètre. Si l'utilisateur est un {@link Professeur}, ses résultats sont les résultats de tous ses élèves. Si c'est un {@link Eleve}, ses résultats sont ses résultats dans tous les cours auxquels il est inscrit, avec le nom du professeur enseignant chaque cours.
+     *  Si l'utilisateur n'a pas d'élèves ou n'est pas inscrit dans un cours, un message d'information est affiché à cet effet.
+     */
+    public abstract void afficheResultats(ArrayList<NiveauxEleves> listNiveauxUtilisateur);
+
 }

@@ -176,7 +176,7 @@ public class Main {
                                 utilisateurActif.afficheExercicesAccessibles(exercicesAccessibles);
                                 break;
                             case "3": // le prof veut voir les notes de ses élèves
-                                afficherResultats((Professeur) utilisateurActif);
+                                utilisateurActif.afficheResultats(listNiveauxUtilisateur);
                                 break;
                             default:
                                 System.out.println("Rien");
@@ -249,7 +249,7 @@ public class Main {
                                 break;
 
                             case "2": // l'utilisateur veut voir ses résultats
-                                afficherResultats((Eleve) utilisateurActif);
+                                utilisateurActif.afficheResultats(listNiveauxUtilisateur);
                                 break;
                             case "3":
                                 List<Professeur> allProf = professeurDao.queryForAll();
@@ -540,57 +540,6 @@ public class Main {
             NiveauxEleves niveau = new NiveauxEleves(user, listProfs.get(pseudoProf));
             listNiveauxUtilisateur.add(niveau);
             niveauElevesDao.create(niveau);
-        }
-    }
-
-    /**
-     *  Affiche les résultats de l'utilisateur spécifié en paramètre. Si l'utilisateur est un {@link Professeur}, ses résultats sont les résultats de tous ses élèves. Si c'est un {@link Eleve}, ses résultats sont ses résultats dans tous les cours auxquels il est inscrit, avec le nom du professeur enseignant chaque cours.
-     *  Si l'utilisateur n'a pas d'élèves ou n'est pas inscrit dans un cours, un message d'information est affiché à cet effet.
-     */
-    public static void afficherResultats(Utilisateur utilisateur) {
-        if (utilisateur instanceof Professeur) {
-            // On vérifie s'il y a des élèves inscrits dans la langue enseignée par le professeur
-            boolean aDesEleves = false;
-            for (NiveauxEleves niv : listNiveauxUtilisateur) {
-                if (niv.getPseudoProfesseur().equals(utilisateur.getPseudo())) {
-                    aDesEleves = true;
-                    break;
-                }
-            }
-            // Si le professeur a des élèves, on affiche leurs résultats
-            if (aDesEleves) {
-                System.out.println("Résultats de vos élèves :");
-                for (NiveauxEleves niv : listNiveauxUtilisateur) {
-                    if (niv.getPseudoProfesseur().equals(utilisateur.getPseudo())) {
-                        System.out.println("\n" + niv.getPseudoEleve() + " :\n" +
-                                "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
-                                "- " + niv.getScore()); // le score dans la langue
-                    }
-                }
-            } else {
-                System.out.println("Vous n'avez pas encore d'élèves inscrits dans votre cours.\n");
-            }
-        } else if (utilisateur instanceof Eleve) {
-            // On vérifie s'il y a des cours dans lesquels l'élève est inscrit
-            boolean estInscrit = false;
-            for (NiveauxEleves niv : listNiveauxUtilisateur) {
-                if (niv.getPseudoEleve().equals(utilisateur.getPseudo())) {
-                    estInscrit = true;
-                    break;
-                }
-            }
-            if (estInscrit) {
-                System.out.println("Bulletin :");
-                for (NiveauxEleves niv : listNiveauxUtilisateur) {
-                    if (niv.getPseudoEleve().equals(utilisateur.getPseudo())) {
-                        System.out.println("\n" + niv.getLangue() + " (" + niv.getPseudoProfesseur() + ") :\n" +
-                                "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
-                                "- " + niv.getScore() + "\n"); // le score dans la langue
-                    }
-                }
-            } else {
-                System.out.println("Vous n'êtes pas encore inscrit dans un cours.\n");
-            }
         }
     }
 }

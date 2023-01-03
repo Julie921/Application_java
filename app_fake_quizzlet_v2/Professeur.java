@@ -99,4 +99,33 @@ public class Professeur extends Utilisateur {
         }
         return exercicesAccessibles;
     }
+
+    /**
+     *  Affiche les résultats des élèves du professeur actif. Si le professeur n'a pas d'élèves, affiche un message indiquant qu'il n'a pas encore d'élèves inscrits dans son cours.
+     *  @param listNiveauxUtilisateur la liste des niveaux des élèves dans chaque langue
+     */
+    @Override
+    public void afficheResultats(ArrayList<NiveauxEleves> listNiveauxUtilisateur) {
+        // On vérifie s'il y a des élèves inscrits dans la langue enseignée par le professeur
+        boolean aDesEleves = false;
+        for (NiveauxEleves niv : listNiveauxUtilisateur) {
+            if (niv.getPseudoProfesseur().equals(this.getPseudo())) {
+                aDesEleves = true;
+                break;
+            }
+        }
+        // Si le professeur a des élèves, on affiche leurs résultats
+        if (aDesEleves) {
+            System.out.println("Résultats de vos élèves :");
+            for (NiveauxEleves niv : listNiveauxUtilisateur) {
+                if (niv.getPseudoProfesseur().equals(this.getPseudo())) {
+                    System.out.println("\n" + niv.getPseudoEleve() + " :\n" +
+                            "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
+                            "- " + niv.getScore()); // le score dans la langue
+                }
+            }
+        } else { // le prof n'a pas d'élèves
+            System.out.println("Vous n'avez pas encore d'élèves inscrits dans votre cours.\n");
+        }
+    }
 }

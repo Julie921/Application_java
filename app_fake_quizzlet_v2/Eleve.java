@@ -158,4 +158,33 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		return exercicesAccessibles;
 	}
 
+	/**
+	 *  Affiche les résultats de l'élève, c'est-à-dire la liste de ses cours et ses scores pour chacun d'eux.
+	 *  Si l'élève n'est inscrit dans aucun cours, affiche un message indiquant qu'il n'est pas encore inscrit dans un cours.
+	 *  @param listNiveauxUtilisateur la liste de tous les niveaux de tous les élèves
+	 */
+	public void afficheResultats(ArrayList<NiveauxEleves> listNiveauxUtilisateur){
+		// On vérifie s'il y a des cours dans lesquels l'élève est inscrit
+		boolean estInscrit = false;
+		for (NiveauxEleves niv : listNiveauxUtilisateur) {
+			if (niv.getPseudoEleve().equals(this.getPseudo())) {
+				estInscrit = true;
+				break;
+			}
+		}
+		if (estInscrit) {
+			System.out.println("Bulletin :");
+			for (NiveauxEleves niv : listNiveauxUtilisateur) {
+				if (niv.getPseudoEleve().equals(this.getPseudo())) {
+					System.out.println("\n" + niv.getLangue() + " (" + niv.getPseudoProfesseur() + ") :\n" +
+							"- " + niv.getNiveau() + "\n" + // le niveau dans la langue
+							"- " + niv.getScore() + "\n"); // le score dans la langue
+				}
+			}
+		} else {
+			System.out.println("Vous n'êtes pas encore inscrit dans un cours.\n");
+		}
+
+	}
+
 }
