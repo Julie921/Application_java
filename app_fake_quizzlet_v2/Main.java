@@ -236,15 +236,15 @@ public class Main {
                                         reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
                                         System.out.println("Félicitations, vous avez réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "!\n");
-                                        updateScore(exerciceChoisi.getLangue(), 1F);
                                     } else { // l'élève n'a pas réussi l'exercice
                                         reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
                                         System.out.println("Dommage, vous n'avez pas réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "...\n");
-                                        updateScore(exerciceChoisi.getLangue(), -1F);
                                     }
+                                    Boolean eleveValide = reponseEleve.valide();
                                     for (NiveauxEleves niv : listNiveauxUtilisateur) {
                                         if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == exerciceChoisi.getLangue()) {
+                                            niv.updateScore(eleveValide, niveauElevesDao);
                                             niv.updateNiveau(exerciceChoisi.getLangue(), niveauElevesDao);
                                             break;
                                         }
@@ -275,7 +275,6 @@ public class Main {
                                 } else {
                                     Professeur prof = allProf.get(indexProf);
                                     ((Eleve) utilisateurActif).inscriptionLangue(prof, listNiveauxUtilisateur, niveauElevesDao);
-                                    /*inscriptionLangue((Eleve) utilisateurActif, allProf.get(indexProf).getPseudo());*/
                                 }
                                 break;
 
@@ -434,51 +433,6 @@ public class Main {
             connectionSource.close();
         }
     }
-
-    /**
-     * Cette méthode permet de mettre à jour le score d'un élève dans une langue donnée.
-     * Elle parcourt la liste des enregistrements de niveaux de l'utilisateur actif et si l'enregistrement concerne l'utilisateur actif et la langue donnée, le score de cet enregistrement est mis à jour avec la valeur donnée en paramètre.
-     *
-     * @param lang     la langue pour laquelle mettre à jour le score
-     * @param addScore la valeur à ajouter au score actuel
-     * @throws SQLException
-     */
-    public static void updateScore(Langue lang, Float addScore) throws SQLException {
-        // Pour chaque enregistrement de niveau de l'utilisateur actif
-        for (NiveauxEleves niv : listNiveauxUtilisateur) {
-            // Si l'enregistrement concerne l'utilisateur actif et la langue donnée
-            if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == lang) {
-                // Mise à jour du score de l'enregistrement
-                niv.setScore(niv.getScore() + addScore);
-                niveauElevesDao.update(niv); // actualisation dans la base de données concrètement
-            }
-        }
-    }
-
-    /**
-     * Cette méthode met à jour le niveau de l'utilisateur actif (un élève) dans une langue donnée, en fonction de son score dans cette langue.
-     * Si le score est compris entre 20 et 40, le niveau est défini comme "intermédiaire".
-     * Si le score est compris entre 40 et 60, le niveau est défini comme "avancé".
-     * Si le score est supérieur à 60, le niveau est défini comme "expert".
-     *
-     * @param lang la langue pour laquelle mettre à jour le niveau de l'utilisateur actif
-     * @throws SQLException
-    public static void updateNiveau(Langue lang) throws SQLException {
-        for (NiveauxEleves niv : listNiveauxUtilisateur) {
-            if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == lang) {
-                if (niv.getScore() < 20) {
-                    niv.setNiveau(BaremeNiveau.DEBUTANT);
-                } else if (niv.getScore() >= 20 && niv.getScore() < 40) {
-                    niv.setNiveau(BaremeNiveau.INTERMEDIAIRE);
-                } else if (niv.getScore() >= 40 && niv.getScore() < 60) {
-                    niv.setNiveau(BaremeNiveau.AVANCE);
-                } else if (niv.getScore() >= 60) {
-                    niv.setNiveau(BaremeNiveau.EXPERT);
-                }
-                niveauElevesDao.update(niv);
-            }
-        }
-    }*/
 
     /**
      * Méthode statique qui re-crée les objets à partir de la base de données.

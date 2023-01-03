@@ -214,12 +214,14 @@ public class NiveauxEleves {
 
     /**
      * Cette méthode met à jour le niveau de l'utilisateur actif (un élève) dans une langue donnée, en fonction de son score dans cette langue.
+     * Si le score est inférieur à 20, le niveaue st défini comme "débutant"
      * Si le score est compris entre 20 et 40, le niveau est défini comme "intermédiaire".
      * Si le score est compris entre 40 et 60, le niveau est défini comme "avancé".
      * Si le score est supérieur à 60, le niveau est défini comme "expert".
-     *
+     * La régression d'un niveau supérieur à un niveau inférieur est possible.
      * @param lang la langue pour laquelle mettre à jour le niveau de l'utilisateur actif
      * @param niveauElevesDao l'objet Dao pour accéder à la table des enregistrements de niveaux des élèves dans la base de données
+     * @see NiveauxEleves#updateScore(Boolean, Dao)
      * @throws SQLException
      */
     public void updateNiveau(Langue lang, Dao niveauElevesDao) throws SQLException {
@@ -233,6 +235,28 @@ public class NiveauxEleves {
             this.setNiveau(BaremeNiveau.EXPERT);
         }
         niveauElevesDao.update(this);
+    }
+
+    /**
+     *  Cette méthode permet de mettre à jour le score d'un élève pour un enregistrement de niveau donné.
+     *  Si l'élève a réussi l'exercice, son score est incrémenté de 1.
+     *  Si l'élève a échoué l'exercice, son score est décrémenté de 1.
+     *  La réussite de l'élève dépend de si son score obtenu est supérieur ou non à la note de passation (fixée par rapport au {@link Exercice#pourcentage} de réussite fixé par le professeur lors de la création de l'exercice.
+     *  @param eleveValide booléen indiquant si l'élève a réussi ou échoué l'exercice
+     *  @param niveauElevesDao Dao permettant la mise à jour de l'enregistrement de niveau dans la base de données
+     * @see Notation
+     * @see ReponseEleve#valide()
+     *  @throws SQLException
+     */
+    public void updateScore(Boolean eleveValide, Dao niveauElevesDao) throws SQLException {
+        // Mise à jour du score de l'enregistrement
+        if(eleveValide){
+            this.score++;
+        }
+        else {
+            this.score--;
+        }
+        niveauElevesDao.update(this); // actualisation dans la base de données concrètement
     }
 }
 
