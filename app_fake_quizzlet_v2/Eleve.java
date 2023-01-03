@@ -1,7 +1,11 @@
 package app_fake_quizzlet_v2;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -192,6 +196,35 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 
 	}
 
-
+	/**
+	 *  Cette méthode permet à un élève de s'inscrire à un cours de langue avec un professeur donné.
+	 *  Si l'élève est déjà inscrit dans un cours de cette langue, avec un autre professeur ou le même professeur,
+	 *  une notification est affichée à l'écran.
+	 *  Sinon, un enregistrement de {@link NiveauxEleves} est créé pour enregistrer l'inscription de l'élève dans ce cours de langue,
+	 *  et une notification de réussite de l'inscription est affichée.
+	 *  @param professeur le professeur avec lequel l'élève souhaite s'inscrire
+	 *  @param listNiveauxUtilisateur la liste des enregistrements de niveaux des élèves
+	 *  @param niveauElevesDao l'objet Dao pour accéder à la table des enregistrements de niveaux des élèves dans la base de données
+	 *  @throws SQLException si une erreur SQL se produit lors de l'accès à la base de données
+	 */
+	public void inscriptionLangue(Professeur professeur, ArrayList<NiveauxEleves> listNiveauxUtilisateur, Dao niveauElevesDao) throws SQLException {
+		// On vérifie si l'élève est déjà inscrit dans la langue (que ça soit avec un autre prof ou le même prof)
+		boolean estInscrit = false;
+		for (NiveauxEleves niveau : listNiveauxUtilisateur) {
+			if (niveau.getPseudoEleve().equals(this.getPseudo()) && niveau.getLangue().equals(professeur.getLangue())) {
+				estInscrit = true;
+				System.out.println("Vous êtes déjà inscrit dans un cours de cette langue.\n");
+				break;
+			}
+		}
+		// Si l'élève n'est pas inscrit dans la langue, on crée un enregistrement de NiveauxEleves pour l'inscrire dans cette langue
+		if (!estInscrit) {
+			this.ajouterProf(professeur);
+			NiveauxEleves niveau = new NiveauxEleves(this, professeur);
+			listNiveauxUtilisateur.add(niveau);
+			niveauElevesDao.create(niveau);
+			System.out.println("Inscription réussie.");
+		}
+	}
 
 }

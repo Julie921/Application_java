@@ -113,7 +113,7 @@ public class Main {
                 if (inputUser.equals(QUIT_COMMAND))
                     break;
 
-                if (professeurSession) {
+                if (professeurSession) { //TODO : changer et mettre dans Utilisateur ?
                     utilisateurActif = checkSession(inputUser, "prof");
                 } else if (studentSession) {
                     utilisateurActif = checkSession(inputUser, "eleve");
@@ -266,10 +266,12 @@ public class Main {
                                 // il a fini de choisir ses professeurs
 
                                 // Sinon, on vérifie que l'index donné est correct
-                                if ((indexProf < 0) || (indexProf >= allProf.size())) {
+                                if ((indexProf < 0) || (indexProf >= allProf.size())) { //TODO problème quand on fait !quit
                                     System.out.println("Saisie invalide, index non compris.");
                                 } else {
-                                    inscriptionLangue((Eleve) utilisateurActif, allProf.get(indexProf).getPseudo());
+                                    Professeur prof = allProf.get(indexProf);
+                                    ((Eleve) utilisateurActif).inscriptionLangue(prof, listNiveauxUtilisateur, niveauElevesDao);
+                                    /*inscriptionLangue((Eleve) utilisateurActif, allProf.get(indexProf).getPseudo());*/
                                 }
                                 break;
 
@@ -396,8 +398,8 @@ public class Main {
                                 return null;
                             }
                             // et on l'ajoute dans la liste des profs de l'eleve.
-                            ((Eleve) user).ajouterProf(allProf.get(indexProf));
-                            inscriptionLangue((Eleve) user, allProf.get(indexProf).getPseudo());
+                            Professeur prof = allProf.get(indexProf);
+                            ((Eleve) user).inscriptionLangue(prof, listNiveauxUtilisateur, niveauElevesDao);
                         }
                     } while (!profsFini);
                 }
@@ -523,7 +525,7 @@ public class Main {
      *
      * @param pseudoProf le pseudo du professeur enseignant la langue dans laquelle l'élève souhaite s'inscrire
      */
-    public static void inscriptionLangue(Eleve user, String pseudoProf) throws SQLException {
+    /*public static void inscriptionLangue(Eleve user, String pseudoProf) throws SQLException {
         // On vérifie si l'élève est déjà inscrit dans la langue
         boolean estInscrit = false;
         for (NiveauxEleves niveau : listNiveauxUtilisateur) {
@@ -541,5 +543,5 @@ public class Main {
             listNiveauxUtilisateur.add(niveau);
             niveauElevesDao.create(niveau);
         }
-    }
+    }*/
 }
