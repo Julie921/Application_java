@@ -47,7 +47,7 @@ public class NiveauxEleves {
      * Le pseudo de l'élève. Stocke la valeur de la colonne "pseudo_eleve" dans la base de données.
      */
     @DatabaseField(columnName = ELEVE_ID)
-    private String eleve;
+    private String pseudoEleve;
 
     /**
      * La langue enseignée par le professeur. Stocke la valeur de la colonne "langue" dans la base de données.
@@ -68,7 +68,7 @@ public class NiveauxEleves {
      * Stocke la valeur de la colonne "pseudo_professeur" dans la base de données.
      */
     @DatabaseField(columnName = PROF_COL)
-    private String professeur;
+    private String pseudoProfesseur;
 
     /**
      * Le score de l'élève dans cette langue.
@@ -90,8 +90,8 @@ public class NiveauxEleves {
      * @param professeur l'objet Professeur en charge de l'enseignement de l'élève dans cette langue
      */
     public NiveauxEleves(Eleve eleve, Professeur professeur) {
-        this.eleve = eleve.getPseudo();
-        this.professeur = professeur.getPseudo();
+        this.pseudoEleve = eleve.getPseudo();
+        this.pseudoProfesseur = professeur.getPseudo();
         this.langue = professeur.getLangue();
         this.niveau = eleve.getBaremeNiveau(this.langue);
         this.setScore(0);
@@ -129,12 +129,12 @@ public class NiveauxEleves {
      * @return le pseudo de l'élève
      */
     public String getPseudoEleve() {
-        return eleve;
+        return pseudoEleve;
     }
 
     //TODO  à quoi elle sert ?
     public void setEleve(Eleve eleve) {
-        this.eleve = eleve.getPseudo();
+        this.pseudoEleve = eleve.getPseudo();
     }
 
     /**
@@ -142,8 +142,8 @@ public class NiveauxEleves {
      *
      * @return le pseudo du professeur
      */
-    public String getProfesseur() {
-        return professeur;
+    public String getPseudoProfesseur() {
+        return pseudoProfesseur;
     }
 
     /**
@@ -152,7 +152,7 @@ public class NiveauxEleves {
      * @param professeur le nouvel objet Professeur en charge de l'enseignement de l'élève
      */
     public void setProfesseur(Professeur professeur) {
-        this.professeur = professeur.getPseudo();
+        this.pseudoProfesseur = professeur.getPseudo();
     }
 
     /**
@@ -192,19 +192,20 @@ public class NiveauxEleves {
     }
 
     /**
-     * Retourne une chaîne de caractères représentant l'objet NiveauxEleves sous la forme "NiveauxEleves{index=x, eleve=y, langue=z, niveau=w, professeur=u, score=v}".
-     *
-     * @return une chaîne de caractères représentant l'objet NiveauxEleves
+     *  Représentation textuelle de la classe NiveauxEleves.
+     *  Cette méthode est appelée automatiquement lorsque l'on utilise la fonction {@code print} sur un objet de type NiveauxEleves.
+     *  Elle permet d'afficher de manière lisible les informations contenues dans l'objet.
+     *  @return une chaîne de caractères contenant les informations de l'objet NiveauxEleves.
      */
     @Override
     public String toString() {
         return "NiveauxEleves{" +
-                "index=" + index +
-                ", eleve=" + eleve +
-                ", langue=" + langue +
-                ", niveau=" + niveau +
-                ", professeur=" + professeur +
-                ", score=" + score +
-                '}';
+                "\n index=" + index +
+                "\n pseudoEleve=" + pseudoEleve +
+        "\n langue=" + langue +
+                "\n niveau=" + niveau +
+                "\n pseudoProfesseur=" + pseudoProfesseur +
+        "\n score=" + score +
+                "\n}";
     }
 }
