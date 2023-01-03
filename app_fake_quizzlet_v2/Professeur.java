@@ -117,13 +117,18 @@ public class Professeur extends Utilisateur {
         // Si le professeur a des élèves, on affiche leurs résultats
         if (aDesEleves) {
             System.out.println("Résultats de vos élèves :");
+            System.out.println("+-------------+---------------+--------+");
+            System.out.println("|   Elève     |  Niveau       | Score  |");
+            System.out.println("+-------------+---------------+--------+");
             for (NiveauxEleves niv : listNiveauxUtilisateur) {
-                if (niv.getPseudoProfesseur().equals(this.getPseudo())) {
-                    System.out.println("\n" + niv.getPseudoEleve() + " :\n" +
-                            "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
-                            "- " + niv.getScore()); // le score dans la langue
+                if(niv.getPseudoProfesseur().equals(this.getPseudo())){
+                    String eleve = String.format("| %-13s ", niv.getPseudoEleve());
+                    String niveau = String.format("| %-15s ", niv.getNiveau());
+                    String score = String.format("| %-8s ", niv.getScore());
+                    System.out.println(eleve + niveau + score);
                 }
             }
+            System.out.println("+-------------+---------------+--------+");
         } else { // le prof n'a pas d'élèves
             System.out.println("Vous n'avez pas encore d'élèves inscrits dans votre cours.\n");
         }

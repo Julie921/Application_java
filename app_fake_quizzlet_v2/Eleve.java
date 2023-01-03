@@ -173,14 +173,19 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 			}
 		}
 		if (estInscrit) {
-			System.out.println("Bulletin :");
+			System.out.println("+--------------+----------------+------------+-----------+");
+			System.out.println("|   Langue     |    Professeur  |  Niveau    | Score  |");
+			System.out.println("+--------------+----------------+------------+-----------+");
 			for (NiveauxEleves niv : listNiveauxUtilisateur) {
-				if (niv.getPseudoEleve().equals(this.getPseudo())) {
-					System.out.println("\n" + niv.getLangue() + " (" + niv.getPseudoProfesseur() + ") :\n" +
-							"- " + niv.getNiveau() + "\n" + // le niveau dans la langue
-							"- " + niv.getScore() + "\n"); // le score dans la langue
+				if(niv.getPseudoEleve().equals(this.getPseudo())){
+					String langue = String.format("| %-12s ", niv.getLangue());
+					String prof = String.format("| %-14s ", niv.getPseudoProfesseur());
+					String niveau = String.format("| %-11s ", niv.getNiveau());
+					String score = String.format("| %-11s |", niv.getScore());
+					System.out.println(langue + prof + niveau + score);
 				}
 			}
+			System.out.println("+--------------+----------------+------------+-----------+");
 		} else {
 			System.out.println("Vous n'êtes pas encore inscrit dans un cours.\n");
 		}
