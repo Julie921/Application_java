@@ -94,4 +94,9 @@ public abstract class Exercice {
     public abstract  void previewText();
 
     public abstract ReponseEleve construireReponse(Eleve eleve);
+
+    /**
+     * Affiche la correction de l'exercice, c'est-à-dire les vraies réponses qu'il fallait fournir.
+     */
+    public abstract void afficherCorrection();
 }

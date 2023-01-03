@@ -101,6 +101,16 @@ public class ExoATrous extends Exercice {
     }
 
     /**
+     *  Affiche la correction de chaque phrase de l'exercice à trous, c'est-à-dire les vraies réponses qu'il fallait fournir.
+     */
+    @Override
+    public void afficherCorrection() {
+        for(PhraseATrous phrase: listPhrases){
+            System.out.println(phrase.getPhraseCorrecte());
+        }
+    }
+
+    /**
      * Redéfinition de la méthode toString() de la classe Object.
      * @return (String) Une chaîne de caractères qui représente l'objet ExoATrous.
      */
