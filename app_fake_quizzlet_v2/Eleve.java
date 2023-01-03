@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
+import org.fusesource.jansi.Ansi;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -213,7 +214,7 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 		for (NiveauxEleves niveau : listNiveauxUtilisateur) {
 			if (niveau.getPseudoEleve().equals(this.getPseudo()) && niveau.getLangue().equals(professeur.getLangue())) {
 				estInscrit = true;
-				System.out.println("Vous êtes déjà inscrit dans un cours de cette langue.\n");
+				System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("\nVous êtes déjà inscrit dans un cours de cette langue.\n").reset());
 				break;
 			}
 		}
@@ -223,7 +224,8 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 			NiveauxEleves niveau = new NiveauxEleves(this, professeur);
 			listNiveauxUtilisateur.add(niveau);
 			niveauElevesDao.create(niveau);
-			System.out.println("Inscription réussie.");
+			System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a("\nInscription réussie.\n").reset());
+
 		}
 	}
 
