@@ -11,6 +11,7 @@ import com.j256.ormlite.table.TableUtils;
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -70,6 +71,7 @@ public class Main {
 
             ///////////////////////////////////////////////////////////////////////
 
+            //TODO : enlever car il existe déjà avec remplir
             // test pour changer la méthode de passage de niveau : juste une somme
             ParseurPhraseATrous parseurPhraseATrous = new ParseurPhraseATrous(); // parseur pour les exo à trous
 
@@ -135,7 +137,7 @@ public class Main {
                         System.out.println("//-------------------------------------------------//\n");
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
-                                "1 : Importer un exercice\n" +
+                                "1 : Ajouter un exercice\n" +
                                 "2 : Voir les exercices sauvegardés\n" +
                                 "3 : Voir les résultats de mes élèves");
                         System.out.print("Votre réponse: ");
@@ -152,11 +154,16 @@ public class Main {
 
                     } while (!inputUser.equals(QUIT_COMMAND) && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
 
-                    /*while(!inputUser.equals(QUIT_COMMAND)) {
+                    while(!inputUser.equals(QUIT_COMMAND)) {
                         // TODO compléter les cases
                         switch (inputUser) {
-                            case "1":
-                                System.out.println("Renseignez le nom du fichier");
+                            case "1": // ajouter un exercice
+                                System.out.println("Attention à bien préciser les métadonnées sur la première lignes : \n " +
+                                "LANG:TYPE_EXO:NIVEAU:POURCENTAGE_POINT_POUR_REUSSIR\nPar exemple: 'FR:EXO_A_TROU:DEBUTANT:0.5' signifie qu'il s'agit d'un exercice à trous en français, pour les débutants, et qu'il faut obtenir 50% des points pour que l'exercice soit considéré comme réussi.\n" +
+                                "Langues disponibles : " + getEnumValuesAsString(Langue.class) + "\n" +
+                                        "Type d'exercices : " + getEnumValuesAsString(TypeExo.class) + "\n" +
+                                        "Niveaux : " + getEnumValuesAsString(BaremeNiveau.class) + "\n" +
+                                        "Pourcentage : entre 0 et 1");
                                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                                 int res = fileChooser.showOpenDialog(null);
                                 if (res == JFileChooser.APPROVE_OPTION){
@@ -169,20 +176,21 @@ public class Main {
                                 }
                             case "3": // le prof veut voir les notes de ses élèves
                                 for(NiveauxEleves niv: listNiveauxUtilisateur){ // pour chaque inscription dans la table NiveauxEleves
-                                    if(niv.getProfesseur().equals(utilisateur_principal.getPseudo())){ // si l'élève a comme prof le prof qui utilise l'application
-                                        System.out.println("\n" + niv.getEleve() + " :\n" + // le nom de l'élève
+                                    if(niv.getProfesseur().equals(utilisateurActif.getPseudo())){ // si l'élève a comme prof le prof qui utilise l'application
+                                        System.out.println("\n" + niv.getPseudoEleve() + " :\n" + // le nom de l'élève
                                                 "- " + niv.getNiveau() + "\n" + // le niveau dans la langue
                                                 "- " + niv.getScore()); // le score dans la langue
                                     }
                                 }
+                                break;
                             default:
                                 System.out.println("Rien");
                                 break;
                             }
-                        }
                         System.out.print("Que voulez-vous faire ? ");
                         inputUser = scannerInputUser.nextLine();
-                    }*/
+                    }
+
 
                 } else if (studentSession) {
                     Boolean choixEleve1 = false, choixEleve2 = false;
@@ -223,12 +231,12 @@ public class Main {
                                     break;
                                 }
 
-                                if(Integer.parseInt(inputUser)>listExercices.size() || inputUser.equals("0")) {
+                                if(Integer.parseInt(inputUser)>exercicesAccessibles.size() || inputUser.equals("0")) {
                                     System.out.println("\nVotre réponse ne convient pas\n");
                                 }
                                 else{ // l'élève a choisi un exercice de la liste
                                     //TODO : faire la passation de niveaux
-                                    Exercice exerciceChoisi = listExercices.get(Integer.parseInt(inputUser)-1);
+                                    Exercice exerciceChoisi = exercicesAccessibles.get(Integer.parseInt(inputUser)-1);
 
                                     // construction de la réponse de l'exercice
                                     ReponseEleve reponseEleve = exerciceChoisi.construireReponse((Eleve) utilisateurActif);
@@ -239,12 +247,14 @@ public class Main {
                                         System.out.println("Félicitations, vous avez réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "!\n");
                                         updateScore(exerciceChoisi.getLangue(), 1F);
+                                        updateNiveau(exerciceChoisi.getLangue());
                                     }
                                     else{ // l'élève n'a pas réussi l'exercice
                                         reponseEleve.affichePhrasesRempliesAvecCouleurs(parseurPhraseATrous.getReversedPattern());
                                         System.out.println("Dommage, vous n'avez pas réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "...\n");
                                         updateScore(exerciceChoisi.getLangue(), -1F);
+                                        updateNiveau(exerciceChoisi.getLangue());
                                     }
                                 }
                             break;
@@ -279,16 +289,29 @@ public class Main {
         }
     }
 
+    /**
+     *  Cette méthode remplit la liste des parseurs (objets implémentant l'interface {@link Metaparse}) disponibles dans l'application.
+     *  Ces parseurs sont utilisés pour analyser et transformer des données d'input en objets {@link Phrase} spécifiques aux types d'exercices.
+     *  Actuellement, cette méthode ajoute les parseurs suivants :
+     <ul>
+     <li>{@link ParseurPhraseATrous} pour les exercices de type {@link TypeExo#EXO_A_TROU}</li>
+     <li>{@link ParseurTerminaison} pour les exercices de type {@link TypeExo#EXO_TERMINAISON}</li>
+     </ul>
+     */
     private static void remplirListeParseurs() {
         listParseurs.put(TypeExo.EXO_A_TROU, new ParseurPhraseATrous());
         listParseurs.put(TypeExo.EXO_TERMINAISON, new ParseurTerminaison());
         // Rajouter nouveaux parseurs ici si on veut créer d'autres types d'exercices
     }
 
-    public void scenarioEleve(){
-
-    }
-
+    /**
+     *  Cette méthode vérifie si l'utilisateur actif (un élève ou un professeur) existe dans la base de données et, le cas échéant, renvoie l'objet correspondant.
+     *  Si l'utilisateur n'existe pas, l'utilisateur peut choisir de s'enregistrer.
+     *  Si l'utilisateur est un élève, il doit en outre sélectionner ses professeurs parmi ceux existants dans la base de données.
+     *  @param pseudo le pseudo de l'utilisateur actif
+     *  @param type le type d'utilisateur actif ("prof" ou "eleve")
+     *  @return l'objet Utilisateur correspondant à l'utilisateur actif
+     */
     public static Utilisateur checkSession(String pseudo, String type) {
         String inputUser = "";
         Boolean choix1, choix2 = false;
@@ -392,6 +415,11 @@ public class Main {
         return user;
     }
 
+    /**
+     *  Cette méthode permet de fermer la connexion à la base de données en utilisant l'objet {@link ConnectionSource} fourni en paramètre.
+     *  Elle affiche un message de confirmation de fermeture de l'application.
+     *  @throws Exception s'il y a une erreur lors de la fermeture de la connexion
+     */
     public static void fermetureConnexion() throws Exception {
         System.out.println("\n//-------------------------------------------------//");
         System.out.println("Fermeture de l'application");
@@ -401,20 +429,46 @@ public class Main {
         }
     }
 
-    // Méthode qui permet d'updater le score dans l'objet NiveauxEleve et dans la Base de Données
-    public static void updateScore(Langue lang, Float addScore) throws SQLException { //TODO : mettre la méthode autre part
-        for(NiveauxEleves niv : listNiveauxUtilisateur) {
+    /**
+     *  Cette méthode permet de mettre à jour le score d'un élève dans une langue donnée.
+     *  Elle parcourt la liste des enregistrements de niveaux de l'utilisateur actif et si l'enregistrement concerne l'utilisateur actif et la langue donnée, le score de cet enregistrement est mis à jour avec la valeur donnée en paramètre.
+     *  @param lang la langue pour laquelle mettre à jour le score
+     *  @param addScore la valeur à ajouter au score actuel
+     *  @throws SQLException
+     */
+    public static void updateScore(Langue lang, Float addScore) throws SQLException {
+        // Pour chaque enregistrement de niveau de l'utilisateur actif
+        for (NiveauxEleves niv : listNiveauxUtilisateur) {
+            // Si l'enregistrement concerne l'utilisateur actif et la langue donnée
             if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == lang) {
-                niv.setScore(niv.getScore()+addScore);
-                niveauElevesDao.update(niv);
+                // Mise à jour du score de l'enregistrement
+                niv.setScore(niv.getScore() + addScore);
+                niveauElevesDao.update(niv); // actualisation dans la base de données concrètement
             }
         }
     }
 
-    public static void updateNiveau(Langue lang, BaremeNiveau newNiveau) throws SQLException { //TODO : mettre la méthode autre part
+    /**
+     *  Cette méthode met à jour le niveau de l'utilisateur actif (un élève) dans une langue donnée, en fonction de son score dans cette langue.
+     *  Si le score est compris entre 20 et 40, le niveau est défini comme "intermédiaire".
+     *  Si le score est compris entre 40 et 60, le niveau est défini comme "avancé".
+     *  Si le score est supérieur à 60, le niveau est défini comme "expert".
+     *  @param lang la langue pour laquelle mettre à jour le niveau de l'utilisateur actif
+     *  @throws SQLException
+     */
+    public static void updateNiveau(Langue lang) throws SQLException {
         for(NiveauxEleves niv : listNiveauxUtilisateur) {
             if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == lang) {
-                niv.setNiveau(newNiveau);
+                if (niv.getScore() < 20) {
+                    niv.setNiveau(BaremeNiveau.DEBUTANT);
+                }
+                else if (niv.getScore() >= 20 && niv.getScore() < 40) {
+                    niv.setNiveau(BaremeNiveau.INTERMEDIAIRE);
+                } else if (niv.getScore() >= 40 && niv.getScore() < 60) {
+                    niv.setNiveau(BaremeNiveau.AVANCE);
+                } else if (niv.getScore() >= 60) {
+                    niv.setNiveau(BaremeNiveau.EXPERT);
+                }
                 niveauElevesDao.update(niv);
             }
         }
@@ -462,12 +516,25 @@ public class Main {
                 for (Exercice exercice : listExercices) {
                     // Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
                     if (exercice.getLangue().equals(niveauEleve.getLangue()) && exercice.getNiveau().equals(niveauEleve.getNiveau())) {
+                        System.out.println(niveauEleve.getNiveau());
                         exercicesAccessibles.add(exercice);
                     }
                 }
             }
         }
         return exercicesAccessibles;
+    }
+
+    /**
+     *  Cette méthode prend en entrée une classe qui étend l'interface Enum, et retourne une chaîne de caractères qui contient les valeurs de l'énumération séparées par une virgule.
+     *  @param e la classe de l'énumération dont on veut récupérer les valeurs
+     *  @return une chaîne de caractères qui contient les valeurs de l'énumération séparées par une virgule
+     */
+    public static String getEnumValuesAsString(Class<? extends Enum<?>> e) {
+        // On utilise un stream pour parcourir chaque élément de l'énumération, on map chaque élément sur son nom, et on utilise Collectors.joining pour concaténer les éléments en une chaîne de caractères séparée par une virgule.
+        return Arrays.stream(e.getEnumConstants())
+                .map(Enum::name)
+                .collect(Collectors.joining(", "));
     }
 }
 
