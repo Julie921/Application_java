@@ -81,19 +81,13 @@ public class Professeur extends Utilisateur {
     public ArrayList<Exercice> getExercicesAccessibles(ArrayList<NiveauxEleves> listNiveauxUtilisateur, List<Exercice> listExercices) {
         ArrayList<Exercice> exercicesAccessibles = new ArrayList<>();
         // Pour chaque enregistrement de niveau de l'utilisateur actif
-        for (NiveauxEleves niveauEleve : listNiveauxUtilisateur) {
-            // Si l'enregistrement concerne l'utilisateur actif
-            if (niveauEleve.getLangue().equals(this.getLangue())) {
-                // Pour chaque exercice de la liste
-                for (Exercice exercice : listExercices) {
-                    // Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
-                    if (exercice.getLangue().equals(niveauEleve.getLangue())) {
-                        System.out.println(niveauEleve.getNiveau());
-                        exercicesAccessibles.add(exercice);
-                    }
-                }
+        for (Exercice exercice : listExercices) {
+            // Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
+            if (exercice.getLangue().equals(this.getLangue())) {
+                exercicesAccessibles.add(exercice);
             }
         }
+
         if(exercicesAccessibles.isEmpty()){
             System.out.println("Il n'y a encore aucun exercice enregistré en " + this.getLangue() + ".");
         }
