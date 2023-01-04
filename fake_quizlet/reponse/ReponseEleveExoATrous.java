@@ -25,7 +25,7 @@ public class ReponseEleveExoATrous extends ReponseEleve {
      * @param exercice l'exercice à trous à compléter.
      * @param eleve l'élève qui répond à l'exercice.
      */
-    ReponseEleveExoATrous(ExoATrous exercice, Eleve eleve) {
+    public ReponseEleveExoATrous(ExoATrous exercice, Eleve eleve) {
         // Appel du constructeur de la classe parente
         super(exercice, eleve);
 
