@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="Release">
+    <output-path>$PROJECT_DIR$/build/release</output-path>
+    <root id="root">
+      <element id="file-copy" path="$PROJECT_DIR$/database.db.mv.db" />
+      <element id="file-copy" path="$PROJECT_DIR$/database.db.trace.db" />
+      <element id="directory" name="ressources">
+        <element id="dir-copy" path="$PROJECT_DIR$/ressources" />
+      </element>
+      <element id="archive" name="Application_java.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/res_jar/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="Application_java" />
+        <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/h2database/h2/2.1.214/h2-2.1.214.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/github/alexarchambault/windows-ansi/windows-ansi/0.0.4/windows-ansi-0.0.4.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/fusesource/jansi/jansi/1.18/jansi-1.18.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/lib/ormlite-jdbc-6.1.jar" path-in-jar="/" />
+      </element>
+    </root>
+  </artifact>
+</component>

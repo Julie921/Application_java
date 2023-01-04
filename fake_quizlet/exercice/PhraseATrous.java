@@ -27,7 +27,7 @@ public class PhraseATrous extends Phrase{
      * @param phraseAvecTrous la phrase avec les trous
      * @param motsAPlacer la liste des mots à placer dans l'ordre correct
      */
-    PhraseATrous(String phraseCorrecte, String phraseAvecTrous, ArrayList<String> motsAPlacer) {
+    public PhraseATrous(String phraseCorrecte, String phraseAvecTrous, ArrayList<String> motsAPlacer) {
         this.phraseCorrecte = phraseCorrecte;
         this.phraseAvecTrous = phraseAvecTrous;
         this.motsAPlacer = motsAPlacer;
