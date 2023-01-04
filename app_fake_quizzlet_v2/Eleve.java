@@ -151,7 +151,6 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 				for (Exercice exercice : listExercices) {
 					// Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
 					if (exercice.getLangue().equals(niveauEleve.getLangue()) && exercice.getNiveau().equals(niveauEleve.getNiveau())) {
-						System.out.println(niveauEleve.getNiveau());
 						exercicesAccessibles.add(exercice);
 					}
 				}

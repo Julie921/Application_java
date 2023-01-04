@@ -1,5 +1,7 @@
 package app_fake_quizzlet_v2;
 
+import org.fusesource.jansi.Ansi;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -77,16 +79,14 @@ public class ImportExercice {
                 throw new IllegalStateException("Unexpected value: " + typeExo);
         }
 
-        System.out.println("--------------------------------ICI");
-        System.out.println(file.getPath());
-        System.out.println(Main.RESSOURCES_FOLDER+"/"+file.getName());
         Path source = Paths.get(file.getPath());
         Path target = Paths.get(Main.RESSOURCES_FOLDER+"/"+file.getName());
         if (Files.notExists(target)) {
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("Fichier copié avec succès.");
         }
-        System.out.println("--------------------------------FIN");
+
+        System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a("\nL'exercice a été créé avec succès.\n").reset());
 
         return exoACreer;
     }

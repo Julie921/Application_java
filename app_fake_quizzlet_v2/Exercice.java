@@ -95,7 +95,7 @@ public abstract class Exercice {
         this.pourcentage = pourcentage;
     }
 
-    public abstract  void previewText();
+    public abstract void previewText();
 
     public abstract ReponseEleve construireReponse(Eleve eleve);
 

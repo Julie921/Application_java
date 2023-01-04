@@ -93,6 +93,9 @@ public class ExoATrous extends Exercice {
         if (listPhrases.size() > 3) {
             System.out.println("...");
         }
+        else {
+            System.out.println("");
+        }
     }
 
     //TODO: écrire la javadoc

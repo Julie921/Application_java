@@ -89,7 +89,7 @@ public class Professeur extends Utilisateur {
         }
 
         if(exercicesAccessibles.isEmpty()){
-            System.out.println("Il n'y a encore aucun exercice enregistré en " + this.getLangue() + ".");
+            System.out.println("\nIl n'y a encore aucun exercice enregistré en " + this.getLangue() + ".\n");
         }
         return exercicesAccessibles;
     }
@@ -122,7 +122,7 @@ public class Professeur extends Utilisateur {
                     System.out.println(eleve + niveau + score);
                 }
             }
-            System.out.println("+-------------+---------------+--------+");
+            System.out.println("+-------------+---------------+--------+\n");
         } else { // le prof n'a pas d'élèves
             System.out.println("Vous n'avez pas encore d'élèves inscrits dans votre cours.\n");
         }

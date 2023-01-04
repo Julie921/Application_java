@@ -86,10 +86,10 @@ public class Main {
             String inputUser = ""; // initilisation de la string qui contiendra ce que l'utilisateur rentre
 
             //Cette boucle permet à l'utilisateur de choisir son type de session (élève ou professeur).
-             //Si l'utilisateur entre 1, la variable studentSession sera mise à true. Si l'utilisateur entre 2, la variable professeurSession sera mise à true.
-             //Si l'utilisateur entre !quit, la méthode fermetureConnexion sera appelée et le programme se termine.
-             //Si l'utilisateur entre une autre réponse, il sera informé que sa réponse ne convient pas.
-             //La boucle se répète jusqu'à ce que l'utilisateur entre 1, 2 ou !quit.
+            //Si l'utilisateur entre 1, la variable studentSession sera mise à true. Si l'utilisateur entre 2, la variable professeurSession sera mise à true.
+            //Si l'utilisateur entre !quit, la méthode fermetureConnexion sera appelée et le programme se termine.
+            //Si l'utilisateur entre une autre réponse, il sera informé que sa réponse ne convient pas.
+            //La boucle se répète jusqu'à ce que l'utilisateur entre 1, 2 ou !quit.
 
             boolean studentSession = false;
             boolean professeurSession = false;
@@ -138,119 +138,161 @@ public class Main {
             }
 
             System.out.println("\n//-------------------------------------------------//");
-            System.out.println("Bonjour " + utilisateurActif.getPseudo() + "!");
+            System.out.println("Bonjour " + utilisateurActif.getPseudo() + " !");
 
             do {
 
-                if (professeurSession) {
-                    Boolean choixActionProf1 = false, choixActionProf2 = false, choixActionProf3 = false;
+                if (professeurSession) { // l'utilisateur actif est un professeur
+
                     do {
+                        // menu des options disponibles
                         System.out.println("//-------------------------------------------------//\n");
                         System.out.println("Que voulez-vous faire ?");
                         System.out.println("" +
-                                "1 : Ajouter un exercice\n" +
-                                "2 : Voir les exercices sauvegardés\n" +
-                                "3 : Voir les résultats de mes élèves");
+                                "1 : Voir les exercices sauvegardés\n" +
+                                "2 : Voir les résultats de mes élèves\n" +
+                                "3 : Ajouter un exercice");
+                        System.out.print("Votre réponse: ");
+                        inputUser = scannerInputUser.nextLine(); // on récupère son choix
+
+                        if(!inputUser.equals(QUIT_COMMAND) && !inputUser.equals("1") && !inputUser.equals("2") && !inputUser.equals("3")){ // si l'utilisateur ne rentre pas un choix valide
+                            System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("\n/!\\ Votre réponse ne convient pas. Veuillez saisir un numéro valide ou quitter l'application avec '!quit'\n").reset());
+                        }
+
+                        if(inputUser.equals(QUIT_COMMAND)){ // si l'utilisateur veut fermer l'application
+                            fermetureConnexion();
+                            break;
+                        }
+
+                    } while (!inputUser.equals(QUIT_COMMAND) && !inputUser.equals("1") && !inputUser.equals("2") && !inputUser.equals("3")); // ça continue de demander tant que l'utilisateur ne rentre pas un numéro correspondant à un choix ou la commande pour quitter
+
+                    while (!inputUser.equals(QUIT_COMMAND)) {
+
+                        switch (inputUser) {
+                            case "1": // voir une liste des exercices existants pour la langue du professeur
+                                ArrayList<Exercice> exercicesAccessibles = utilisateurActif.getExercicesAccessibles(listNiveauxUtilisateur, listExercices); // on récupère la liste des exercices qui sont dans la langue enseignée par le prof
+
+                                utilisateurActif.afficheExercicesAccessibles(exercicesAccessibles); //  on affiche une preview de chaque exercice
+                                break;
+                            case "2": // le prof veut voir les notes de ses élèves
+                                utilisateurActif.afficheResultats(listNiveauxUtilisateur); // on affiche les résultats des élèves inscrits dans son cours sous la forme d'un tableau
+                                break;
+                            case "3": // ajouter un exercice
+
+                                // affichage des consignes pour le formatage des métadonnées de l'exercice
+                                System.out.println(Ansi.ansi().fg(Ansi.Color.BLUE).a("\n/!\\ Attention à bien préciser les métadonnées sur la première lignes : \n" + "LANG:TYPE_EXO:NIVEAU:POURCENTAGE_POINT_POUR_REUSSIR\n" +
+                                        "Par exemple: 'FR:EXO_A_TROU:DEBUTANT:0.5' signifie qu'il s'agit d'un exercice à trous en français, pour les débutants, et qu'il faut obtenir 50% des points pour que l'exercice soit considéré comme réussi.\n" +
+                                        "- Langues disponibles : " + getEnumValuesAsString(Langue.class) + "\n" +
+                                        "- Type d'exercices : " + getEnumValuesAsString(TypeExo.class) + "\n" +
+                                        "- Niveaux : " + getEnumValuesAsString(BaremeNiveau.class) + "\n" +
+                                        "- Pourcentage : entre 0 et 1\n").reset());
+
+                                // ouverture de la boîte de dialogue pour sélectionner le fichier
+                                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                                int res = fileChooser.showOpenDialog(null);
+
+                                // si l'utilisateur a sélectionné un fichier
+                                if (res == JFileChooser.APPROVE_OPTION) {
+                                    listExercices.add(importExercice.readFromFile(fileChooser.getSelectedFile())); // on crée l'exercice et on l'ajoute à la liste des exercices
+                                }
+                                break;
+                            default: // si l'utilisateur entre autre chose que les choix proposés
+                                System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("\n/!\\ Votre saisie est incorrecte.\n").reset());
+                                break;
+                        }
+                        System.out.println("//-------------------------------------------------//\n");
+                        System.out.print("Que voulez-vous faire ? ");
+                        System.out.println("\n" + //menu avec les options
+                                "1 : Voir les exercices sauvegardés\n" +
+                                "2 : Voir les résultats de mes élèves\n" +
+                                "3 : Ajouter un exercice");
                         System.out.print("Votre réponse: ");
                         inputUser = scannerInputUser.nextLine();
 
-                        // Choix Professeur
-                        choixActionProf1 = inputUser.equals("1");
-                        choixActionProf2 = inputUser.equals("2");
-                        choixActionProf3 = inputUser.equals("3");
-
-                        if (!choixActionProf1 && !choixActionProf2 && !choixActionProf3 && !inputUser.equals(QUIT_COMMAND)) {
-                            System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
+                        if(inputUser.equals(QUIT_COMMAND)){ // si l'utilisateur veut fermer l'application
+                            fermetureConnexion();
+                            break;
                         }
-
-                    } while (!inputUser.equals(QUIT_COMMAND) && !choixActionProf1 && !choixActionProf2 && !choixActionProf3);
-
-                    while (!inputUser.equals(QUIT_COMMAND)) {
-                        // TODO compléter les cases
-                        switch (inputUser) {
-                            case "1": // ajouter un exercice
-                                System.out.println("Attention à bien préciser les métadonnées sur la première lignes : \n " +
-                                        "LANG:TYPE_EXO:NIVEAU:POURCENTAGE_POINT_POUR_REUSSIR\nPar exemple: 'FR:EXO_A_TROU:DEBUTANT:0.5' signifie qu'il s'agit d'un exercice à trous en français, pour les débutants, et qu'il faut obtenir 50% des points pour que l'exercice soit considéré comme réussi.\n" +
-                                        "Langues disponibles : " + getEnumValuesAsString(Langue.class) + "\n" +
-                                        "Type d'exercices : " + getEnumValuesAsString(TypeExo.class) + "\n" +
-                                        "Niveaux : " + getEnumValuesAsString(BaremeNiveau.class) + "\n" +
-                                        "Pourcentage : entre 0 et 1");
-                                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                                int res = fileChooser.showOpenDialog(null);
-                                if (res == JFileChooser.APPROVE_OPTION) {
-                                    listExercices.add(importExercice.readFromFile(fileChooser.getSelectedFile()));
-                                }
-                                break;
-                            case "2":
-                                ArrayList<Exercice> exercicesAccessibles = utilisateurActif.getExercicesAccessibles(listNiveauxUtilisateur, listExercices);
-
-                                utilisateurActif.afficheExercicesAccessibles(exercicesAccessibles);
-                                break;
-                            case "3": // le prof veut voir les notes de ses élèves
-                                utilisateurActif.afficheResultats(listNiveauxUtilisateur);
-                                break;
-                            default:
-                                System.out.println("Rien");
-                                break;
-                        }
-                        System.out.print("Que voulez-vous faire ? ");
-                        inputUser = scannerInputUser.nextLine();
                     }
 
 
-                } else if (studentSession) {
-                    Boolean choixEleve1 = false, choixEleve2 = false;
+                } else if (studentSession) { // si l'utilisateur principal est un élève
+
                     do {
-                        System.out.println("//-------------------------------------------------//");
+                        // menu des options disponibles
+                        System.out.println("//-------------------------------------------------//\n");
                         System.out.println("Que voulez-vous faire ?");
-                        System.out.println("" +
+                        System.out.println("\n" +
                                 "1 : Faire un exercice\n" +
                                 "2 : Voir mes résultats\n" +
                                 "3 : S'inscrire dans un nouveau cours de langue");
-
                         System.out.print("Votre réponse: ");
-                        inputUser = scannerInputUser.nextLine();
+                        inputUser = scannerInputUser.nextLine(); // on récupère son choix
 
-                        // Choix Eleve
-                        choixEleve1 = inputUser.equals("1");
-                        choixEleve2 = inputUser.equals("2");
-                        /*if (!choixEleve1 && !choixEleve2 && !inputUser.equals(QUIT_COMMAND)) {
-                            System.out.println("Votre réponse ne convient pas\n//-------------------------------------------------//");
-                        }*/
+                        if(!inputUser.equals(QUIT_COMMAND) && !inputUser.equals("1") && !inputUser.equals("2") && !inputUser.equals("3")){ // si l'utilisateur ne rentre pas un choix valide
+                            System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("\n/!\\ Votre réponse ne convient pas. Veuillez saisir un numéro valide ou quitter l'application avec '!quit'\n").reset());
+                        }
+
+                        if(inputUser.equals(QUIT_COMMAND)){ // si l'utilisateur veut fermer l'application
+                            fermetureConnexion();
+                            break;
+                        }
+
+                    } while (!inputUser.equals(QUIT_COMMAND) && !inputUser.equals("1") && !inputUser.equals("2") && !inputUser.equals("3")); // ça continue de demander tant que l'utilisateur ne rentre pas un numéro correspondant à un choix ou la commande pour quitter
+
+                    while (!inputUser.equals(QUIT_COMMAND)) {
                         switch (inputUser) {
                             case "1": // l'élève veut faire un exercice
 
-                                System.out.println("Voici une preview de chaque exercice acessible pour vos langues et votre niveau dans ces langues.");
+                                System.out.println("\nVoici une preview de chaque exercice acessible pour vos langues et votre niveau dans ces langues.\n");
 
-                                ArrayList<Exercice> exercicesAccessibles = utilisateurActif.getExercicesAccessibles(listNiveauxUtilisateur, listExercices);
+                                ArrayList<Exercice> exercicesAccessibles = utilisateurActif.getExercicesAccessibles(listNiveauxUtilisateur, listExercices); // on récupère la liste des exercices que l'utilisateur peut faire au vu de son niveau et des langues qu'il étudie
 
-                                utilisateurActif.afficheExercicesAccessibles(exercicesAccessibles);
+                                utilisateurActif.afficheExercicesAccessibles(exercicesAccessibles); // on affiche une preview de chaque exercice possible
 
-                                System.out.println("\nNuméro de l'exercice choisi : ");
+                                System.out.print("\nNuméro de l'exercice choisi : ");
                                 inputUser = scannerInputUser.nextLine();
-                                if (inputUser.equals(QUIT_COMMAND)) {
-                                    fermetureConnexion();
+
+                                if (inputUser.equals(QUIT_COMMAND)) { // si
                                     break;
                                 }
 
+                                // on vérifie que l'index rentré est correct
                                 if (Integer.parseInt(inputUser) > exercicesAccessibles.size() || inputUser.equals("0")) {
-                                    System.out.println("\nVotre réponse ne convient pas\n");
-                                } else { // l'élève a choisi un exercice de la liste
-                                    Exercice exerciceChoisi = exercicesAccessibles.get(Integer.parseInt(inputUser) - 1);
+                                    System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("\n/!\\ Votre réponse ne convient pas. Veuillez saisir un numéro valide ou quitter l'application avec '!quit'\n").reset());
+                                }
+
+                                else { // l'élève a choisi un exercice de la liste
+                                    Exercice exerciceChoisi = exercicesAccessibles.get(Integer.parseInt(inputUser) - 1); // on récupère l'exercice
 
                                     // construction de la réponse de l'exercice
                                     ReponseEleve reponseEleve = exerciceChoisi.construireReponse((Eleve) utilisateurActif);
+
+                                    // correction des réponses de l'élève
                                     System.out.println("\nCorrection :\n");
 
+                                    reponseEleve.affichePhrasesRempliesAvecCouleurs(listParseurs.get(exerciceChoisi.getType()).getReversedPattern()); // on reconstitue l'exercice avec les réponses de l'élève en mettant des couleurs selon si sa réponse est bonne  ou non
+
                                     if (reponseEleve.valide()) { // l'élève a réussi l'exercice et gagne un point dans son score de la langue
-                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(listParseurs.get(exerciceChoisi.getType()).getReversedPattern()); // on récupère le reversed pattern du parseur utilisé pour le type de l'exercice spécifique
                                         System.out.println("Félicitations, vous avez réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "!\n");
                                     } else { // l'élève n'a pas réussi l'exercice
-                                        reponseEleve.affichePhrasesRempliesAvecCouleurs(listParseurs.get(exerciceChoisi.getType()).getReversedPattern());
                                         System.out.println("Dommage, vous n'avez pas réussi l'exercice.");
                                         System.out.println("Vous deviez obtenir " + reponseEleve.getSeuilPassation() + " points pour valider et vous en avez obtenu " + reponseEleve.getNoteDonnee() + "...\n");
                                     }
+
+                                    // on demande à l'utilisateur s'il veut voir les réponses correctes
+                                    System.out.println("Voulez-vous voir les réponses correctes ?");
+                                    System.out.println("" +
+                                            "- 1 : Oui\n" +
+                                            "- 2 : Non");
+                                    System.out.print("Votre réponse : ");
+                                    inputUser = scannerInputUser.nextLine(); // on récupère son choix
+                                    if(inputUser.equals("1")) {
+                                        exerciceChoisi.afficherCorrection();
+                                    }
+
+                                    // on update le score de l'élève et au besoin on update le niveau de l'élève
                                     Boolean eleveValide = reponseEleve.valide();
                                     for (NiveauxEleves niv : listNiveauxUtilisateur) {
                                         if (niv.getPseudoEleve().equals(utilisateurActif.getPseudo()) && niv.getLangue() == exerciceChoisi.getLangue()) {
@@ -262,11 +304,12 @@ public class Main {
                                 }
                                 break;
 
-                            case "2": // l'utilisateur veut voir ses résultats
+                            case "2": // l'utilisateur veut voir ses résultats dans les langues dans lequelles il est inscrit
                                 utilisateurActif.afficheResultats(listNiveauxUtilisateur);
                                 break;
-                            case "3":
-                                List<Professeur> allProf = professeurDao.queryForAll();
+
+                            case "3": // l'utilisateur veut s'inscrire dans un nouveau cours
+                                List<Professeur> allProf = professeurDao.queryForAll(); // on récupère la liste de tous les profs
                                 System.out.println("Dans quel cours voulez-vous vous inscrire ?");
                                 for (int i = 0; i < allProf.size(); i++) {
                                     Professeur p = allProf.get(i);
@@ -274,15 +317,18 @@ public class Main {
                                 }
                                 System.out.print("Professeur choisi: ");
                                 inputUser = scannerInputUser.nextLine();
+
+                                if(inputUser.equals(QUIT_COMMAND)){ // si l'utilisateur veut quitter l'app
+                                    System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("\n/!\\ Votre identifiant ne sera pas créé.\n").reset());
+                                    fermetureConnexion();
+                                }
+
                                 int indexProf = Integer.parseInt(inputUser) - 1;
 
-                                // Si l'eleve a rentrée 0 dans sa donnée
-                                // il a fini de choisir ses professeurs
-
-                                // Sinon, on vérifie que l'index donné est correct
-                                if ((indexProf < 0) || (indexProf >= allProf.size())) { //TODO problème quand on fait !quit
-                                    System.out.println("Saisie invalide, index non compris.");
-                                } else {
+                                // on vérifie que l'index donné est correct
+                                if ((indexProf < 0) || (indexProf >= allProf.size())) {
+                                    System.out.println(Ansi.ansi().fg(Ansi.Color.RED).a("\n/!\\ Votre réponse ne convient pas. Veuillez saisir un numéro valide ou quitter l'application avec '!quit'\n").reset());
+                                } else { // si l'index est bon, on inscrit l'élève dans le cours
                                     Professeur prof = allProf.get(indexProf);
                                     ((Eleve) utilisateurActif).inscriptionLangue(prof, listNiveauxUtilisateur, niveauElevesDao);
                                 }
@@ -294,7 +340,20 @@ public class Main {
 
                         }
 
-                    } while (!inputUser.equals(QUIT_COMMAND) && !choixEleve1 && !choixEleve2);
+                        System.out.println("//-------------------------------------------------//\n");
+                        System.out.print("Que voulez-vous faire ? ");
+                        System.out.println("\n" +
+                                "1 : Faire un exercice\n" +
+                                "2 : Voir mes résultats\n" +
+                                "3 : S'inscrire dans un nouveau cours de langue");
+                        System.out.print("Votre réponse: ");
+                        inputUser = scannerInputUser.nextLine();
+
+                        if(inputUser.equals(QUIT_COMMAND)){ // si l'utilisateur veut fermer l'application
+                            fermetureConnexion();
+                            break;
+                        }
+                    }
                 }
 
             } while (!inputUser.equals(QUIT_COMMAND));
