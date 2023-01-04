@@ -71,6 +71,11 @@ public class Main {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+        System.setProperty("file.encoding", "UTF-8");
+        System.setProperty("native.encoding", "UTF-8");
+        System.setProperty("sun.stdout.encoding", "UTF-8");
+        System.setProperty("sun.jnu.encoding", "UTF-8");
+        System.setProperty("sun.stderr.encoding", "UTF-8");
         LoggerFactory.setLogBackendFactory(LogBackendType.NULL); //enlève tous les print de ormlite
 
         try {
