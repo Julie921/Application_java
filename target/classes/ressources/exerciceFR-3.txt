@@ -1,6 +1,0 @@
-FR:EXO_A_TROU:INTERMEDIAIRE:0.5
-Je suis désolé, je ne parle pas #français#.
-Je n'ai pas #compris# ce que tu as #dit#.
-Je ne suis pas #d'accord# avec toi.
-Tu es très #gentil#.
-Je suis #fatigué#, je vais me #coucher#.
