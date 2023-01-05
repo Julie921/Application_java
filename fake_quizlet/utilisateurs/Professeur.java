@@ -18,7 +18,7 @@ import java.util.List;
 public class Professeur extends Utilisateur {
 
     /**
-     * @DatabaseField indique que cet attribut est mappé sur une colonne de la table "PROFESSEURS" dans la base de données.
+     * DatabaseField indique que cet attribut est mappé sur une colonne de la table "PROFESSEURS" dans la base de données.
      */
     @DatabaseField
     private Langue langue;
