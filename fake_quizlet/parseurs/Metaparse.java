@@ -7,7 +7,7 @@ import fake_quizlet.exercice.PhraseATrous;
 import java.util.regex.Pattern;
 
 /**
- * La classe Metaparse est une interface qui définit une méthode abstraite {@code parse()} permettant de parser un input.
+ * La classe Metaparse est une classe qui définit une méthode abstraite {@code parse()} permettant de parser un input.
  *
  * Metaparse est destinée à être implémentée par des classes spécifiques aux exercices. Par exemple, {@link ParseurPhraseATrous} est une classe qui implémente cette interface et qui permet de créer les objets {@link PhraseATrous} des exercices {@link ExoATrous}.
  */

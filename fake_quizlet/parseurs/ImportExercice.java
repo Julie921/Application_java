@@ -72,7 +72,7 @@ public class ImportExercice {
         // Ferme le fichier
         reader.close();
 
-        switch (typeExo) {
+        switch (typeExo) { //ajouter un case si on veut créer un nouveau type d'exercice
             case EXO_A_TROU:
                 exoACreer = new ExoATrous(langueExo, niveauExo, pourcentageExo, (ParseurPhraseATrous) listParseurs.get(TypeExo.EXO_A_TROU), inputParser);
                 break;
@@ -131,7 +131,7 @@ public class ImportExercice {
         // Ferme le fichier
         reader.close();
 
-        switch (typeExo) {
+        switch (typeExo) { //ajouter un case si on veut créer un nouveau type d'exercice
             case EXO_A_TROU:
                 exoACreer = new ExoATrous(langueExo, niveauExo, pourcentageExo, (ParseurPhraseATrous) listParseurs.get(TypeExo.EXO_A_TROU), inputParser);
                 break;
