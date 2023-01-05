@@ -126,6 +126,10 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 					if (exercice.getLangue().equals(niveauEleve.getLangue()) && exercice.getNiveau().equals(niveauEleve.getNiveau())) {
 						exercicesAccessibles.add(exercice);
 					}
+					// Si l'exercice a la même langue et un niveau inférieur à celui de l'enregistrement de l'utilisateur actif, on l'ajoute également à la liste des exercices accessibles
+					else if (exercice.getLangue().equals(niveauEleve.getLangue()) && exercice.getNiveau().ordinal() < niveauEleve.getNiveau().ordinal()) {
+						exercicesAccessibles.add(exercice);
+					}
 				}
 			}
 		}
