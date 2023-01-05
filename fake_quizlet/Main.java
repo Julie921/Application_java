@@ -28,47 +28,96 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ *  Cette classe est la classe principale de l'application. Elle gère la création de la base de données, l'initialisation de celle-ci, l'ajout d'exercices, la connexion d'un utilisateur et la redirection vers les différentes actions possibles.
+ */
 public class Main {
 
+    /**
+     *  URL de la base de données H2 utilisée pour stocker les informations sur les utilisateurs.
+     */
     private final static String DATABASE_URL = "jdbc:h2:file:./database.db";
 
     /**
      * Dossier dans lequel se trouve les ressources de l'application = les fichiers .txt contenant des exercices
      */
     public final static String RESSOURCES_FOLDER = "./ressources";
+
+    /**
+     * connectionSource est un objet de type ConnectionSource qui permet de gérer la connexion à la base de données.
+     */
     private static ConnectionSource connectionSource = null;
+
+    /**
+     * professeurDao est un objet de type Dao dont la clé primaire est une String (pseudo du professeur) qui permet de gérer les objets de type {@link Professeur} dans la base de données.
+     */
     private static Dao<Professeur, String> professeurDao;
+
+    /**
+     * eleveDao est un objet de type Dao dont la clé primaire est une String (pseudo de l'élève) qui permet de gérer les objets de type {@link Eleve} dans la base de données.
+     */
     private static Dao<Eleve, String> eleveDao;
+
+    /**
+     * niveauElevesDao est un objet de type Dao dont la clé primaire est un Integer généré automatiquement et qui permet de gérer les objets de type {@link NiveauxEleves} dans la base de données.
+     */
     private static Dao<NiveauxEleves, Integer> niveauElevesDao;
 
+    /**
+     *  Scanner utilisé pour récupérer les réponses de l'utilisateur.
+     */
     public static Scanner scannerInputUser = new Scanner(System.in); //pour récupérer les réponses de l'utilisateur
 
+    /**
+     *  Commande utilisée pour quitter l'application.
+     */
     private static String QUIT_COMMAND = "!quit"; // pour quitter l'application
 
-    // Référence de l'utilisateur principal pour toutes les opérations
+    /**
+     *  Référence de l'utilisateur principal pour toutes les opérations.
+     */
     private static Utilisateur utilisateurActif = null;
 
-    // Dictionnaire qui permet de récupérer plus facilement les objets Professeur
+    /**
+     *  Dictionnaire qui permet de récupérer plus facilement les objets Professeur avec leur pseudo
+     */
     private static HashMap<String, Professeur> listProfs = new HashMap<>();
 
-    // Dictionnaire qui permet de récupérer plus facilement les objets Eleve
+    /**
+     *  Dictionnaire qui permet de récupérer plus facilement les objets Eleve avec leur pseudo
+     */
     private static HashMap<String, Eleve> listEleves = new HashMap<>();
 
-    // Liste des NiveauxEleves qui fait le lien entre Eleve et Professeur
+    /**
+     *  Liste des NiveauxEleves qui fait le lien entre Eleve et Professeur et qui référence le niveau et le score de chaque élève dans chaque langue dans laquelle il est inscrit
+     */
     private static ArrayList<NiveauxEleves> listNiveauxUtilisateur = new ArrayList<>();
 
+    /**
+     *  Représente la liste des exercices disponibles dans l'application.
+     * Cette liste est utilisée pour afficher les exercices.
+     */
     private static List<Exercice> listExercices = new ArrayList<>();
 
+    /**
+     *  Représente la liste des parseurs utilisés par l'application pour lire les fichiers .txt contenant les exercices.
+     * Chaque parseur est associé à un type d'exercice (TypeExo).
+     */
     private static HashMap<TypeExo, Metaparse> listParseurs = new HashMap<>();
 
+    /**
+     *  Représente la classe utilisée pour importer des exercices à partir de fichiers .txt.
+     */
     private static ImportExercice importExercice = null;
 
+    /**
+     * Représente le sélecteur de fichier utilisé pour ouvrir les fichiers .txt contenant les exercices.
+     */
     private static JFileChooser fileChooser = new JFileChooser(".");
 
 
     /**
-     * @param args
-     * @throws Exception
+     *  La méthode main est le point d'entrée de l'application. Elle s'occupe de créer la base de données, de l'initialiser, de charger les exercices et de lancer la boucle principale de l'application.
      */
     public static void main(String[] args) throws Exception {
         System.setProperty("file.encoding", "UTF-8");
