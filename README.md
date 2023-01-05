@@ -12,6 +12,13 @@ Fake Quizlet est une application qui répond aux besoins suivants :
 - Les élèves peuvent consulter leurs progrès dans leurs langues
 - Les professeurs peuvent consulter les progrès de leurs élèves
 
+Pour lancer l'application : 
+
+```bash
+cd build/release
+java -jar Application_java.jar
+```
+
 Pour quitter l'application, il faut rentrer le mot clé `!quit`.
 
 # Explication plus détaillée
