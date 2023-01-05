@@ -142,7 +142,7 @@ A noter que les exercices ne sont pas stockés dans la DataBase mais dans le dos
 
 # Demo
 
-Pour accéder à la javadoc : `build/release/javadoc/index.html`
+Pour accéder à la javadoc : `build/release/javadoc/index.html` et la diagramme des classes est disponibles dans `build/release/javadoc/package_diagram.svg`.
 
 Afin de pouvoir tester l'application, nous avons créé une base de données fictives avec les informations suivantes : 
 
