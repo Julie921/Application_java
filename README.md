@@ -100,7 +100,7 @@ Selon son niveau, l'élève n'est pas noté de la même manière (classe `Bareme
 
 ### La correction des exercices
 
-La correction se fait automatiquement. L'objet de la classe `ReponseEleve`[^classe_abstraite] est construit lorsque l'élève répond à un exercice. Dans le constructeur, une fois toutes les réponses de l'élève récupéré, l'attribut `reponsesCorrection` est instancié grâce à la méthode `corrige()` (interface `Correction`). Cette méthode attribue une `ValeurReponse` (énumération) à chaque réponse.
+La correction se fait automatiquement. L'objet de la classe `ReponseEleve`[^classe_abstraite] est construit lorsque l'élève répond à un exercice. Dans le constructeur, une fois toutes les réponses de l'élève récupéré, l'attribut `reponsesCorrection` est instancié grâce à la méthode `corrige()` (interface `Correction`). Cette méthode attribue une `ValeurReponse` (énumération) à chaque réponse. Chaque réponse peut être soit "VRAI", soit "FAUX", soit "NR" (non-répondue)
 
 [^classe_abstraite]: `ReponseEleve` est une classe abstraite. La classe `ReponseEleveExoATrous` est le classe concrète qui étend cette classe et qui est spécifique aux exercices à trous.
 
