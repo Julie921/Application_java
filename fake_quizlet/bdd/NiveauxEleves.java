@@ -142,7 +142,6 @@ public class NiveauxEleves {
         return pseudoEleve;
     }
 
-    //TODO  à quoi elle sert ?
     public void setEleve(Eleve eleve) {
         this.pseudoEleve = eleve.getPseudo();
     }
