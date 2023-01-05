@@ -114,9 +114,11 @@ public class ExoATrous extends Exercice {
      */
     @Override
     public void afficherCorrection() {
+        System.out.println("\n");
         for(PhraseATrous phrase: listPhrases){
             System.out.println(phrase.getPhraseCorrecte());
         }
+        System.out.println("\n");
     }
 
     /**
