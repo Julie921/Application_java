@@ -34,20 +34,106 @@ Lors de la création de son compte, l'élève doit sélectionner les cours auxqu
 
 Si l'utilisateur entre la commande pour quitter l'application (`!quit`), son compte est tout de même créé mais il n'est inscrit dans aucun cours. Il peut s'inscrire dans des cours ultérieurement.
 
+L'élève est attribué automatiquement le score de 0 et le niveau DEBUTANT dans la langue. 
+
 Une fois inscrit et identifié, trois actions sont possibles : 
 
 1. Faire un exercice : 
-    1. Une preview de chaque exercice accessible pour l'élève s'affiche. Un exercice est considéré comme accessible pour l'élève si l'élève est inscrit dans la langue correspondant à celle de l'exercice et si le niveau de l'exercice correspond au niveau de l'élève dans la langue. Par exemple, si l'élève est DEBUTANT en espagnol, AVANCE en anglais et 
+    1. Une preview de chaque exercice accessible pour l'élève s'affiche. Un exercice est considéré comme accessible pour l'élève si l'élève est inscrit dans la langue correspondant à celle de l'exercice et si le niveau de l'exercice correspond au niveau de l'élève dans la langue ou à un niveau inférieur à l'élève. Par exemple, si l'élève est DEBUTANT en espagnol et AVANCE en anglais, il s'affichera une preview de tous les exercices en espagnol pour DEBUTANT et tous les exercices en anglais pour DEBUTANT, INTERMEDIAIRE et AVANCE.
+   2. L'élève sélectionne l'exercice qu'il veut faire.
+   3. (Pour l'instant, seulement les exercices à trous sont disponibles) L'élève répond aux questions ce qui construit un objet de la classe ReponseEleveExoATrous.
+   4. Cet objet permet également d'attribuer une note à l'élève, de lui afficher les endroits où il a eu bon ou faux et de lui dire si l'exercice est considéré comme réussi ou non (selon s'il dépasse la note pallier fixé par le prof qui a créé l'exercice).
+   5. Il lui est proposé de voir ou non les réponses correctes.
+2. Voir le notes qu'il a obtenues : un tableau s'affiche avec pour chaque langue qu'il étudie le nom de son professeur, son score et son niveau.
+3. S'inscrire dans un nouveau cours : si l'élève choisit un cours d'une langue dans laquelle il est déjà inscrit, il ne peut pas s'inscire. S'il choisit un cours d'une langue dans laquelle il n'est pas déjà inscrit, un message indique que l'inscription est réussie. 
 
+## Les règles de gestion
 
+### Le passage d'un niveau 
 
+Il existe quatre niveaux : DEBUTANT, INTERMEDIAIRE, AVANCE, EXPERT. Pour qu'un élève passe d'un niveau à un autre, il faut que son score soit compris dans une certaine plage. 
 
+- DEBUTANT : en-dessous de 20
+- INTERMEDIAIRE : entre 20 et 40
+- AVANCE : entre 40 et 60
+- EXPERT : au-dessous de 60
 
+Le passage d'un niveau inférieur à un niveau supérieur est donc possible, *tout comme* la régression : un élève peut passer d'un niveau supérieur à un niveau inférieur si son score descend trop.
 
+L'élève a accès à tous les exercices de son niveau et des niveaux inférieurs au sien. 
 
+Pour que son score augmente, il faut que l'élève fasse un exercice et que l'exercice soit considéré comme réussi. Un exercice est considéré comme réussi si la note obtenue dépasse la note seuil fixée avec les métadonnées fournies par le professeur lors de la création de l'exercice. En effet, quand le prof crée un exercice, il doit renseigner le pourcentage de points qu'il faut obtenir pour que l'exercice soit considéré comme réussi. La note seuil est calculée à partir de ce pourcentage et du nombre de réponses à fournir en tout[^note_seuil].
 
+[^note_seuil]: Si l'exercice a 10 réponses à fournir et que le pourcentage est de 50%, il faudra obtenir 5 points. S'il avait été de 75%, il aurait fallu obtenir 7.5 points. 
 
+Nous avons choisi de fonctionner en pourcentage plutôt que de demander au prof de renseigner le nombre de points directement parce que c'est plus facile à gérer pour un prof si l'exercice est très long. Les pourcentages permettent également de créer des exercices plus ou moins difficiles pour un même niveau. 
 
+Si l'élève réussit l'exercice, son score est incrémenté de 1. Sinon, son score est décrémenté de 1. 
 
+Selon son niveau, l'élève n'est pas noté de la même manière (classe `BaremeNiveau`) : 
 
-# Pour ajouter des choses
+- DEBUTANT : 
+  - +1 par bonne réponse
+  - 0 par mauvaise réponse
+  - 0 par réponse non-répondue
+- INTERMEDIAIRE
+   - +1 par bonne réponse
+   - -1 par mauvaise réponse
+   - 0 par réponse non-répondue
+- AVANCE 
+   - +1 par bonne réponse
+   - -1 par mauvaise réponse
+   - -1 par réponse non-répondue
+- EXPERT
+   - +1 par bonne réponse
+   - -2 par mauvaise réponse
+   - -1 par réponse non-répondue
+
+### La correction des exercices
+
+La correction se fait automatiquement. L'objet de la classe `ReponseEleve`[^classe_abstraite] est construit lorsque l'élève répond à un exercice. Dans le constructeur, une fois toutes les réponses de l'élève récupéré, l'attribut `reponsesCorrection` est instancié grâce à la méthode `corrige()` (interface `Correction`). Cette méthode attribue une `ValeurReponse` (énumération) à chaque réponse.
+
+[^classe_abstraite]: `ReponseEleve` est une classe abstraite. La classe `ReponseEleveExoATrous` est le classe concrète qui étend cette classe et qui est spécifique aux exercices à trous.
+
+Dans l'interface du terminal s'affiche alors l'exercice reconstitué avec les réponses de l'élève (grâce à la méthode `affichePhrasesRempliesAvecCouleurs()`). Si l'élève a eu bon, son mot est surligné en vert, si l'élève a eu faux, en rouge et s'il n'a pas répondu, "___" s'affichent en jaune.
+
+L'élève choisit de voir ou non les vraies réponses correctes qu'il fallait fournir.
+
+## Ajout d'un exercice
+
+Si un professeur veut ajouter un exercice, il faut que son fichier `.txt` soit formaté correctement. Sur la première ligne de son fichier doivent apparaître les informations suivantes séparées par des ":" : 
+
+- La langue de l'exercice : DE, EN, ES, FR, JPN, ZH (énumération `Langue`)
+- Le type d'exercice : EXO_A_TROU, EXO_TERMINAISON (énumération `TypeExo`)
+- Le niveau de l'exercice : DEBUTANT, INTERMEDIAIRE, AVANCE, EXPERT (énumération `BaremeNiveau`)
+- Le pourcentage de points à obtenir pour que l'exercice soit considéré comme réussi : entre 0 et 1.
+
+Par exemple, si je veux créer un exercice à trous en français pour les débutants et que je veux que mes élèves aient la moitié des points, je dois écrire : 
+
+```plain
+FR:EXO_A_TROU:DEBUTANT:0.5
+```
+
+La méthode `readFromFile()` de la classe `ImportExercice` permet de lire le fichier et de créer l'objet `Exercice` correspondant. Le fichier est également copié dans le dossier `ressources` de l'application pour que l'exercice puisse être accessible même après la fermeture de l'application.
+
+### Et si quelqu'un veut créer un nouveau type d'exercice ? 
+
+Pour créer un nouveau type d'exercice et l'implémenter dans cette application, il faut : 
+
+- Ajouter le type dans l'énumération `TypeExo`
+- Créer une classe qui étend la classe `Exercice`
+- Créer une classe qui étend la classe `Metaparse` et qui permet de parser l'exercice à partir de l'input du prof
+- Créer une classe qui étend la classe `ReponseEleve` et qui permet de récupérer les réponses de l'élèves, de le noter, de dire s'il valide ou non et d'afficher l'exercice reconstitué avec ses réponses
+- Dans la classe `ImportExercice`, ajouter un `case` pour notre type d'exercice afin que l'objet soit créé avec la bonne classe concrète lors de l'import d'un exercice depuis un fichier `.txt`.
+
+## Database
+
+Nous avons choisi de stocker les informations de l'application avec une base de données H2. Les informations stockées sont : 
+
+- Les professeurs (pseudo et langue),
+- Les élèves (pseudo),
+- Les `NiveauxEleves` : cette table renseigne, pour chaque élève et pour chaque langue qu'il étudie son prof, son niveau, son score. 
+
+Quand l'application est ouverte, la fonction `createFromDatabase()` du `Main` permet de recréer les objets à partir des informations gardées dans la DataBase pour qu'on puisse utiliser les méthodes des objets. 
+
+A noter que les exercices ne sont pas stockés dans la DataBase mais dans le dossier `ressources` de l'application. A l'ouverture de l'application, les objets `Exercice` sont recréés grâce à la méthode `importDossier()` de la classe `ImportExercice`.
