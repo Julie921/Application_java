@@ -70,7 +70,7 @@ public class ReponseEleveExoATrous extends ReponseEleve {
         for (PhraseATrous phrase : exo.getListPhrases()) {
             totalReponsesAFournir += phrase.getMotsAPlacer().size();
         }
-        this.seuilPassation = exo.getPourcentage() * totalReponsesAFournir * exo.getNiveau().getVrai();
+        this.seuilPassation = exo.getPourcentage() * totalReponsesAFournir;
     }
 
     @Override
