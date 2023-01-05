@@ -180,8 +180,6 @@ Afin de pouvoir tester l'application, nous avons créé une base de données fic
 | 5     | camille_du95  | EN     | INTERMEDIAIRE | ClementVincent    | 26    |
 | 6     | chloe_du97    | ES     | DEBUTANT      | CedricMoreau      | 19    |
 | 7     | juliette_du96 | FR     | DEBUTANT      | JeanDurand        | 10    |
-
-  : NIVEAUXELEVE
   
 Nous avons également créé quelques exercices : 
 
