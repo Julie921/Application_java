@@ -142,6 +142,8 @@ A noter que les exercices ne sont pas stockés dans la DataBase mais dans le dos
 
 # Demo
 
+Pour accéder à la javadoc : `build/release/javadoc/index.html`
+
 Afin de pouvoir tester l'application, nous avons créé une base de données fictives avec les informations suivantes : 
 
 - Table des élèves : 
