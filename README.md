@@ -116,6 +116,8 @@ FR:EXO_A_TROU:DEBUTANT:0.5
 
 La méthode `readFromFile()` de la classe `ImportExercice` permet de lire le fichier et de créer l'objet `Exercice` correspondant. Le fichier est également copié dans le dossier `ressources` de l'application pour que l'exercice puisse être accessible même après la fermeture de l'application.
 
+A noter que peu importe quel prof a créé l'exercice, il sera accessible par tout le monde, pas seulement aux étudiants qui sont inscrits au cours de ce professeur.
+
 ### Et si quelqu'un veut créer un nouveau type d'exercice ? 
 
 Pour créer un nouveau type d'exercice et l'implémenter dans cette application, il faut : 
@@ -128,7 +130,7 @@ Pour créer un nouveau type d'exercice et l'implémenter dans cette application,
 
 ## Database
 
-Nous avons choisi de stocker les informations de l'application avec une base de données H2. Les informations stockées sont : 
+Nous avons choisi de stocker les informations de l'application avec une base de données H2. Nous avons utilisé ORMlite pour gérer la BDD. Les informations stockées sont : 
 
 - Les professeurs (pseudo et langue),
 - Les élèves (pseudo),
@@ -137,3 +139,44 @@ Nous avons choisi de stocker les informations de l'application avec une base de 
 Quand l'application est ouverte, la fonction `createFromDatabase()` du `Main` permet de recréer les objets à partir des informations gardées dans la DataBase pour qu'on puisse utiliser les méthodes des objets. 
 
 A noter que les exercices ne sont pas stockés dans la DataBase mais dans le dossier `ressources` de l'application. A l'ouverture de l'application, les objets `Exercice` sont recréés grâce à la méthode `importDossier()` de la classe `ImportExercice`.
+
+# Demo
+
+Afin de pouvoir tester l'application, nous avons créé une base de données fictives avec les informations suivantes : 
+
+| PSEUDO        |
+|---------------|
+| alice_du98    |
+| benjamin2003  |
+| camille_du95  |
+| chloe_du97    |
+| juliette_du96 |
+
+  : ELEVES
+
+| PSEUDO         | LANGUE |
+|----------------|--------|
+| JeanDurand     | FR     |
+| SophieGarcia   | FR     |
+| FrancoisDupont | DE     |
+| LucieBertrand  | DE     |
+| NicolasPerrin  | DE     |
+| VirginieRobert | JPN    |
+| CharlesRenard  | ZH     |
+| CedricMoreau   | ES     |
+| ClementVincent | EN     |
+| BenjaminDubois | ZH     |
+
+  : PROFESSEURS
+
+| INDEX | PSEUDO_ELEVE  | LANGUE | NIVEAU        | PSEUDO_PROFESSEUR | SCORE |
+|-------|---------------|--------|---------------|-------------------|-------|
+| 1     | alice_du98    | FR     | INTERMEDIAIRE | JeanDurand        | 21    |
+| 2     | alice_du98    | DE     | DEBUTANT      | LucieBertrand     | 11    |
+| 3     | benjamin2003  | JPN    | EXPERT        | VirginieRobert    | 71    |
+| 4     | camille_du95  | ZH     | AVANCE        | BenjaminDubois    | 46    |
+| 5     | camille_du95  | EN     | INTERMEDIAIRE | ClementVincent    | 26    |
+| 6     | chloe_du97    | ES     | DEBUTANT      | CedricMoreau      | 19    |
+| 7     | juliette_du96 | FR     | DEBUTANT      | JeanDurand        | 10    |
+
+  : NIVEAUXELEVE
