@@ -14,10 +14,20 @@ import java.util.ArrayList;
  */
 public class PhraseATrous extends Phrase{
 
-    String phraseCorrecte; //attribut qui contient la phrase sans les # et avec les réponses correctes
-    String phraseAvecTrous; //attribut qui contient la phrase avec des ___ à la place des mots à placer
+    /**
+     * Attribut qui contient la phrase sans les #, en somme la phrase correcte.
+     */
+    String phraseCorrecte;
 
-    ArrayList<String> motsAPlacer = new ArrayList<>(); //liste de tous les mots à placer dans l'ordre
+    /**
+     * Attribut qui contient la phrase avec des ___ à la place des mots à placer.
+     */
+    String phraseAvecTrous;
+
+    /**
+     * Liste de tous les mots à placer dans l'ordre correct.
+     */
+    ArrayList<String> motsAPlacer = new ArrayList<>();
 
     /**
      * Constructeur de la classe PhraseATrous.

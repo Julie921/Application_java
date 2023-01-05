@@ -140,9 +140,21 @@ public abstract class ReponseEleve implements Correction, Notation {
      */
     public abstract void setSeuilPassation();
 
+    /**
+     * Getter qui permet de récupérer la note seuil que l'élève doit atteindre pour que l'exercice soit considéré comme réussi, validé.
+     * @return la note seuil que l'élève doit atteindre pour que l'exercice soit considéré comme réussi, validé.
+     */
     public Float getSeuilPassation(){
         return this.seuilPassation;
     }
 
+    /**
+     *  Méthode qui doit être redéfinie par les classes concrètes qui héritent de la classe ReponseEleve.
+     *  Elle permet de recontituer l'exercice en utilisant les réponses de l'élève et en utilisant des couleurs pour indiquer si la réponse est vrai, fausse, ou non-répondue :
+     *  - VRAI : vert
+     *  - FAUX : rouge
+     *  - NR : jaune
+     *  @param pattern le motif de la regex à utiliser pour identifier les réponses dans la phrase.
+     */
     public abstract void affichePhrasesRempliesAvecCouleurs(Pattern pattern);
 }

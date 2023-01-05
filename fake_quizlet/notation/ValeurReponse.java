@@ -16,7 +16,6 @@ import fake_quizlet.notation.Notation;
  * @see BaremeNiveau
  */
 public enum ValeurReponse {
-
     VRAI, FAUX, NR;
 
 }

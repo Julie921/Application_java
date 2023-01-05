@@ -26,10 +26,11 @@ public class ParseurPhraseATrous extends Metaparse {
     }
 
     /**
-     * Méthode qui permet de parser une phrase à trous et de retourner un objet de type PhraseATrous.
-     * @param  phraseAParser la phrase à parser
-     * @return l'objet PhraseATrous contenant la phrase correcte, la phrase avec les trous et la liste des mots à trouver
-     * */
+     * Méthode qui permet de parser une phrase avec des trous sous la forme "#mot#" et de retourner une {@link PhraseATrous} avec la phrase correcte, la phrase avec les trous et la liste des mots à placer.
+     *
+     * @param phraseAParser La phrase à parser sous forme de chaîne de caractères.
+     * @return La {@link PhraseATrous} créée à partir de la phrase à parser.
+     */
     @Override
     public PhraseATrous parse(String phraseAParser) {
         String l_phraseCorrecte = phraseAParser.replaceAll(delimiter, "");

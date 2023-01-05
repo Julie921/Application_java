@@ -28,16 +28,37 @@ import java.util.List;
  */
 public class ImportExercice {
 
+    /**
+     * HashMap contenant les parseurs associés à chaque type d'exercice.
+     */
     HashMap<TypeExo, Metaparse> listParseurs = null;
 
+    /**
+     * Constructeur de la classe ImportExercice.
+     *
+     * @param liste la liste des parseurs à utiliser pour chaque type d'exercice
+     */
     public ImportExercice(HashMap<TypeExo, Metaparse> liste) {
         this.listParseurs = liste;
     }
 
+    /**
+     * Ajoute un parseur à la liste de parseurs.
+     *
+     * @param type le type d'exercice pour lequel le parseur est utilisé
+     * @param parseur le parseur à utiliser pour le type d'exercice donné
+     */
     public void addParseur(TypeExo type, Metaparse parseur) {
         this.listParseurs.put(type, parseur);
     }
 
+    /**
+     * Lit un fichier et crée un objet {@link Exercice} à partir de son contenu.
+     *
+     * @param file le fichier à lire
+     * @return l'objet {@link Exercice} créé à partir du fichier
+     * @throws IOException si une erreur d'entrée-sortie survient lors de la lecture du fichier
+     */
     public Exercice readFromFile(File file) throws IOException {
         // TODO refractor readFomFile et readFile
         // Données à remplir
@@ -97,6 +118,13 @@ public class ImportExercice {
         return exoACreer;
     }
 
+    /**
+     * Lit un fichier à partir de son chemin et crée un objet {@link Exercice} à partir de son contenu.
+     *
+     * @param path le chemin du fichier à lire
+     * @return l'objet {@link Exercice} créé à partir du fichier
+     * @throws IOException si une erreur d'entrée-sortie survient lors de la lecture du fichier
+     */
     public Exercice readFile(String path) throws IOException {
         // Données à remplir
         Langue langueExo = null;
@@ -146,6 +174,12 @@ public class ImportExercice {
         return exoACreer;
     }
 
+    /**
+     *  Cette méthode permet d'importer tous les exercices contenus dans un dossier donné en utilisant la méthode {@link ImportExercice#readFile(String)}.
+     *  @param pathDossier Le chemin vers le dossier contenant les exercices à importer.
+     *  @return Une liste d'objets {@link Exercice} correspondant aux exercices importés.
+     *  @throws IOException Si un problème est survenu lors de la lecture des fichiers.
+     */
     public List<Exercice> importDossier(String pathDossier) throws IOException {
         File dossier = new File(pathDossier);
         String[] files = dossier.list();

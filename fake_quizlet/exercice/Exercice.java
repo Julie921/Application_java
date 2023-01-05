@@ -32,6 +32,10 @@ public abstract class Exercice {
      */
     private Float pourcentage;
 
+    /**
+     * Le type d'exercice
+     * @see TypeExo
+     */
     private TypeExo type;
 
     /**
@@ -106,10 +110,20 @@ public abstract class Exercice {
      */
     public abstract void afficherCorrection();
 
+    /**
+     * Getter pour récupérer le type de l'exercice.
+     * @see TypeExo
+     * @return
+     */
     public TypeExo getType(){
         return this.type;
     }
 
+    /**
+     * Setter pour définir le type d'exercice dont il s'agit.
+     * @see TypeExo
+     * @param type
+     */
     public void setType(TypeExo type){
         this.type = type;
     }

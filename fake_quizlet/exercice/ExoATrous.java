@@ -88,9 +88,13 @@ public class ExoATrous extends Exercice {
         }
     }
 
+    /**
+     * Affiche un aperçu du texte de l'exercice à trous, en affichant seulement les 3 premières phrases.
+     * Si le texte contient plus de 3 phrases, affiche "..." à la fin des 3 premières phrases.
+     */
     @Override
     public void previewText() {
-        // Affiche seulement les 10 premières phrases du texte
+        // Affiche seulement les 3 premières phrases du texte
         for (int i = 0; i < 3 && i < listPhrases.size(); i++) {
             System.out.println(listPhrases.get(i).getPhraseAvecTrous());
         }
@@ -99,11 +103,16 @@ public class ExoATrous extends Exercice {
             System.out.println("...");
         }
         else {
-            System.out.println("");
+            System.out.println(""); //retour à la ligne pour que ça fasse plus clean
         }
     }
 
-    //TODO: écrire la javadoc
+    /**
+     * Construit une réponse à l'exercice à trous pour un élève donné.
+     *
+     * @param eleve l'élève pour lequel la réponse est construite
+     * @return la réponse à l'exercice à trous
+     */
     @Override
     public ReponseEleveExoATrous construireReponse(Eleve eleve) {
         return new ReponseEleveExoATrous(this, eleve);

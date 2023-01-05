@@ -25,11 +25,20 @@ public enum BaremeNiveau {
     // Déclaration des constantes
     DEBUTANT(1, 0, 0), INTERMEDIAIRE(1, -1, 0), AVANCE(1, -1, -1), EXPERT(1, -2, -1);
 
-    // Déclaration des attributs pour les valeurs à l'interieur de nos constantes.
-    private int vrai; //nombre de points attribués par réponse vraie de l'élève
-    private int faux; //nombre de points attribués par réponse fausse de l'élève
-    private int nr; //nombre de points attributs par réponse non répondue de l'élève
+    /**
+     * Nombre de points attribués par réponse vraie de l'élève.
+     */
+    private int vrai;
 
+    /**
+     * Nombre de points attribués par réponse fausse de l'élève.
+     */
+    private int faux;
+
+    /**
+     * Nombre de points attributs par réponse non répondue de l'élève.
+     */
+    private int nr;
     /**
      * Constructeur de la classe `BaremeNiveau`
      *

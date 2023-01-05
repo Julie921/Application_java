@@ -39,24 +39,10 @@ public class Professeur extends Utilisateur {
         this.langue = langue;
     }
 
-    //TODO : je crois que ces métodes ne servent plus à rien maintenant qu'on a la BDD
-    /* PARTIE ELEVE */
-    /*public ForeignCollection<Eleve> getListEleves() {
-        return this.listEleves;
-    }*/
-
-    /*public void listElevesToString() {
-        for (Eleve eleve : listEleves) {
-            System.out.println(eleve);
-        }
-    }
-*/
- /*   public void ajouterEleve(Eleve eleve) {
-        this.listEleves.add(eleve);
-    }*/
-
-
-    /* PARTIE GENERALE */
+    /**
+     *  Méthode qui retourne une chaîne de caractères représentant le professeur.
+     *  @return Une chaîne de caractères contenant le pseudo du professeur et la langue qu'il enseigne.
+     */
     @Override
     public String toString() {
         return "Professeur { "+ this.getPseudo()+
@@ -80,14 +66,20 @@ public class Professeur extends Utilisateur {
         this.langue = langue;
     }
 
+    /**
+     * Cette méthode retourne la liste des exercices accessibles pour un professeur donné, en prenant en compte la langue enseignée par le professeur et les exercices disponibles. Si aucun exercice n'est disponible dans la langue enseignée par le professeur, un message est affiché à l'utilisateur.
+     * @param listNiveauxUtilisateur la liste des niveaux des utilisateurs (pas utilisé mais vu que c'est une méthode abstraite redéfinie, on est obligé de le mettre)
+     * @param listExercices la liste des exercices disponibles
+     * @return
+     */
     @Override
     public ArrayList<Exercice> getExercicesAccessibles(ArrayList<NiveauxEleves> listNiveauxUtilisateur, List<Exercice> listExercices) {
         ArrayList<Exercice> exercicesAccessibles = new ArrayList<>();
-        // Pour chaque enregistrement de niveau de l'utilisateur actif
-        for (Exercice exercice : listExercices) {
-            // Si l'exercice a la même langue et le même niveau que l'enregistrement de l'utilisateur actif, on l'ajoute à la liste des exercices accessibles
+
+        for (Exercice exercice : listExercices) { //pour chaque exercice
+            // si l'exercice est de la même langue que celle enseignée par le prof
             if (exercice.getLangue().equals(this.getLangue())) {
-                exercicesAccessibles.add(exercice);
+                exercicesAccessibles.add(exercice); //on l'ajoute à la liste
             }
         }
 
@@ -106,8 +98,8 @@ public class Professeur extends Utilisateur {
         // On vérifie s'il y a des élèves inscrits dans la langue enseignée par le professeur
         boolean aDesEleves = false;
         for (NiveauxEleves niv : listNiveauxUtilisateur) {
-            if (niv.getPseudoProfesseur().equals(this.getPseudo())) {
-                aDesEleves = true;
+            if (niv.getPseudoProfesseur().equals(this.getPseudo())) { // le pseudo du prof à cette ligne correspond à ce prof là
+                aDesEleves = true; // donc le prof a des élèves
                 break;
             }
         }

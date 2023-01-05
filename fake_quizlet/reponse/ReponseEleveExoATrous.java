@@ -62,8 +62,12 @@ public class ReponseEleveExoATrous extends ReponseEleve {
         this.calculNote();
     }
 
-
-        @Override
+    /**
+     *  Méthode setSeuilPassation qui définit le seuil de réussite d'un exercice en fonction de son pourcentage de réussite et du nombre de réponses à fournir.
+     *  Cette méthode est spécifique aux exercices de type {@link ExoATrous}.
+     *  Elle calcule le nombre total de réponses à fournir en comptant le nombre de mots à placer dans chaque phrase de l'exercice, puis définit le seuil de réussite en multipliant ce nombre par le pourcentage de réussite de l'exercice.
+     */
+    @Override
     public void setSeuilPassation() {
         ExoATrous exo = (ExoATrous) this.exercice;
         Float totalReponsesAFournir = 0.0F;

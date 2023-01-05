@@ -113,6 +113,14 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 				'}';
 	}
 
+	/**
+	 * Récupère la liste des exercices accessibles pour l'utilisateur (élève) courant en fonction de ses niveaux en langues et de la liste des exercices disponibles.
+	 * Un exercice est considéré comme accessible s'il a la même langue et le même niveau que l'utilisateur, ou s'il a la même langue et un niveau inférieur.
+	 *
+	 * @param listNiveauxUtilisateur la liste de tous les niveaux de tous les élèves
+	 * @param listExercices la liste de tous les exercices disponibles dans l'application
+	 * @return la liste des exercices accessibles pour l'utilisateur (élève) courant
+	 */
 	@Override
 	public ArrayList<Exercice> getExercicesAccessibles(ArrayList<NiveauxEleves> listNiveauxUtilisateur, List<Exercice> listExercices) {
 		ArrayList<Exercice> exercicesAccessibles = new ArrayList<>();
@@ -153,7 +161,7 @@ public class Eleve extends Utilisateur { //TODO association réflexive pour que 
 				break;
 			}
 		}
-		if (estInscrit) {
+		if (estInscrit) { // l'élève est inscrit dans des cours, on affiche un tableau
 			System.out.println("+--------------+----------------+------------+-----------+");
 			System.out.println("|   Langue     |    Professeur  |  Niveau    | Score  |");
 			System.out.println("+--------------+----------------+------------+-----------+");
