@@ -1,0 +1,2 @@
+FR:EXO_A_TROU:DEBUTANT:0.5
+Je suis un #animal# qui vit dans la #mer#. J'ai une #queue# et des #nageoires#. Je suis un #poisson#.
