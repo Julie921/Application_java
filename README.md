@@ -144,6 +144,8 @@ A noter que les exercices ne sont pas stockés dans la DataBase mais dans le dos
 
 Afin de pouvoir tester l'application, nous avons créé une base de données fictives avec les informations suivantes : 
 
+- Table des élèves : 
+
 | PSEUDO        |
 |---------------|
 | alice_du98    |
@@ -152,7 +154,7 @@ Afin de pouvoir tester l'application, nous avons créé une base de données fic
 | chloe_du97    |
 | juliette_du96 |
 
-  : ELEVES
+- Tables des professeurs : 
 
 | PSEUDO         | LANGUE |
 |----------------|--------|
@@ -167,7 +169,7 @@ Afin de pouvoir tester l'application, nous avons créé une base de données fic
 | ClementVincent | EN     |
 | BenjaminDubois | ZH     |
 
-  : PROFESSEURS
+- Table avec pour chaque langue étudiée par chaque élève son niveau, son prof et son score : 
 
 | INDEX | PSEUDO_ELEVE  | LANGUE | NIVEAU        | PSEUDO_PROFESSEUR | SCORE |
 |-------|---------------|--------|---------------|-------------------|-------|
@@ -180,3 +182,19 @@ Afin de pouvoir tester l'application, nous avons créé une base de données fic
 | 7     | juliette_du96 | FR     | DEBUTANT      | JeanDurand        | 10    |
 
   : NIVEAUXELEVE
+  
+Nous avons également créé quelques exercices : 
+
+| Langue    | Niveau        | Nombre d'exo |
+|-----------|----------------|---------------|
+| DE        | DÉBUTANT       | 2             |
+| DE        | INTERMÉDIAIRE  | 1             |
+| FR        | DÉBUTANT       | 3             |
+| FR        | INTERMÉDIAIRE  | 2             |
+| FR        | AVANCÉ         | 1             |
+| FR        | EXPERT         | 1             |
+| JPN       | DÉBUTANT       | 1             |
+| JPN       | INTERMÉDIAIRE  | 2             |
+| ZH        | DÉBUTANT       | 2             |
+| ZH        | AVANCÉ         | 1             |
+
