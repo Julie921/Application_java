@@ -31,6 +31,7 @@ public abstract class Metaparse {
     /**
      *  Méthode {@code parse()} qui permet de parser un input en utilisant l'objet {@link Pattern} fourni en paramètre.
      * @param phraseNotParsed l'input à parser
+     * @return l'objet {@link Phrase} généré à partir de la String non-parsée
      */
     public abstract Phrase parse(String phraseNotParsed);
 

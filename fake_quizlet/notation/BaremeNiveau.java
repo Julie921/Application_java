@@ -22,8 +22,26 @@ import fake_quizlet.reponse.ReponseEleve;
  * @see ReponseEleve
  */
 public enum BaremeNiveau {
-    // Déclaration des constantes
-    DEBUTANT(1, 0, 0), INTERMEDIAIRE(1, -1, 0), AVANCE(1, -1, -1), EXPERT(1, -2, -1);
+
+    /**
+     * Le barème de notation pour les élèves de niveau DEBUTANT
+     */
+    DEBUTANT(1, 0, 0),
+
+    /**
+     * Le barème de notation pour les élèves de niveau INTERMEDIAIRE
+     */
+    INTERMEDIAIRE(1, -1, 0),
+
+    /**
+     * Le barème de notation pour les élèves de niveau AVANCE
+     */
+    AVANCE(1, -1, -1),
+
+    /**
+     * Le barème de notation pour les élèves de niveau EXPERT
+     */
+    EXPERT(1, -2, -1);
 
     /**
      * Nombre de points attribués par réponse vraie de l'élève.

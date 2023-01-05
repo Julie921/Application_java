@@ -94,15 +94,26 @@ public abstract class Exercice {
     }
 
     /**
-     * Setter permettant de modifier le pourcentage de points qu'un élève doit obtenir en faisant l'exercice pour que l'exercice soit
-     * considéré comme réussi.
+     * Setter permettant de modifier le pourcentage de points qu'un élève doit obtenir en faisant l'exercice pour que l'exercice soit considéré comme réussi.
+     * @param pourcentage le pourcentage de points qu'un élève doit obtenir en faisant l'exercice pour que l'exercice soit considéré comme réussi.
     */
     public void setPourcentage(Float pourcentage) {
         this.pourcentage = pourcentage;
     }
 
+    /**
+     * Affiche un aperçu de l'exercice. Elle est utilisée pour que les professeurs puissent voir les exercices déjà enregistrés et que les élèves puissent choisir l'exercice qu'ils veulent faire.
+     * Elle est à définir dans les classe filles de `Exercice`
+     */
     public abstract void previewText();
 
+    /**
+     *  Cette méthode permet de construire la réponse d'un élève à un exercice.
+     *  Elle est définie dans les classes filles de `Exercice`.
+     *  @param eleve l'élève dont on souhaite construire la réponse
+     *  @return La réponse de l'élève à l'exercice
+     * @see ExoATrous#construireReponse(Eleve) 
+     */
     public abstract ReponseEleve construireReponse(Eleve eleve);
 
     /**
@@ -113,7 +124,7 @@ public abstract class Exercice {
     /**
      * Getter pour récupérer le type de l'exercice.
      * @see TypeExo
-     * @return
+     * @return le type de l'exercice
      */
     public TypeExo getType(){
         return this.type;
@@ -122,7 +133,7 @@ public abstract class Exercice {
     /**
      * Setter pour définir le type d'exercice dont il s'agit.
      * @see TypeExo
-     * @param type
+     * @param type le type de l'exercice
      */
     public void setType(TypeExo type){
         this.type = type;

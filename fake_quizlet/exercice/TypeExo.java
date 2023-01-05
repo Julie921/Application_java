@@ -8,7 +8,15 @@ package fake_quizlet.exercice;
  * Cette énumération permet au professeur de renseigner le type de l'exercice qu'il veut créer dans les métadonnées de son fichier pour que l'application utilise le bon parseur.
  */
 public enum TypeExo {
+
+    /**
+     * Le code pour les exercices de la classe {@link ExoATrous}
+     */
     EXO_A_TROU,
+
+    /**
+     * Le code pour les exercices où il faut remplir la terminaison
+     */
     EXO_TERMINAISON;
 
 }

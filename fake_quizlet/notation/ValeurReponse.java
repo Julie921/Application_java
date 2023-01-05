@@ -16,6 +16,20 @@ import fake_quizlet.notation.Notation;
  * @see BaremeNiveau
  */
 public enum ValeurReponse {
-    VRAI, FAUX, NR;
+
+    /**
+     * Valeur attribuée à une réponse qui est correcte.
+     */
+    VRAI,
+
+    /**
+     * Valeur attribuée à une réponse qui est fausse.
+     */
+    FAUX,
+
+    /**
+     * Valeur attribuée à une réponse qui n'est pas répondue.
+     */
+    NR;
 
 }

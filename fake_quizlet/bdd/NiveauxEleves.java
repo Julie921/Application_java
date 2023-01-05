@@ -142,6 +142,11 @@ public class NiveauxEleves {
         return pseudoEleve;
     }
 
+    /**
+     * Modifie l'élève.
+     *
+     * @param eleve
+     */
     public void setEleve(Eleve eleve) {
         this.pseudoEleve = eleve.getPseudo();
     }

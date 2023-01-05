@@ -33,6 +33,8 @@ public class Professeur extends Utilisateur {
     /**
      * Constructeur pour la classe Professeur.
      * Il permet d'instancier un objet Professeur en renseignant le nom d'utilisateur (pseudo) et la langue enseignée par ce professeur.
+     * @param pseudo  le pseudo du professeur
+     * @param langue la langue enseignée par le professeur
     */
     public Professeur(String pseudo, Langue langue) {
         super(pseudo);
@@ -70,7 +72,7 @@ public class Professeur extends Utilisateur {
      * Cette méthode retourne la liste des exercices accessibles pour un professeur donné, en prenant en compte la langue enseignée par le professeur et les exercices disponibles. Si aucun exercice n'est disponible dans la langue enseignée par le professeur, un message est affiché à l'utilisateur.
      * @param listNiveauxUtilisateur la liste des niveaux des utilisateurs (pas utilisé mais vu que c'est une méthode abstraite redéfinie, on est obligé de le mettre)
      * @param listExercices la liste des exercices disponibles
-     * @return
+     * @return une liste d'objet {@link Exercice} correspondant à tous les exercices disponibles dans la langue enseignée par le professeur
      */
     @Override
     public ArrayList<Exercice> getExercicesAccessibles(ArrayList<NiveauxEleves> listNiveauxUtilisateur, List<Exercice> listExercices) {

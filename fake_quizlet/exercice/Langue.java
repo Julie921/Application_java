@@ -13,6 +13,34 @@ package fake_quizlet.exercice;
  */
 public enum Langue {
 
-    DE, EN, ES, FR, JPN, ZH;
+    /**
+     * Code de langue correspondant à l'allemand
+     */
+    DE,
+
+    /**
+     * Code de langue correspondant à l'anglais
+     */
+    EN,
+
+    /**
+     * Code de langue correspondant à l'espagnol
+     */
+    ES,
+
+    /**
+     * Code de langue correspondant au français
+     */
+    FR,
+
+    /**
+     * Code de langue correspondant au japonais
+     */
+    JPN,
+
+    /**
+     * Code de langue correspondant au chinois
+     */
+    ZH;
 
 }
